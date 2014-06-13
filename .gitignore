@@ -1,0 +1,4 @@
+build
+.installed_files.txt
+*.pyc
+*~
