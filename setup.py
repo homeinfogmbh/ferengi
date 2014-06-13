@@ -3,15 +3,13 @@
 from distutils.core import setup
 
 setup(
-	name='PyExposeAgent',
+	name='F.E.R.E.N.G.I.',
 	version='0.1-indev',
 	author='Richard Neumann',
 	author_email='mail@richard-neumann.de',
-	package_dir = {'homie': ''},
-	packages=['homie.interfaces.exposeagent',
-			'homie.translators.exposeagent'],
+	packages=['ferengi'],
 	data_files=[],
 	license=open('LICENSE.txt').read(),
-	description='Interface implementation for the Exposé-Agent client program of the HOMEINFO GmbH',
+	description='Frankly Everything, but Real Estates Notoriously Greedy Importer',
 	long_description=open('README.txt').read(),
 )
