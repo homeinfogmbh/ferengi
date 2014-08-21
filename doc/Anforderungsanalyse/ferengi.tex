@@ -1,0 +1,196 @@
+\documentclass[a4paper]{article}
+
+% Paketimporte
+\usepackage[ngerman]{babel} % Neue Deutsche Rechtschreibung
+\usepackage[utf8]{inputenc} % UTF-8 für plattformunabhängige Codierung mit Umlauten
+\DeclareUnicodeCharacter{00A0}{ } % Für no-break-spaces
+\usepackage{eurosym} % €-Symbol
+\usepackage{titlesec} % Textüberschriften anpassen
+\usepackage[pdftex]{graphicx} % Für Grafiken
+\usepackage{float} 
+\usepackage{url} % Für korrekte URL-Formatierung
+\usepackage{wrapfig} % Für Abbildungen mit textumlauf
+\usepackage{csquotes} % Für Zitate
+\usepackage{glossaries} % Für Glossar
+
+% \titleformat{⟨Überschriftenklasse⟩}[Absatzformatierung⟩]{⟨Textformatierung⟩} {⟨Nummerierung⟩}{⟨Abstand zwischen Nummerierung und Überschriftentext⟩}{⟨Code vor der Überschrift⟩}[⟨Code nach der Überschrift⟩]
+
+\titleformat{\chapter}[hang]{\large\bfseries}{\thechapter\quad}{0pt}{}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection\quad}{0pt}{}
+\titleformat{\subsection}[hang]{\large\bfseries}{\thesubsection\quad}{0pt}{}
+\titleformat{\subsubsection}[hang]{\large\bfseries}{\thesubsubsection\quad}{0pt}{}
+\titleformat{\paragraph}[hang]{\large\bfseries}{\theparagraph\quad}{0pt}{}
+
+% \titlespacing{⟨Überschriftenklasse⟩}{⟨Linker Einzug⟩}{⟨Platz oberhalb⟩}{⟨Platz unterhalb⟩}[⟨rechter Einzug⟩]
+
+\titlespacing{\chapter}{0pt}{-3em}{6pt}
+\titlespacing{\section}{0pt}{6pt}{6pt}
+\titlespacing{\subsection}{0pt}{6pt}{6pt}
+\titlespacing{\subsubsection}{0pt}{6pt}{6pt}
+\titlespacing{\paragraph}{0pt}{6pt}{6pt}
+
+%Toleranzen für Mikrotypographie
+\pretolerance=150
+\setlength{\emergencystretch}{10em}
+
+% Metadaten
+\title{Anforderungsspezifikation zum Projekt \newline \enquote{Frankly Everything, but Real Estates Notoriously Greedy Importer} (\enquote{F.E.R.E.N.G.I.})}
+	\author{Für die HOMEINFO - Digitale Informationssysteme GmbH (\enquote{Kunde}) \\ 
+	von Richard Neumann (\enquote{Entwickler})}
+\date{\today}
+
+% Inhaltsverzeichnis-Konfiguration
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+
+% Glossar
+\makeglossaries
+	
+\begin{document}	
+	% Titelblatt
+	\maketitle
+	\pagebreak
+	
+	% Inhaltsverzeichnis
+	\tableofcontents
+	\pagebreak
+	
+	\section*{Vorwort}
+	Diese Spezifikation stellt fest, was entwickelt werden soll. Sie enthält dazu die Anforderungen des Kunden an die Anwendung.
+	Vermerke und ausstehende Aktionen sind \emph{kursiv} gedruckt.
+	
+	\pagebreak
+	\section{Mission des Projekts}
+	\subsection{Erläuterung des zu lösenden Problems}
+	Mit \enquote{F.E.R.E.N.G.I.} soll ein neues zentralisiertes und modulares System zur Beschaffung, Speicherung, Verwaltung, und Filterung von Wetterdaten, Nachrichten, Zitaten und weiteren nicht-Immobilien Zusatzdaten für Digital-Signage Geräte entwickelt werden. 
+	\subsection{Wünsche und Prioritäten des Kunden}
+	Die \emph{Beschaffung}, \emph{Speicherung} und \emph{Verwaltung} von solchen Zusatzdaten von Drittanbietern steht im Vordergrund.
+	Des Weiteren wurde folgende Kundenwünsche definiert:
+	\begin{itemize}
+		\item Automatisierter Import
+		\item Zentrale Speicherung von Daten
+		\item Regelmäßige Aktualisierung der Daten
+		\item Modularität und Erweiterbarkeit
+		\item Einhaltung von Standards
+		\item Geringe Komplexität
+	\end{itemize}
+		
+	\subsection{Domäne}
+	Die Applikation soll als UNIX-Daemon auf einem Linux-Server laufen und webbasierte Schnittstellen zur Verfügung stellen.
+	
+	\subsection{Maßnahmen zur Anforderungsanalyse}
+	Zur Anforderungsanalyse wurde das aktuelle, auf verteilten PHP Skripten basierende System der Fa. HOMEINFO als Referenz genommen. Weiterhin wurden Anforderungen aus den vom Kunden erbrachten Dienstleistungen hergeleitet.
+	Insbesondere durch direkten Kontakt zum Geschäftsführer Herrn Gunkel können laufend Unklarheiten geklärt und Wünsche und Prioritäten besprochen werden.
+	
+	\begin{tabular}{|p{4cm}|p{7,5cm}|}
+		\hline
+		\emph{Datum} & \emph{Thema} \\
+		\hline
+		Mi., 21.08.2014 10:30 Uhr & Erstellung der Anforderungsdefinition \\
+		\hline
+	\end{tabular}
+	
+	\section{Rahmenbedingungen und Umfeld}	
+	\subsection{Einschränkungen und Vorgaben}
+	Der Entwurf ist auf einen UNIX-Daemon beschränkt. Als Schnittstellen zum Benutzer sollen die Protokolle \emph{MySQL} und \emph{SFTP} zum Einsatz kommen. Des Weiteren sind die Schnittstellen zu den Wetterdaten, Nachrichten und Zitaten der Drittanbieter fest vorgegeben.
+	
+	\subsection{Anwender}
+	Das System ist ausschließlich für die Digital-Signange Geräte und Mitarbeiter der Firma \emph{HOMEINFO - Digitale Informationssysteme GmbH} zugänglich.
+	Dabei sollen die Exposé-TVs der Firma die aktuellen Immobiliendaten der Kunden automatisiert über asymmetrische Authentifizierung vom System beziehen können.
+	\linebreak
+	
+	\begin{tabular}{|p{3cm}|p{9cm}|}
+	\hline
+	\emph{Rolle} & \emph{Beschreibung} \\
+	\hline
+	Benutzer & Kunde der Fa. HOMEINFO. Kann:
+		\begin{itemize}
+		\item \emph{Keine Aktion}
+		\end{itemize} \\
+	\hline
+	Fa. HOMEINFO & Kunde der Software. Kann:
+		\begin{itemize}
+		\item Daten von Anbietern automatisch beziehen
+		\item Daten von maschinell auf den Exposé-TVs anzeigen lassen
+		\end{itemize} \\
+	\hline
+	Administrator & Eine Person, welche einen Account mit Zugriffsrechten auf alle Systemdaten hat. Kann:
+		\begin{itemize}
+		\item \emph{Vollzugriff}
+		\end{itemize} \\
+	\hline
+	\end{tabular}
+	
+	\pagebreak
+		
+	\subsection{Schnittstellen und angrenzende Systeme}
+	\emph{F.E.R.E.N.G.I.} soll sich mit einer Vielzahl von Drittanbietern austauschen können. Dabei soll es von folgenden Systemen Daten aufnehmen können:
+	\begin{itemize}
+		\item Facebook
+		\item Adversign
+		\item Wetter.de
+	\end{itemize}
+	Weitere Schnittstellen sollen jederzeit über eine standardisierte API aufgenommen werden können.
+	
+%	\section{Funktionale Anforderungen}
+%	\emph{F.E.R.E.N.G.I.} soll in der Lage sein, die o.g. Schnittstellen automatisch für jeden Benutzer anzusprechen und lokal die Immobiliendaten im \emph{Openimmo}-Format in der \emph{Version 1.2.6}. zu hinterlegen. Darüber hinaus soll es möglich sein die Immobiliendaten der Kunden nach dem Import, bzw. vor dem Export über reguläre Ausdrücke zu modifizieren. Auch soll \emph{H.O.M.I.E.} QR-Codes für Mobil-Exposés generieren und veröffentlichen können. 
+	
+%	\subsection{Use-Case-Diagramme}
+%	\subsubsection{Use-Case Tabellen}	
+%	\begin{tabular}{|p{2,5cm}|p{9cm}|}
+%		\hline
+%		\emph{Use Case Nr. 1} &  \\
+%		\hline
+%		\emph{Umfeld} &  \\
+%		\hline
+%		\emph{Systemgrenzen} &  \\
+%		\hline
+%		\emph{Ebene} &  \\
+%		\hline
+%		\emph{Hauptakteur} &  \\
+%		\hline
+%		\emph{Stakeholder u. Interesse} &  \\
+%		\hline
+%		\emph{Voraussetzung} &  \\
+%		\hline
+%		\emph{Garantien} & - \\
+%		\hline
+%		\emph{Erfolgsfall} & \\
+%		\hline
+%		\emph{Auslöser} &  \\
+%		\hline
+%		\emph{Beschreibung} & 
+%			\begin{tabular}{lp{8cm}}
+%				1. &  \\
+%				2. &   \\
+%				3. &  \\
+%			\end{tabular}  
+%		WEITER: Use Case 2 \\
+%		\hline
+%		\emph{Erweiterungen} & 
+%		\begin{tabular}{lp{8cm}}
+%			4a & WENN ,  DANN \\
+%		\end{tabular} \\
+%		\hline
+%		\emph{Technologie} &  \\
+%		\hline
+%
+%	\end{tabular}
+%	
+%	\pagebreak
+%	
+%	\section{Skizzen}
+%	Im Folgenden werden Skizzen zur webbasierten grafischen Benutzeroberfläche gezeigt, die Als Vorlage für die spätere Implementierung dienen sollen.
+%	
+%	\subsection{Programmabläufe}
+%	\begin{figure}[H]
+%		\centering
+%%		\includegraphics[width=0.7\linewidth]{./GUI/PET-Login}
+%		\caption{Expose-Agent Import}
+%		\label{fig1}
+%	\end{figure}
+%	% Glossar ausgeben
+%	\printglossaries
+	
+\end{document}
