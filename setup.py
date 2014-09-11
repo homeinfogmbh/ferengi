@@ -7,6 +7,7 @@ setup(
 	version='0.1-indev',
 	author='Richard Neumann',
 	author_email='mail@richard-neumann.de',
+    install_requires=['homie'],
 	packages=['ferengi'],
 	data_files=[],
 	license=open('LICENSE.txt').read(),
