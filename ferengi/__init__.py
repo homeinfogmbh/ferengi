@@ -1,6 +1,6 @@
 """Frankly Everything, but Real Estates Notoriously Greedy Importer
 
-System for importing of non-real estate digital signage data.
+System for importing non-real estate digital signage data.
 
           __,----.____
       _,-' ___// _,','(=
@@ -20,8 +20,5 @@ System for importing of non-real estate digital signage data.
        `-.__  \\\\  `_`,(=
             `----'~
 """
-__version__ = '0.1-indev'
-__date__ = '23.04.2015'
-__author__ = 'Richard Neumann <r.neumann@homeinfo.de>'
 __credits__ = ('* To Gene Roddenberry for Star Trek.\n'
                '* To Joshua Bell for the FERENGI ascii logo')

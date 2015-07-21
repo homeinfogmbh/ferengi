@@ -1,20 +1,47 @@
 """FERENGI's main configuration"""
 
-from configparser import ConfigParser
+from homeinfo.lib.config import Configuration
 
-__date__ = "05.02.2015"
-__author__ = "Richard Neumann <r.neumann@homeinfo.de>"
-__all__ = ['core', 'db', 'facebook', 'guess_pic', 'news', 'quotes', 'weather']
+__all__ = ['ferengi_config']
 
-CONFIG_FILE = '/usr/local/etc/ferengi.conf'
 
-config = ConfigParser()
-config.read(CONFIG_FILE)
+class FerengiConfig(Configuration):
+    """HIPSTER's main config parser"""
 
-core = config['core']
-db = config['db']
-facebook = config['facebook']
-guess_pic = config['guess_pic']
-news = config['news']
-quotes = config['quotes']
-weather = config['weather']
+    @property
+    def core(self):
+        self.load()
+        return self['core']
+
+    @property
+    def db(self):
+        self.load()
+        return self['db']
+
+    @property
+    def facebook(self):
+        self.load()
+        return self['facebook']
+
+    @property
+    def guess_pic(self):
+        self.load()
+        return self['guess_pic']
+
+    @property
+    def news(self):
+        self.load()
+        return self['news']
+
+    @property
+    def quotes(self):
+        self.load()
+        return self['quotes']
+
+    @property
+    def weather(self):
+        self.load()
+        return self['weather']
+
+
+ferengi_config = FerengiConfig('/etc/ferengi.conf')
