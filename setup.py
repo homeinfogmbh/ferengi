@@ -11,7 +11,8 @@ setup(
     packages=['ferengi'],
     data_files=[('/etc', ['files/etc/ferengi.conf'])],
     license=open('LICENSE.txt').read(),
-    description=('Frankly Everything, but Real Estates'
-                 ' Notoriously Greedy Importer'),
+    description=(
+        'Frankly Everything, but Real Estates'
+        ' Notoriously Greedy Importer'),
     long_description=open('README.txt').read(),
     )
