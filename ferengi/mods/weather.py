@@ -4,7 +4,7 @@ from hashlib import md5
 from datetime import datetime, timedelta
 
 from requests import get
-from peewee import DateTimeField, IntegerField
+from peewee import DateTimeField, IntegerField, CharField
 
 from ..config import ferengi_config
 from ..db import FerengiModel
@@ -16,8 +16,9 @@ class WeatherTable(FerengiModel):
     class Meta:
         db_table = 'weather'
 
+    region = CharField(32)
     last_update = DateTimeField(null=True, default=None)
-    queries = IntegerField(default=0)
+    queries = IntegerField(default=0)  # This month's queries
 
     @property
     def up2date(self):
@@ -105,7 +106,8 @@ class WeatherTranslator():
         'Duisburg': 'DE0002289',
         'Passau': 'DE0008145',
         'Herne': 'DE0004490',
-        'Ludwigshafen': 'DE0006443'}
+        'Ludwigshafen': 'DE0006443'
+    }
 
     WEATHER = {
         'sonnig': 22,
@@ -143,7 +145,8 @@ class WeatherTranslator():
         'Gewitter': 1,
         'leichtes Gewitter': 1,
         'starkes Gewitter': 1,
-        'k.A.': 0}
+        'k.A.': 0
+    }
 
     def __init__(self, dom):
         """Sets the DOM"""
