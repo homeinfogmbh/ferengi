@@ -1,0 +1,1 @@
+"""FERENGI's quotes interface"""

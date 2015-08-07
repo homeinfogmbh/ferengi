@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 from requests import get
 from peewee import DateTimeField, IntegerField, CharField
 
-from ..config import ferengi_config
-from ..db import FerengiModel
+from ferengi.config import ferengi_config
+from ferengi.db import FerengiModel
 
 
 class WeatherTable(FerengiModel):
