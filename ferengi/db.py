@@ -14,7 +14,8 @@ class FerengiModel(Model):
             ferengi_config.db['db'],
             host=ferengi_config.db['host'],
             user=ferengi_config.db['user'],
-            passwd=ferengi_config.db['passwd'])
+            passwd=ferengi_config.db['passwd'],
+            closing=True)
         schema = database.database
 
     id = PrimaryKeyField()
