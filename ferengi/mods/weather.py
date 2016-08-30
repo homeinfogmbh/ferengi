@@ -49,24 +49,29 @@ class WeatherClient():
         return False
 
     @property
+    def config(self):
+        """Returns the weather config section"""
+        return config['weather']
+
+    @property
     def limit(self):
         """Returns the limit of monthly queries"""
-        return int(config.weather['LIMIT'])
+        return int(self.config['LIMIT'])
 
     @property
     def base_url(self):
         """Returns the base URL"""
-        return config.weather['BASE_URL']
+        return self.config['BASE_URL']
 
     @property
     def user_name(self):
         """Returns the API user name"""
-        return config.weather['USER_NAME']
+        return self.config['USER_NAME']
 
     @property
     def _api_key(self):
         """Returns the API key"""
-        return config.weather['API_KEY']
+        return self.config['API_KEY']
 
     def _update(self):
         """Perform update"""

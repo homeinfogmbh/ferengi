@@ -1,31 +1,41 @@
-#! /usr/bin/env python3
 """Bing web API clients"""
 
 from requests import get
 from json import loads
 
+from ..config import config
+
 
 class WebService():
     """Basic abstract Bing web service"""
-    
-    def __init__(self, base_url, api_key):
+
+    def __init__(self, base_url):
         """Sets the base URL"""
         self.base_url = base_url
-        self.api_key = api_key
 
     def __call__(self):
         """Calls the API"""
         return get(self.base_url, params=self.params, headers=self.headers)
 
     @property
-    def params(self):
-        """Returns the appropriate query parameters"""
-        raise NotImplementedError()
+    def config(self):
+        """Returns the Bing config section"""
+        return config['bing']
+
+    @property
+    def api_key(self):
+        """Returns the API key"""
+        return self.config['API_KEY']
 
     @property
     def headers(self):
         """Returns the appropriate query headers"""
         return {'Ocp-Apim-Subscription-Key': self.api_key}
+
+    @property
+    def params(self):
+        """Returns the appropriate query parameters"""
+        raise NotImplementedError()
 
     @property
     def text(self):
@@ -41,12 +51,11 @@ class WebService():
 class NewsSearch(WebService):
     """A news search"""
 
-    def __init__(self, api_key, q, count=None, offset=None, mkt=None,
+    def __init__(self, q, count=None, offset=None, mkt=None,
                  safe_search=None):
         """Sets the search options"""
-        super().__init__(
-            'https://api.cognitive.microsoft.com/bing/v5.0/news/search',
-            api_key)
+        super().__init__('https://api.cognitive.microsoft.com'
+                         '/bing/v5.0/news/search')
         self.q = q
         self.count = count
         self.offset = offset
