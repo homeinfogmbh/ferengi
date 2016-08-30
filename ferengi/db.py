@@ -1,7 +1,7 @@
 """Abstract base classes for database tables"""
 
 from peewee import Model, MySQLDatabase, PrimaryKeyField
-from .config import ferengi_config
+from .config import config
 
 __all__ = ['FerengiModel']
 
@@ -11,10 +11,10 @@ class FerengiModel(Model):
 
     class Meta:
         database = MySQLDatabase(
-            ferengi_config.db['db'],
-            host=ferengi_config.db['host'],
-            user=ferengi_config.db['user'],
-            passwd=ferengi_config.db['passwd'],
+            config.db['db'],
+            host=config.db['host'],
+            user=config.db['user'],
+            passwd=config.db['passwd'],
             closing=True)
         schema = database.database
 

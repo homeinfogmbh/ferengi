@@ -2,7 +2,7 @@
 
 from homeinfo.lib.config import Configuration
 
-__all__ = ['ferengi_config']
+__all__ = ['config']
 
 
 class FerengiConfig(Configuration):
@@ -44,4 +44,4 @@ class FerengiConfig(Configuration):
         return self['weather']
 
 
-ferengi_config = FerengiConfig('/etc/ferengi.conf')
+config = FerengiConfig('/etc/ferengi.conf')

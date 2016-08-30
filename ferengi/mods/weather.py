@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from requests import get
 from peewee import DateTimeField, IntegerField, CharField
 
-from ferengi.config import ferengi_config
+from ferengi.config import config
 from ferengi.db import FerengiModel
 
 
@@ -51,22 +51,22 @@ class WeatherClient():
     @property
     def limit(self):
         """Returns the limit of monthly queries"""
-        return int(ferengi_config.weather['LIMIT'])
+        return int(config.weather['LIMIT'])
 
     @property
     def base_url(self):
         """Returns the base URL"""
-        return ferengi_config.weather['BASE_URL']
+        return config.weather['BASE_URL']
 
     @property
     def user_name(self):
         """Returns the API user name"""
-        return ferengi_config.weather['USER_NAME']
+        return config.weather['USER_NAME']
 
     @property
     def _api_key(self):
         """Returns the API key"""
-        return ferengi_config.weather['API_KEY']
+        return config.weather['API_KEY']
 
     def _update(self):
         """Perform update"""
