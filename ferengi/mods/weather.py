@@ -26,8 +26,7 @@ class WeatherTable(FerengiModel):
         if self.last_update is None:
             return False
         else:
-            now = datetime.now()
-            if now - self.last_update <= timedelta(days=1):
+            if datetime.now() - self.last_update <= timedelta(days=1):
                 return True
             else:
                 return False
@@ -36,17 +35,15 @@ class WeatherTable(FerengiModel):
 class WeatherClient():
     """Receive and store weather data"""
 
+    def __call__(self, city_code):
+        """Get weather for the respective city code"""
+        return get(self.url(city_code))
+
     @property
     def quota(self):
         """Checks if quotas are okay"""
-        if self.QUERIES:
-            try:
-                queries = int(self.QUERIES)
-            except:
-                queries = self.LIMIT + 1
-            if queries < self.LIMIT:
-                return True
-        return False
+        # TODO: implement
+        pass
 
     @property
     def config(self):
@@ -69,28 +66,28 @@ class WeatherClient():
         return self.config['USER_NAME']
 
     @property
-    def _api_key(self):
+    def api_key(self):
         """Returns the API key"""
         return self.config['API_KEY']
 
-    def _update(self):
+    def check_string(self, city_code):
+        """Returns the check string for the city code"""
+        return ''.join((self.user_name, self.api_key, city_code))
+
+    def checksum(self, city_code):
+        """Returns a checksum for the respective city code"""
+        return md5(self.check_string(city_code).encode()).hexdigest()
+
+    def url(self, city_code):
+        """Returns the search URL"""
+        return '/'.join((
+            self.base_url, 'city', city_code, 'user', self.user_name,
+            'cs', self.checksum(city_code)))
+
+    def update(self):
         """Perform update"""
         for city in self.CITIES:
-            city_code = self.CITIES[city]
-            city_data = self._from_api(city_code)
-            self._store(city, city_data)
-
-    def _url(self, city_code):
-        """Returns the search URL"""
-        user = self.user_name
-        checksum = md5(''.join([user, self._api_key,
-                                city_code]).encode()).hexdigest()
-        return '/'.join([self.base_url, 'city', city_code,
-                         'user', user, 'cs', checksum])
-
-    def _from_api(self, city_code):
-        """Get weather for the respective city code"""
-        return get(self._url(city_code))
+            self.store(city, self(self.CITIES[city]))
 
 
 class WeatherTranslator():
@@ -106,7 +103,7 @@ class WeatherTranslator():
         'Hamburg': 'DE0004130',
         'Crailsheim': 'DE0001811',
         'Gaildorf': 'DE0003215',
-        'Schwaebisch_Hall': 'DE0009632',
+        'Schwäbisch Hall': 'DE0009632',
         'Buxtehude': 'DE0001740',
         'Duisburg': 'DE0002289',
         'Passau': 'DE0008145',
@@ -153,18 +150,13 @@ class WeatherTranslator():
 
     def __init__(self, dom):
         """Sets the DOM"""
-        self._dom = dom
+        self.dom = dom
 
     def __str__(self):
         """Returns the DOM data formatted
         as string for the Flash Application
         """
         return self.application
-
-    @property
-    def dom(self):
-        """Returns the DOM"""
-        return self._dom
 
     @property
     def application(self):
