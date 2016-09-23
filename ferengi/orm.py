@@ -1,7 +1,9 @@
 """Abstract base classes for database tables"""
 
-from peewee import Model, MySQLDatabase, PrimaryKeyField
-from .config import config
+from peewee import Model, PrimaryKeyField
+from homeinfo.peewee import MySQLDatabase
+
+from ferengi.config import config
 
 __all__ = ['FerengiModel']
 

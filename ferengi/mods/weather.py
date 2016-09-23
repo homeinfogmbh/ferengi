@@ -7,7 +7,7 @@ from requests import get
 from peewee import DateTimeField, IntegerField, CharField
 
 from ferengi.config import config
-from ferengi.db import FerengiModel
+from ferengi.orm import FerengiModel
 
 
 class WeatherTable(FerengiModel):
@@ -111,8 +111,7 @@ class WeatherTranslator():
         'Duisburg': 'DE0002289',
         'Passau': 'DE0008145',
         'Herne': 'DE0004490',
-        'Ludwigshafen': 'DE0006443'
-    }
+        'Ludwigshafen': 'DE0006443'}
 
     WEATHER = {
         'sonnig': 22,
@@ -150,8 +149,7 @@ class WeatherTranslator():
         'Gewitter': 1,
         'leichtes Gewitter': 1,
         'starkes Gewitter': 1,
-        'k.A.': 0
-    }
+        'k.A.': 0}
 
     def __init__(self, dom):
         """Sets the DOM"""

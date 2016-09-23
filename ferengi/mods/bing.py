@@ -3,7 +3,7 @@
 from requests import get
 from json import loads
 
-from ..config import config
+from ferengi.config import config
 
 
 class WebService():
