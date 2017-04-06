@@ -4,9 +4,8 @@ from distutils.core import setup
 
 setup(
     name='ferengi',
-    version='0.1-indev',
+    version='latest',
     author='Richard Neumann',
-    author_email='r.neumann@homeinfo.de',
     packages=['ferengi', 'ferengi.mods'],
     data_files=[('/etc', ['files/etc/ferengi.conf'])],
     description=(

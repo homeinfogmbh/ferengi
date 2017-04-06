@@ -1,11 +1,11 @@
 """FERENGI's main configuration"""
 
-from homeinfo.lib.config import Configuration
+from configparserplus import ConfigParserPlus
 
 __all__ = ['config']
 
 
-class FerengiConfig(Configuration):
+class FerengiConfig(ConfigParserPlus):
     """HIPSTER's main config parser"""
 
     @property
