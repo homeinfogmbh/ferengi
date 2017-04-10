@@ -4,19 +4,16 @@ from hashlib import md5
 from datetime import datetime, timedelta
 
 from requests import get
-from peewee import DateTimeField, IntegerField, CharField
+from peewee import ForeignKeyField, IntegerField, CharField, DateTimeField
 
 from ferengi.config import config
 from ferengi.orm import FerengiModel
 
 
-class WeatherTable(FerengiModel):
-    """Weather database table"""
+class Region(FerengiModel):
+    """Available regions"""
 
-    class Meta:
-        db_table = 'weather'
-
-    region = CharField(32)
+    name = CharField(32)
     last_update = DateTimeField(null=True, default=None)
     queries = IntegerField(default=0)  # This month's queries
 
@@ -30,6 +27,40 @@ class WeatherTable(FerengiModel):
                 return True
             else:
                 return False
+
+
+class Forecast(FerengiModel):
+    """Regional weather forecast"""
+
+    region = ForeignKeyField(Region, db_column='region')
+    dt = DateTimeField()
+    temp = DecimalField(5, 2)
+    temp_min = DecimalField(5, 2)
+    temp_max = DecimalField(5, 2)
+    pressure = DecimalField(6, 2)
+    sea_level = DecimalField(6, 2)
+    grd_level = DecimalField(6, 2)
+    humidity = SmallIntegerField()
+    temp_kf = DecimalField(4, 2)
+    clouds_all = SmallIntegerField()
+    wind_speed = DecimalField(4, 2)
+    wind_deg = DecimalField(6, 3)
+
+
+class Weather(FerengiModel):
+    """Weather details"""
+
+    forecast = ForeignKeyField(Forecast, db_column='forecast')
+    weather_id = SmallIntegerField()
+    main = CharField(255)
+    description = CharField(255)
+    icon = CharField(255)
+
+
+class DateForecast(FerengiModel):
+    """Forecast for the whole day"""
+
+    forecast =
 
 
 class WeatherClient():
@@ -94,18 +125,17 @@ class WeatherTranslator():
     """Translates OpenWeather DOM to Application data"""
 
     CITIES = {
-        'Hannover': 'DE0004160',
-        'Stuttgart': 'DE0010287',
         'Bielefeld': 'DE0001129',
         'Braunschweig': 'DE0001456',
-        'Hameln': 'DE0004132',
-        'Braunschweig': 'DE0001456',
-        'Hamburg': 'DE0004130',
+        'Buxtehude': 'DE0001740',
         'Crailsheim': 'DE0001811',
+        'Duisburg': 'DE0002289',
+        'Hannover': 'DE0004160',
+        'Stuttgart': 'DE0010287',
+        'Hameln': 'DE0004132',
+        'Hamburg': 'DE0004130',
         'Gaildorf': 'DE0003215',
         'Schwäbisch Hall': 'DE0009632',
-        'Buxtehude': 'DE0001740',
-        'Duisburg': 'DE0002289',
         'Passau': 'DE0008145',
         'Herne': 'DE0004490',
         'Ludwigshafen': 'DE0006443'}
