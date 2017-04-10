@@ -6,14 +6,13 @@ from requests import get
 from peewee import Model, PrimaryKeyField, ForeignKeyField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
 
-from peeweeplus import MySQLDatabase
 from configparserplus import ConfigParserPlus
 
+from .api import ferengi_database
 
 config = ConfigParserPlus('/etc/ferengi.d/weather.conf')
-database = MySQLDatabase(
-    config['db']['db'],
-    host=config['db']['host'],
+database = ferengi_database(
+    config['db']['database'],
     user=config['db']['user'],
     passwd=config['db']['passwd'])
 
@@ -125,12 +124,17 @@ class Client():
 
     def __init__(self, base_url=None, api_key=None):
         """Sets base URL and API key"""
-        self.base_url = base_url or config['client']['base_url']
-        self.api_key = api_key or config['client']['api_key']
+        self.base_url = base_url or self.config['base_url']
+        self.api_key = api_key or self.config['api_key']
 
     def __call__(self, city_id):
         """Retrievels weather data for the respective city ID"""
         return get()    # TODO: implement
+
+    @property
+    def config(self):
+        """Returns the API config section"""
+        return config['api']
 
 
 client = Client()   # Default client
