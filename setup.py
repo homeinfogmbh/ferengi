@@ -6,8 +6,8 @@ setup(
     name='ferengi',
     version='latest',
     author='Richard Neumann',
-    packages=['ferengi', 'ferengi.mods'],
-    data_files=[('/etc', ['files/etc/ferengi.conf'])],
+    packages=['ferengi'],
+    data_files=[('/etc/ferengi.d', ['files/etc/ferengi.d/weather.conf'])],
     description=(
         'Frankly Everything, but Real Estates'
         ' Notoriously Greedy Importer'))
