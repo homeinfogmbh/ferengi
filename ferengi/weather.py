@@ -104,10 +104,7 @@ class City(_WeatherModel):
         if self.last_update is None:
             return False
         else:
-            if datetime.now() - self.last_update <= timedelta(days=1):
-                return True
-            else:
-                return False
+            return datetime.now() - self.last_update <= timedelta(days=1)
 
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary"""
@@ -115,8 +112,9 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
-        for record in Forecast.from_dict(self, client(self.city_id)):
-            record.save()
+        for forecast in client(self.city_id)['list']:
+            for record in Forecast.from_dict(self, forecast):
+                record.save()
 
     def update_forecast(self, force=False):
         """Updates the city's weather forecast"""
