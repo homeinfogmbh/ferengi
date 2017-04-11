@@ -4,4 +4,4 @@
 from wsgilib import RestApp
 from ferengi.wsgi import SERVICES
 
-application = RestApp(SERVICES, cors=True)
+application = RestApp({'ferengi': SERVICES}, cors=True)
