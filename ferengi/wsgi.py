@@ -26,7 +26,7 @@ class WeatherHandler(ResourceHandler):
                 forecasts = [
                     forecast.to_dict() for forecast in Forecast.select().where(
                         (Forecast.city == city) &
-                        (Forecast.timestamp >= datetime.now()))]
+                        (Forecast.dt >= datetime.now()))]
                 return JSON(forecasts)
 
 
