@@ -10,6 +10,8 @@ Options:
     --help, -h          Show this page.
     --force, -f         Force data import.
 """
+from docopt import docopt
+
 from ferengi.weather import City
 
 
