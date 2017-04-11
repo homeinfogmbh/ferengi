@@ -1,0 +1,21 @@
+#! /usr/bin/env python3
+"""ferengi
+
+Greedy data acquisition
+
+Usage:
+    ferengi weather [options]
+
+Options:
+    --help, -h          Show this page.
+    --force, -f         Force data import.
+"""
+from ferengi.weather import City
+
+
+if __name__ == '__main__':
+    options = docopt(__doc__)
+    force = options['--force']
+
+    if options['weather']:
+        City.update_all()
