@@ -180,9 +180,6 @@ class Forecast(_WeatherModel):
             forecast.wind_deg = dictionary['wind']['deg']
 
         with suppress(KeyError):
-            forecast.clouds_all = dictionary['clouds']['all']
-
-        with suppress(KeyError):
             forecast.rain_3h = dictionary['rain']['3h']
 
         with suppress(KeyError):
@@ -192,6 +189,63 @@ class Forecast(_WeatherModel):
 
         for weather in dictionary['weather']:
             yield Weather.from_dict(forecast, weather)
+
+    def to_dict(self):
+        """Converts the forecast into a JSON-compliant dictionary"""
+        dictionary = {'dt': self.dt.isoformat()}
+        main = {}
+
+        if self.temp is not None:
+            main['temp'] = self.temp
+
+        if self.temp_min is not None:
+            main['temp_min'] = self.temp_min
+
+        if self.temp_max is not None:
+            main['temp_max'] = self.temp_max
+
+        if self.pressure is not None:
+            main['pressure'] = self.pressure
+
+        if self.sea_level is not None:
+            main['sea_level'] = self.sea_level
+
+        if self.grnd_level is not None:
+            main['grnd_level'] = self.grnd_level
+
+        if self.humidity is not None:
+            main['humidity'] = self.humidity
+
+        if main:
+            dictionary['main'] = main
+
+        if self.clouds_all is not None:
+            dictionary['clouds'] = {'all': self.clouds_all}
+
+        wind = {}
+
+        if self.wind_speed is not None:
+            wind['speed'] = self.wind_speed
+
+        if self.wind_deg is not None:
+            wind['deg'] = self.wind_deg
+
+        if wind:
+            dictionary['wind'] = wind
+
+        if self.rain_3h is not None:
+            dictionary['rain'] = {'3h': self.rain_3h}
+
+        if self.snow_3h is not None:
+            dictionary['snow'] = {'3h': self.snow_3h}
+
+        weather = [weather.to_dict() for weather in Weather.select().where(
+            Weather.forecast == self)]
+
+        if weather:
+            dictionary['weather'] = weather
+
+        return dictionary
 
 
 class Weather(_WeatherModel):
@@ -215,6 +269,14 @@ class Weather(_WeatherModel):
         weather.description = dictionary['description']
         weather.icon = dictionary['icon']
         return weather
+
+    def to_dict(self):
+        """Converts the weather into a JSON-compliant dictionary"""
+        return {
+            'id': self.weather_id,
+            'main': self.main,
+            'description': self.description,
+            'icon': self.icon}
 
 
 class Client():

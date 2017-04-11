@@ -11,7 +11,9 @@ setup(
         ('/usr/bin/', ['files/ferengi']),
         ('/usr/lib/systemd/system/',
          ['files/ferengi@.service',
-          'files/ferengi@.timer'])],
+          'files/ferengi@.timer']),
+        ('/usr/share/', ['files/ferengi.wsgi']),
+        ('/etc/uwsgi/apps-available/', ['files/ferengi.ini'])],
     description=(
         'Frankly Everything, but Real Estates'
         ' Notoriously Greedy Importer'))
