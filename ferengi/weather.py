@@ -5,8 +5,9 @@ from contextlib import suppress
 from json import loads
 
 from requests import get
-from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
-    SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
+from peewee import Model, PrimaryKeyField, ForeignKeyField, IntegerField, \
+    SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField, \
+    BooleanField
 
 from configparserplus import ConfigParserPlus
 
@@ -66,6 +67,7 @@ class _WeatherModel(Model):
 class City(_WeatherModel):
     """Available regions"""
 
+    city_id = IntegerField()
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
