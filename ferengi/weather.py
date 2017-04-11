@@ -67,7 +67,6 @@ class _WeatherModel(Model):
 class City(_WeatherModel):
     """Available regions"""
 
-    city_id = IntegerField()
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
@@ -79,7 +78,7 @@ class City(_WeatherModel):
     def from_dict(cls, dictionary):
         """Creates a city from a dictionary"""
         city = cls()
-        city.city_id = dictionary['_id']
+        city.id = dictionary['_id']
         city.name = dictionary['name']
         city.country = dictionary['country']
         city.longitude = dictionary['coord']['lon']
