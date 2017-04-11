@@ -53,10 +53,18 @@ class APIError(Exception):
         return self.response.text
 
 
-class City(Model):
-    """Available regions"""
+class _WeatherModel(Model):
+    """Abstract, basic weather DB model"""
+
+    class Meta:
+        database = database
+        schema = database.database
 
     id = PrimaryKeyField()
+
+
+class City(_WeatherModel):
+    """Available regions"""
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
@@ -115,10 +123,9 @@ class City(Model):
             raise UpToDate() from None
 
 
-class Forecast(Model):
+class Forecast(_WeatherModel):
     """Regional weather forecast"""
 
-    id = PrimaryKeyField()
     city = ForeignKeyField(City, db_column='region')
     dt = DateTimeField()
     temp = SmallIntegerField(null=True, default=None)
@@ -188,10 +195,9 @@ class Forecast(Model):
             yield Weather.from_dict(forecast, weather)
 
 
-class Weather(Model):
+class Weather(_WeatherModel):
     """Weather details"""
 
-    id = PrimaryKeyField()
     forecast = ForeignKeyField(Forecast, db_column='forecast')
     weather_id = SmallIntegerField()
     main = CharField(255)
