@@ -7,6 +7,7 @@ from json import loads
 from requests import get
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
+from peeweeplus import dec2dict
 
 from configparserplus import ConfigParserPlus
 
@@ -225,19 +226,19 @@ class Forecast(_WeatherModel):
         wind = {}
 
         if self.wind_speed is not None:
-            wind['speed'] = self.wind_speed
+            wind['speed'] = dec2dict(self.wind_speed)
 
         if self.wind_deg is not None:
-            wind['deg'] = self.wind_deg
+            wind['deg'] = dec2dict(self.wind_deg)
 
         if wind:
             dictionary['wind'] = wind
 
         if self.rain_3h is not None:
-            dictionary['rain'] = {'3h': self.rain_3h}
+            dictionary['rain'] = {'3h': dec2dict(self.rain_3h)}
 
         if self.snow_3h is not None:
-            dictionary['snow'] = {'3h': self.snow_3h}
+            dictionary['snow'] = {'3h': dec2dict(self.snow_3h)}
 
         weather = [weather.to_dict() for weather in Weather.select().where(
             Weather.forecast == self)]
