@@ -134,7 +134,7 @@ class Forecast(_WeatherModel):
     temp_max = SmallIntegerField(null=True, default=None)
     pressure = SmallIntegerField(null=True, default=None)
     sea_level = SmallIntegerField(null=True, default=None)
-    grd_level = SmallIntegerField(null=True, default=None)
+    grnd_level = SmallIntegerField(null=True, default=None)
     humidity = SmallIntegerField(null=True, default=None)
     clouds_all = SmallIntegerField(null=True, default=None)
     wind_speed = DecimalField(4, 2, null=True, default=None)
@@ -167,7 +167,7 @@ class Forecast(_WeatherModel):
             forecast.sea_level = dictionary['main']['sea_level']
 
         with suppress(KeyError):
-            forecast.grd_level = dictionary['main']['grd_level']
+            forecast.grnd_level = dictionary['main']['grnd_level']
 
         with suppress(KeyError):
             forecast.humidity = dictionary['main']['humidity']
