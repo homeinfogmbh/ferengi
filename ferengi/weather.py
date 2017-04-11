@@ -5,9 +5,8 @@ from contextlib import suppress
 from json import loads
 
 from requests import get
-from peewee import Model, PrimaryKeyField, ForeignKeyField, IntegerField, \
-    SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField, \
-    BooleanField
+from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
+    SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
 
 from configparserplus import ConfigParserPlus
 
