@@ -15,7 +15,7 @@ class WeatherHandler(ResourceHandler):
 
     def get(self):
         """Handles GET requests"""
-        if self.resource is not None:
+        if self.resource is None:
             raise Error('No city specified.') from None
         else:
             try:
