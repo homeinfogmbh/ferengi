@@ -111,7 +111,7 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
-        for forecast in client(self.city_id)['list']:
+        for forecast in client(self.id)['list']:
             for record in Forecast.from_dict(self, forecast):
                 record.save()
 
