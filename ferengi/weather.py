@@ -80,7 +80,7 @@ class City(_WeatherModel):
         city.city_id = dictionary['_id']
         city.name = dictionary['name']
         city.country = dictionary['country']
-        city.longitude = dictionary['coord']['long']
+        city.longitude = dictionary['coord']['lon']
         city.latitude = dictionary['coord']['lat']
         return city
 
