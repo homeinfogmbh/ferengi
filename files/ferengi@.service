@@ -3,5 +3,7 @@ Description=Update weather data
 After=network.target
 
 [Service]
+User=ferengi
+Group=ferengi
 Type=oneshot
 ExecStart=/usr/bin/ferengi weather
