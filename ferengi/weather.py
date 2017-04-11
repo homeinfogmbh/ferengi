@@ -65,6 +65,7 @@ class _WeatherModel(Model):
 
 class City(_WeatherModel):
     """Available regions"""
+
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
@@ -126,7 +127,7 @@ class City(_WeatherModel):
 class Forecast(_WeatherModel):
     """Regional weather forecast"""
 
-    city = ForeignKeyField(City, db_column='region')
+    city = ForeignKeyField(City, db_column='city')
     dt = DateTimeField()
     temp = SmallIntegerField(null=True, default=None)
     temp_min = SmallIntegerField(null=True, default=None)
