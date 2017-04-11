@@ -5,7 +5,7 @@ from contextlib import suppress
 from json import loads
 
 from requests import get
-from peewee import Model, PrimaryKeyField, ForeignKeyField, \
+from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
 
 from configparserplus import ConfigParserPlus
@@ -62,6 +62,7 @@ class City(Model):
     longitude = FloatField()
     latitude = FloatField()
     last_update = DateTimeField(null=True, default=None)
+    auto_update = BooleanField(default=False)
 
     @classmethod
     def from_dict(cls, dictionary):
@@ -79,6 +80,12 @@ class City(Model):
         """Initializes table from dictionary list"""
         for dictionary in list_:
             cls.from_dict(dictionary).save()
+
+    @classmethod
+    def update_all(cls, force=False):
+        """Updates all cities set to be auto updated"""
+        for city in cls.select().where(cls.auto_update == 1):
+            city.update_forecast(force=force)
 
     @property
     def up2date(self):
@@ -114,18 +121,18 @@ class Forecast(Model):
     id = PrimaryKeyField()
     city = ForeignKeyField(City, db_column='region')
     dt = DateTimeField()
-    temp = DecimalField(5, 2)
-    temp_min = DecimalField(5, 2)
-    temp_max = DecimalField(5, 2)
-    pressure = DecimalField(6, 2)
-    sea_level = DecimalField(6, 2)
-    grd_level = DecimalField(6, 2)
-    humidity = SmallIntegerField()
-    clouds_all = SmallIntegerField()
-    wind_speed = DecimalField(4, 2)
-    wind_deg = DecimalField(6, 3)
-    rain_3h = DecimalField(5, 3, null=True, default=None)
-    snow_3h = DecimalField(5, 3, null=True, default=None)
+    temp = SmallIntegerField(null=True, default=None)
+    temp_min = SmallIntegerField(null=True, default=None)
+    temp_max = SmallIntegerField(null=True, default=None)
+    pressure = SmallIntegerField(null=True, default=None)
+    sea_level = SmallIntegerField(null=True, default=None)
+    grd_level = SmallIntegerField(null=True, default=None)
+    humidity = SmallIntegerField(null=True, default=None)
+    clouds_all = SmallIntegerField(null=True, default=None)
+    wind_speed = DecimalField(4, 2, null=True, default=None)
+    wind_deg = DecimalField(6, 3, null=True, default=None)
+    rain_3h = DecimalField(6, 3, null=True, default=None)
+    snow_3h = DecimalField(6, 3, null=True, default=None)
 
     @classmethod
     def from_dict(cls, city, dictionary):
@@ -135,22 +142,44 @@ class Forecast(Model):
         forecast = cls()
         forecast.city = city
         forecast.dt = datetime.fromtimestamp(dictionary['dt'])
-        forecast.temp = dictionary['main']['temp']
-        forecast.temp_min = dictionary['main']['temp_min']
-        forecast.temp_max = dictionary['main']['temp_max']
-        forecast.pressure = dictionary['main']['pressure']
-        forecast.sea_level = dictionary['main']['sea_level']
-        forecast.grd_level = dictionary['main']['grd_level']
-        forecast.humidity = dictionary['main']['humidity']
-        forecast.clouds_all = dictionary['clouds']['all']
-        forecast.wind_speed = dictionary['wind']['speed']
-        forecast.wind_deg = dictionary['wind']['deg']
-        forecast.clouds_all = dictionary['clouds']['all']
 
-        with suppress(AttributeError):
+        with suppress(KeyError):
+            forecast.temp = dictionary['main']['temp']
+
+        with suppress(KeyError):
+            forecast.temp_min = dictionary['main']['temp_min']
+
+        with suppress(KeyError):
+            forecast.temp_max = dictionary['main']['temp_max']
+
+        with suppress(KeyError):
+            forecast.pressure = dictionary['main']['pressure']
+
+        with suppress(KeyError):
+            forecast.sea_level = dictionary['main']['sea_level']
+
+        with suppress(KeyError):
+            forecast.grd_level = dictionary['main']['grd_level']
+
+        with suppress(KeyError):
+            forecast.humidity = dictionary['main']['humidity']
+
+        with suppress(KeyError):
+            forecast.clouds_all = dictionary['clouds']['all']
+
+        with suppress(KeyError):
+            forecast.wind_speed = dictionary['wind']['speed']
+
+        with suppress(KeyError):
+            forecast.wind_deg = dictionary['wind']['deg']
+
+        with suppress(KeyError):
+            forecast.clouds_all = dictionary['clouds']['all']
+
+        with suppress(KeyError):
             forecast.rain_3h = dictionary['rain']['3h']
 
-        with suppress(AttributeError):
+        with suppress(KeyError):
             forecast.snow_3h = dictionary['snow']['3h']
 
         yield forecast
@@ -193,7 +222,7 @@ class Client():
 
     def __call__(self, city_id, raw=False):
         """Retrievels weather data for the respective city ID"""
-        params = {'id': city_id, 'appid': self.api_key}
+        params = {'id': city_id, 'appid': self.api_key, 'units': 'metric'}
         response = get(self.base_url, params=params)
 
         if raw:
