@@ -144,7 +144,7 @@ class Forecast(_WeatherModel):
             except KeyError:
                 pass
             else:
-                yield cls._from_dict(city, timestamp, d, parent=forecast)
+                yield cls._from_dict(city, sub_forecast, d, parent=forecast)
 
     def to_dict(self):
         """Converts the forecast into a JSON-compliant dictionary"""
