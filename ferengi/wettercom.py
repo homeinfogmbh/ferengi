@@ -76,7 +76,7 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
-        forecasts = client(self.ident)['forecast']
+        forecasts = client(self.ident)['city']['forecast']
 
         for forecast in forecasts:
             for record in Forecast.from_dict(
