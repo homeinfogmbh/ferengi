@@ -5,7 +5,7 @@ from datetime import datetime
 from peewee import DoesNotExist
 from wsgilib import Error, JSON, ResourceHandler
 
-from ferengi.weather import City, Forecast
+from ferengi.openweathermap import City, Forecast
 
 __all__ = ['SERVICES']
 
