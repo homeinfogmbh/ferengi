@@ -130,6 +130,8 @@ class Forecast(_WeatherModel):
         forecast.tn = dictionary['tn']
         forecast.ws = dictionary['ws']
         forecast.d = dictionary['d']
+        forecast.wd_txt = dictionary['wd_txt']
+        forecast.w_txt = dictionary['w_txt']
         return forecast
 
     @classmethod
@@ -159,7 +161,9 @@ class Forecast(_WeatherModel):
             'tp': dec2dict(self.tp),
             'tn': self.tn,
             'ws': self.ws,
-            'd': self.d}
+            'd': self.d,
+            'wd_txt': self.wd_txt,
+            'wd_txt': self.w_txt}
 
         if self.parent is None:
             for child in self.__class__.select().where(
