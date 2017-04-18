@@ -140,7 +140,7 @@ class Forecast(_WeatherModel):
 
         for sub_forecast in cls.SUB_FORECASTS:
             try:
-                d = forecast[sub_forecast]
+                d = dictionary[sub_forecast]
             except KeyError:
                 pass
             else:
