@@ -36,6 +36,7 @@ class _WeatherModel(Model):
 class City(_WeatherModel):
     """Available regions"""
 
+    ident = CharField(255)
     name = CharField(255)
     post_code = CharField(255)
     region_code = CharField(2)
@@ -75,8 +76,11 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
-        for forecast in client(self.id)['list']:
-            for record in Forecast.from_dict(self, forecast):
+        forecasts = client(self.ident)['forecast']
+
+        for forecast in forecasts:
+            for record in Forecast.from_dict(
+                    self, forecasts, forecasts[forecast]):
                 record.save()
 
     def update_forecast(self, force=False):
