@@ -192,12 +192,12 @@ class Client():
     def __init__(self, base_url=None, user_name=None, api_key=None):
         """Sets base URL and API key"""
         self.base_url = base_url or self.config['base_url']
-        self.api_key = api_key or self.config['api_key']
         self.user_name = user_name or self.config['user_name']
+        self.api_key = api_key or self.config['api_key']
 
-    def __call__(self, city_id, raw=False):
+    def __call__(self, city, raw=False):
         """Retrievels weather data for the respective city ID"""
-        response = get(self.base_url.format(city_id, self.checksum(city_id)))
+        response = get(self.url(city))
 
         if raw:
             return response
@@ -215,6 +215,10 @@ class Client():
         """Returns the API checksum"""
         hashval = self.user_name + self.api_key + city
         return md5(hashval.encode()).hexdigest()
+
+    def url(self, city):
+        """Returns the URL for the respective city"""
+        return self.base_url.format(city, self.user_name, self.checksum(city))
 
 
 client = Client()   # Default client
