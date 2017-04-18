@@ -109,6 +109,8 @@ class Forecast(_WeatherModel):
     tn = SmallIntegerField()
     ws = SmallIntegerField()
     d = IntegerField()
+    wd_txt = CharField(255)
+    w_txt = CharField(255)
 
     @classmethod
     def _from_dict(cls, city, timestamp, dictionary, parent=None):
