@@ -24,7 +24,7 @@ __all__ = [
     'Client',
     'client']
 
-config = ConfigParserPlus('/etc/ferengi.d/weather.conf')
+config = ConfigParserPlus('/etc/ferengi.d/openweathermap.conf')
 database = ferengi_database(
     config['db']['database'],
     user=config['db']['user'],
