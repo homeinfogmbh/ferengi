@@ -1,4 +1,4 @@
-"""Weather data import"""
+"""Open Weather Map weather data import"""
 
 from datetime import datetime, timedelta
 from contextlib import suppress
