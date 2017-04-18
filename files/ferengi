@@ -4,7 +4,8 @@
 Greedy data acquisition
 
 Usage:
-    ferengi weather [options]
+    ferengi openweathermap [options]
+    ferengi wettercom [options]
 
 Options:
     --help, -h          Show this page.
@@ -12,12 +13,14 @@ Options:
 """
 from docopt import docopt
 
-from ferengi.weather import City
-
 
 if __name__ == '__main__':
     options = docopt(__doc__)
     force = options['--force']
 
-    if options['weather']:
+    if options['openweathermap']:
+        from ferengi.openweathermap import City
+        City.update_all()
+    elif options['wettercom']:
+        from ferengi.wettercom import City
         City.update_all()
