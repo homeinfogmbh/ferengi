@@ -80,7 +80,7 @@ class City(_WeatherModel):
 
         for forecast in forecasts:
             for record in Forecast.from_dict(
-                    self, forecasts, forecasts[forecast]):
+                    self, forecast, forecasts[forecast]):
                 record.save()
 
     def update_forecast(self, force=False):
