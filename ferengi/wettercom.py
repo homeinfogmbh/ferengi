@@ -11,7 +11,7 @@ from peeweeplus import dec2dict
 
 from configparserplus import ConfigParserPlus
 
-from .api import ferengi_database
+from .api import UpToDate, APIError, ferengi_database
 
 
 __all__ = ['City', 'Forecast', 'Client', 'client']
@@ -21,29 +21,6 @@ database = ferengi_database(
     config['db']['database'],
     user=config['db']['user'],
     passwd=config['db']['passwd'])
-
-
-class UpToDate(Exception):
-    """Indicates that the record is up to date"""
-
-    pass
-
-
-class APIError(Exception):
-    """Indicates that data could not be received from the API"""
-
-    def __init__(self, response):
-        """Sets status code and response text"""
-        super().__init__(response.text)
-        self.response = response
-
-    def __int__(self):
-        """Returns the status code"""
-        return self.response.status_code
-
-    def __str__(self):
-        """Returns the response text"""
-        return self.response.text
 
 
 class _WeatherModel(Model):
