@@ -1,5 +1,5 @@
 [Unit]
-Description=Update weather data
+Description=Update FERENGI data
 After=network.target
 
 [Service]
