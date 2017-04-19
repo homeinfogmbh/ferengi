@@ -163,7 +163,7 @@ class Forecast(_WeatherModel):
             'ws': self.ws,
             'd': self.d,
             'wd_txt': self.wd_txt,
-            'wd_txt': self.w_txt}
+            'w_txt': self.w_txt}
 
         if self.parent is None:
             for child in self.__class__.select().where(
