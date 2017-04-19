@@ -174,22 +174,22 @@ class Forecast(_WeatherModel):
         main = {}
 
         if self.temp is not None:
-            main['temp'] = self.temp
+            main['temp'] = dec2dict(self.temp)
 
         if self.temp_min is not None:
-            main['temp_min'] = self.temp_min
+            main['temp_min'] = dec2dict(self.temp_min)
 
         if self.temp_max is not None:
-            main['temp_max'] = self.temp_max
+            main['temp_max'] = dec2dict(self.temp_max)
 
         if self.pressure is not None:
-            main['pressure'] = self.pressure
+            main['pressure'] = dec2dict(self.pressure)
 
         if self.sea_level is not None:
-            main['sea_level'] = self.sea_level
+            main['sea_level'] = dec2dict(self.sea_level)
 
         if self.grnd_level is not None:
-            main['grnd_level'] = self.grnd_level
+            main['grnd_level'] = dec2dict(self.grnd_level)
 
         if self.humidity is not None:
             main['humidity'] = self.humidity
