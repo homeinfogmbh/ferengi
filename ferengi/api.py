@@ -39,4 +39,5 @@ def ferengi_database(database, user=None, passwd=None):
         'ferengi_{}'.format(database),
         host='localhost',
         user=user,
-        passwd=passwd)
+        passwd=passwd,
+        closing=True)
