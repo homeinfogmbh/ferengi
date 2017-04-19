@@ -105,7 +105,7 @@ class Forecast(_WeatherModel):
     w = SmallIntegerField()
     tx = SmallIntegerField()
     pc = SmallIntegerField()
-    tp = DecimalField(4, 2)
+    tp = DecimalField(3, 1)
     tn = SmallIntegerField()
     ws = SmallIntegerField()
     d = IntegerField()
