@@ -17,7 +17,6 @@ __all__ = [
     'config',
     'database',
     'UpToDate',
-    'APIError',
     'City',
     'Forecast',
     'Weather',
