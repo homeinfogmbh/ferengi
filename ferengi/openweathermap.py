@@ -81,6 +81,11 @@ class City(_WeatherModel):
         else:
             return datetime.now() - self.last_update <= timedelta(days=1)
 
+    @property
+    def forecasts(self):
+        """Yields the current forecasts for this city"""
+        return Forecast.select().where(Forecast.city == self)
+
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary"""
         return None     # TODO: implement
@@ -94,7 +99,11 @@ class City(_WeatherModel):
     def update_forecast(self, force=False):
         """Updates the city's weather forecast"""
         if not self.up2date or force:
-            return self._update_forecast()
+            old_forecasts = tuple(self.forecasts)
+            self._update_forecast()
+
+            for old_forecast in old_forecasts:
+                old_forecast.remove()
         else:
             raise UpToDate() from None
 
@@ -223,6 +232,13 @@ class Forecast(_WeatherModel):
             dictionary['weather'] = weather
 
         return dictionary
+
+    def remove(self):
+        """Removes this forecast."""
+        for weather in Weather.select().where(Weather.forecast == self):
+            weather.delete_instance()
+
+        self.delete_instance()
 
 
 class Weather(_WeatherModel):
