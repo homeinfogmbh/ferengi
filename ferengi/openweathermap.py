@@ -312,7 +312,8 @@ class Client():
         if raw:
             return response
         elif response.status_code == 200:
-            print(response.text)
+            json = loads(response.text)
+            print(json['list'])
             return loads(response.text)
 
         raise APIError(response)
