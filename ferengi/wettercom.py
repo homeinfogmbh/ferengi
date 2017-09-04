@@ -45,6 +45,9 @@ class City(_WeatherModel):
     last_update = DateTimeField(null=True, default=None)
     auto_update = BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
     @classmethod
     def from_dict(cls, dictionary):
         """Creates a city from a dictionary"""
@@ -60,7 +63,12 @@ class City(_WeatherModel):
     def update_all(cls, force=False):
         """Updates all cities set to be auto updated"""
         for city in cls.select().where(cls.auto_update == 1):
-            city.update_forecast(force=force)
+            try:
+                city.update_forecast(force=force)
+            except UpToDate:
+                print('Forecast for {} is already up-to-date.'.format(city))
+            else:
+                print('Updated forecast for {}.'.format(city))
 
     @property
     def up2date(self):
