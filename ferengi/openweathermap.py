@@ -88,7 +88,18 @@ class City(_WeatherModel):
 
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary"""
-        return None     # TODO: implement
+        dictionary = {
+            'id': self.id,
+            'name': self.name,
+            'country': self.country,
+            'longitude': self.longitude,
+            'latitude': self.latitude,
+            'auto_update': self.auto_update}
+
+        if self.last_update is not None:
+            dictionary['last_update'] = self.last_update.isoformat()
+
+        return dictionary
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
@@ -104,6 +115,9 @@ class City(_WeatherModel):
 
             for old_forecast in old_forecasts:
                 old_forecast.remove()
+
+            self.last_update = datetime.now()
+            self.save()
         else:
             raise UpToDate() from None
 

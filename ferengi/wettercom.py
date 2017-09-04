@@ -72,7 +72,13 @@ class City(_WeatherModel):
 
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary"""
-        return None     # TODO: implement
+        return {
+            'id': self.id,
+            'name': self.name,
+            'post_code': self.post_code,
+            'region_code': self.region_code,
+            'url': self.url,
+            'country': self.country}
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
