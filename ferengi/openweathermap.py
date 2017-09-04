@@ -31,7 +31,7 @@ database = ferengi_database(
 
 
 class _WeatherModel(Model):
-    """Abstract, basic weather DB model"""
+    """Abstract, basic weather DB model."""
 
     class Meta:
         database = database
@@ -41,7 +41,7 @@ class _WeatherModel(Model):
 
 
 class City(_WeatherModel):
-    """Available regions"""
+    """Available regions."""
 
     name = CharField(255)
     country = CharField(2)
@@ -55,7 +55,7 @@ class City(_WeatherModel):
 
     @classmethod
     def from_dict(cls, dictionary):
-        """Creates a city from a dictionary"""
+        """Creates a city from a dictionary."""
         city = cls()
         city.id = dictionary['_id']
         city.name = dictionary['name']
@@ -66,13 +66,13 @@ class City(_WeatherModel):
 
     @classmethod
     def initialize(cls, list_):
-        """Initializes table from dictionary list"""
+        """Initializes table from dictionary list."""
         for dictionary in list_:
             cls.from_dict(dictionary).save()
 
     @classmethod
     def update_all(cls, force=False):
-        """Updates all cities set to be auto updated"""
+        """Updates all cities set to be auto updated."""
         for city in cls.select().where(cls.auto_update == 1):
             try:
                 city.update_forecast(force=force)
@@ -83,7 +83,7 @@ class City(_WeatherModel):
 
     @property
     def up2date(self):
-        """Determines whether weather is up to date"""
+        """Determines whether weather is up to date."""
         if self.last_update is None:
             return False
         else:
@@ -91,11 +91,11 @@ class City(_WeatherModel):
 
     @property
     def forecasts(self):
-        """Yields the current forecasts for this city"""
+        """Yields the current forecasts for this city."""
         return Forecast.select().where(Forecast.city == self)
 
     def to_dict(self):
-        """Converts the record to a JSON-compilant dictionary"""
+        """Converts the record to a JSON-compilant dictionary."""
         dictionary = {
             'id': self.id,
             'name': self.name,
@@ -110,13 +110,13 @@ class City(_WeatherModel):
         return dictionary
 
     def _update_forecast(self):
-        """Updates the city's weather forecast"""
+        """Updates the city's weather forecast."""
         for forecast in client(self.id)['list']:
             for record in Forecast.from_dict(self, forecast):
                 record.save()
 
     def update_forecast(self, force=False):
-        """Updates the city's weather forecast"""
+        """Updates the city's weather forecast."""
         if not self.up2date or force:
             old_forecasts = tuple(self.forecasts)
             self._update_forecast()
@@ -131,7 +131,7 @@ class City(_WeatherModel):
 
 
 class Forecast(_WeatherModel):
-    """Regional weather forecast"""
+    """Regional weather forecast."""
 
     city = ForeignKeyField(City, db_column='city')
     dt = DateTimeField()
@@ -151,7 +151,7 @@ class Forecast(_WeatherModel):
     @classmethod
     def from_dict(cls, city, dictionary):
         """Creates a forecast for the respective
-        city from the specified dictionary
+        city from the specified dictionary.
         """
         forecast = cls()
         forecast.city = city
@@ -199,7 +199,7 @@ class Forecast(_WeatherModel):
             yield Weather.from_dict(forecast, weather)
 
     def to_dict(self):
-        """Converts the forecast into a JSON-compliant dictionary"""
+        """Converts the forecast into a JSON-compliant dictionary."""
         dictionary = {'dt': self.dt.isoformat()}
         main = {}
 
@@ -264,7 +264,7 @@ class Forecast(_WeatherModel):
 
 
 class Weather(_WeatherModel):
-    """Weather details"""
+    """Weather details."""
 
     forecast = ForeignKeyField(Forecast, db_column='forecast')
     weather_id = SmallIntegerField()
@@ -275,7 +275,7 @@ class Weather(_WeatherModel):
     @classmethod
     def from_dict(cls, forecast, dictionary):
         """Creates a weather record for the respective
-        forecast from the specified dictionary
+        forecast from the specified dictionary.
         """
         weather = cls()
         weather.forecast = forecast
@@ -286,7 +286,7 @@ class Weather(_WeatherModel):
         return weather
 
     def to_dict(self):
-        """Converts the weather into a JSON-compliant dictionary"""
+        """Converts the weather into a JSON-compliant dictionary."""
         return {
             'id': self.weather_id,
             'main': self.main,
@@ -295,7 +295,7 @@ class Weather(_WeatherModel):
 
 
 class Client():
-    """Receive and store weather data"""
+    """Receive and store weather data."""
 
     def __init__(self, base_url=None, api_key=None, **params):
         """Sets base URL and API key"""
@@ -304,7 +304,7 @@ class Client():
         self.params = params
 
     def __call__(self, city_id, raw=False):
-        """Retrievels weather data for the respective city ID"""
+        """Retrievels weather data for the respective city ID."""
         self.params.update(
             {'id': city_id, 'appid': self.api_key})
         response = get(self.base_url, params=self.params)
@@ -313,12 +313,12 @@ class Client():
             return response
         elif response.status_code == 200:
             return loads(response.text)
-        else:
-            raise APIError(response)
+
+        raise APIError(response)
 
     @property
     def config(self):
-        """Returns the API config section"""
+        """Returns the API config section."""
         return config['api']
 
 
