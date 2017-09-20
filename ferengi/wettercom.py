@@ -9,14 +9,14 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, IntegerField
 from peeweeplus import dec2dict
 
-from configparserplus import ConfigParserPlus
+from configlib import INIParser
 
 from .api import UpToDate, APIError, ferengi_database
 
 
 __all__ = ['City', 'Forecast', 'Client', 'client']
 
-config = ConfigParserPlus('/etc/ferengi.d/wettercom.conf')
+config = INIParser('/etc/ferengi.d/wettercom.conf')
 database = ferengi_database(
     config['db']['database'],
     user=config['db']['user'],
