@@ -9,7 +9,7 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
 from peeweeplus import dec2dict
 
-from configparserplus import ConfigParserPlus
+from configlib import INIParser
 
 from .api import UpToDate, APIError, ferengi_database
 
@@ -23,7 +23,7 @@ __all__ = [
     'Client',
     'client']
 
-config = ConfigParserPlus('/etc/ferengi.d/openweathermap.conf')
+config = INIParser('/etc/ferengi.d/openweathermap.conf')
 database = ferengi_database(
     config['db']['database'],
     user=config['db']['user'],
