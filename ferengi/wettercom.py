@@ -11,24 +11,21 @@ from peeweeplus import dec2dict
 
 from configlib import INIParser
 
-from .api import UpToDate, APIError, ferengi_database
+from .api import UpToDate, APIError, get_database
 
 
-__all__ = ['City', 'Forecast', 'Client', 'client']
+__all__ = ['City', 'Forecast', 'Client', 'CLIENT']
 
-config = INIParser('/etc/ferengi.d/wettercom.conf')
-database = ferengi_database(
-    config['db']['database'],
-    user=config['db']['user'],
-    passwd=config['db']['passwd'])
+CONFIG = INIParser('/etc/ferengi.d/wettercom.conf')
+DATABASE = get_database(CONFIG)
 
 
 class _WeatherModel(Model):
     """Abstract, basic weather DB model"""
 
     class Meta:
-        database = database
-        schema = database.database
+        database = DATABASE
+        schema = DATABASE.database
 
     id = PrimaryKeyField()
 
@@ -75,8 +72,8 @@ class City(_WeatherModel):
         """Determines whether weather is up to date"""
         if self.last_update is None:
             return False
-        else:
-            return datetime.now() - self.last_update <= timedelta(days=1)
+
+        return datetime.now() - self.last_update <= timedelta(days=1)
 
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary"""
@@ -90,7 +87,7 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast"""
-        forecasts = client(self.ident)['city']['forecast']
+        forecasts = CLIENT(self.ident)['city']['forecast']
 
         for forecast in forecasts:
             for record in Forecast.from_dict(
@@ -210,7 +207,7 @@ class Client():
     @property
     def config(self):
         """Returns the API config section"""
-        return config['api']
+        return CONFIG['api']
 
     def checksum(self, city):
         """Returns the API checksum"""
@@ -222,4 +219,4 @@ class Client():
         return self.base_url.format(city, self.user_name, self.checksum(city))
 
 
-client = Client()   # Default client
+CLIENT = Client()   # Default client

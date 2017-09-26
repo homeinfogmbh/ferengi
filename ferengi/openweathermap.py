@@ -11,31 +11,26 @@ from peeweeplus import dec2dict
 
 from configlib import INIParser
 
-from .api import UpToDate, APIError, ferengi_database
+from .api import UpToDate, APIError, get_database
 
 __all__ = [
-    'config',
-    'database',
     'UpToDate',
     'City',
     'Forecast',
     'Weather',
     'Client',
-    'client']
+    'CLIENT']
 
-config = INIParser('/etc/ferengi.d/openweathermap.conf')
-database = ferengi_database(
-    config['db']['database'],
-    user=config['db']['user'],
-    passwd=config['db']['passwd'])
+CONFIG = INIParser('/etc/ferengi.d/openweathermap.conf')
+DATABASE = get_database(CONFIG)
 
 
 class _WeatherModel(Model):
     """Abstract, basic weather DB model."""
 
     class Meta:
-        database = database
-        schema = database.database
+        database = DATABASE
+        schema = DATABASE.database
 
     id = PrimaryKeyField()
 
@@ -111,7 +106,7 @@ class City(_WeatherModel):
 
     def _update_forecast(self):
         """Updates the city's weather forecast."""
-        for forecast in client(self.id)['list']:
+        for forecast in CLIENT(self.id)['list']:
             for record in Forecast.from_dict(self, forecast):
                 record.save()
 
@@ -319,7 +314,7 @@ class Client():
     @property
     def config(self):
         """Returns the API config section."""
-        return config['api']
+        return CONFIG['api']
 
 
-client = Client(units='metric', lang='de')   # Default client
+CLIENT = Client(units='metric', lang='de')   # Default client

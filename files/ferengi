@@ -11,13 +11,14 @@ Options:
     --help, -h          Show this page.
     --force, -f         Force data import.
 """
-from sys import stderr
+from sys import stderr, exit as exit_
 from docopt import docopt
 from ferengi.api import APIError
 
 
-if __name__ == '__main__':
-    options = docopt(__doc__)
+def main(options):
+    """Runs the FERENGI client."""
+
     force = options['--force']
 
     if options['openweathermap']:
@@ -25,16 +26,22 @@ if __name__ == '__main__':
 
         try:
             City.update_all()
-        except APIError as e:
-            print('Caught API error ({}): {}'.format(int(e), str(e)),
-                  file=stderr)
-            exit(1)
+        except APIError as api_error:
+            print('Caught API error ({}): {}'.format(
+                int(api_error), str(api_error)), file=stderr)
+            return 1
     elif options['wettercom']:
         from ferengi.wettercom import City
 
         try:
             City.update_all()
-        except APIError as e:
-            print('Caught API error ({}): {}'.format(int(e), str(e)),
-                  file=stderr)
-            exit(1)
+        except APIError as api_error:
+            print('Caught API error ({}): {}'.format(
+                int(api_error), str(api_error)), file=stderr)
+            return 1
+
+    return 0
+
+
+if __name__ == '__main__':
+    exit_(main(docopt(__doc__)))
