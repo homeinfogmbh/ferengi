@@ -9,7 +9,6 @@ from ferengi.openweathermap import City, Forecast
 
 __all__ = ['ROUTER']
 
-
 ROUTER = Router()
 
 
