@@ -2,6 +2,6 @@
 """Terminal query interface"""
 
 from wsgilib import RestApp
-from ferengi.wsgi import SERVICES
+from ferengi.wsgi import ROUTER
 
-application = RestApp(SERVICES, cors=True)
+application = RestApp(ROUTER, cors=True)
