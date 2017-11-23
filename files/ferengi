@@ -5,11 +5,12 @@ Greedy data acquisition
 
 Usage:
     ferengi openweathermap [options]
-    ferengi roa
+    ferengi [options]
 
 Options:
-    --help, -h          Show this page.
-    --force, -f         Force data import.
+    --force, -f             Force data import.
+    --rules-of-acquisition  Print out the rules of acquisition.
+    --help, -h              Show this page.
 """
 from sys import stderr, exit as exit_
 
@@ -31,7 +32,8 @@ def main(options):
             print('Caught API error ({}): {}'.format(
                 int(api_error), str(api_error)), file=stderr)
             return 1
-    elif options['roa']:
+
+    if options['--rules-of-acquisition']:
         print(roa())
 
     return 0
