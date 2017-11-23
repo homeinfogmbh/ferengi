@@ -15,9 +15,8 @@ from sys import stderr, exit as exit_
 
 from docopt import docopt
 
-from ferengi.api import APIError
+from ferengi.api import APIError, roa
 from ferengi.openweathermap import City
-from ferengi.util import roa
 
 
 def main(options):
