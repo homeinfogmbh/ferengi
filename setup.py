@@ -7,8 +7,8 @@ setup(
     version='latest',
     author='Richard Neumann',
     packages=['ferengi'],
+    scripts=['files/ferengi'],
     data_files=[
-        ('/usr/bin/', ['files/ferengi']),
         ('/usr/lib/systemd/system/',
          ['files/ferengi@.service',
           'files/ferengi@.timer']),
