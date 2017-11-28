@@ -58,7 +58,7 @@ def get_database(config):
 
 
 def roa():
-    """Print rules of acquisition."""
+    """Prints the rules of acquisition."""
 
     with open(ROA, 'rb') as file:
         compressed_data = file.read()
