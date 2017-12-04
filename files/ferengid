@@ -1,0 +1,11 @@
+#! /usr/bin/env python3
+"""Ferengi WSGI daemon."""
+
+from ferengi.config import CONFIG
+from ferengi.wsgi import APPLICATION
+
+
+if __name__ == '__main__':
+    HOST = CONFIG['wsgi']['host']
+    PORT = int(CONFIG['wsgi']['port'])
+    APPLICATION.run(host=HOST, port=PORT)

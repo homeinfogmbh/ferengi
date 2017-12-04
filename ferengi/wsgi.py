@@ -1,30 +1,28 @@
 """WSGI services."""
 
 from datetime import datetime
+from json import dumps
 
+from flask import Response, Flask
 from peewee import DoesNotExist
-from wsgilib import Error, JSON, RestHandler, Router
 
 from ferengi.openweathermap import City, Forecast
 
-__all__ = ['ROUTER']
+__all__ = ['APPLICATION']
 
-ROUTER = Router()
+APPLICATION = Flask('ferengi')
 
 
-@ROUTER.route('/weather/<city>')
-class WeatherHandler(RestHandler):
-    """Handles weather queries."""
+@APPLICATION.route('/weather/<city>')
+def get_weather(city):
+    """Returns the respective weather forecasts."""
+    try:
+        city = City.get(City.name == city)
+    except DoesNotExist:
+        return ('No such city.', 404)
 
-    def get(self):
-        """Handles GET requests."""
-        try:
-            city = City.get(City.name == self.vars['city'])
-        except DoesNotExist:
-            raise Error('No such city.', status=404) from None
-        else:
-            forecasts = [
-                forecast.to_dict() for forecast in Forecast.select().where(
-                    (Forecast.city == city) &
-                    (Forecast.dt >= datetime.now()))]
-            return JSON(forecasts)
+    forecasts = [
+        forecast.to_dict() for forecast in Forecast.select().where(
+            (Forecast.city == city) &
+            (Forecast.dt >= datetime.now()))]
+    return Response(dumps(forecasts), mimetype='application/json')
