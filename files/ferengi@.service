@@ -6,4 +6,4 @@ After=network.target
 User=ferengi
 Group=ferengi
 Type=oneshot
-ExecStart=/usr/local/bin/ferengi
+ExecStart=/usr/local/bin/ferengi %i
