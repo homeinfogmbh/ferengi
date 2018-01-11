@@ -16,4 +16,4 @@ setup(
         ('/usr/share/', ['files/roa.xz'])],
     description=(
         'Frankly Everything, but Real Estates'
-        ' Notoriously Greedy Importer'))
+        ' Notoriously Greedy Importer.'))
