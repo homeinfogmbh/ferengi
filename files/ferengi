@@ -7,8 +7,8 @@ Usage:
     ferengi openweathermap [options]
 
 Options:
-    --force, -f             Force data import.
-    --help, -h              Show this page.
+    --force, -f     Force data import.
+    --help, -h      Show this page.
 """
 from sys import argv, stderr, exit as exit_
 
