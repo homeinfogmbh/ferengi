@@ -1,11 +1,10 @@
 """Common FERENGI API"""
 
-from lzma import LZMADecompressor
-
 from peeweeplus import MySQLDatabase
+from syslib import B64LZMA
 
 
-ROA = '/usr/share/roa.xz'
+ROA = '/usr/share/roa.xz.b64'
 
 
 __all__ = [
@@ -42,11 +41,8 @@ def ferengi_database(database, user=None, passwd=None):
     """Returns a local, prefixed database configuration"""
 
     return MySQLDatabase(
-        'ferengi_{}'.format(database),
-        host='localhost',
-        user=user,
-        passwd=passwd,
-        closing=True)
+        'ferengi_{}'.format(database), host='localhost', user=user,
+        passwd=passwd, closing=True)
 
 
 def get_database(config):
@@ -58,11 +54,7 @@ def get_database(config):
 
 
 def roa():
-    """Prints the rules of acquisition."""
+    """Reads and returns the rules of acquisition."""
 
-    with open(ROA, 'rb') as file:
-        compressed_data = file.read()
-
-    decompressor = LZMADecompressor()
-    uncompressed_data = decompressor.decompress(compressed_data)
-    return uncompressed_data.decode()
+    with open(ROA, 'r') as file:
+        return B64LZMA(file.read())

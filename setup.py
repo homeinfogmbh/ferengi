@@ -13,7 +13,7 @@ setup(
          ['files/ferengi.service',
           'files/ferengi@.service',
           'files/ferengi@.timer']),
-        ('/usr/share/', ['files/roa.xz'])],
+        ('/usr/share/', ['files/roa.xz.b64'])],
     description=(
         'Frankly Everything, but Real Estates'
         ' Notoriously Greedy Importer.'))
