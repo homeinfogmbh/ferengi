@@ -1,7 +1,5 @@
 [Unit]
 Description=Terminal checking
-After=network.target mysql.service
-Requires=mysql.service
 
 [Service]
 User=ferengi
@@ -9,4 +7,4 @@ Group=ferengi
 ExecStart=/usr/local/bin/ferengid
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=wsgi-services.target
