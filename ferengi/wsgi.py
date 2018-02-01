@@ -4,7 +4,6 @@ from datetime import datetime
 from json import dumps
 
 from flask import Response, Flask
-from peewee import DoesNotExist
 
 from ferengi.openweathermap import City, Forecast
 
@@ -18,7 +17,7 @@ def get_weather(city):
     """Returns the respective weather forecasts."""
     try:
         city = City.get(City.name == city)
-    except DoesNotExist:
+    except City.DoesNotExist:
         return ('No such city.', 404)
 
     forecasts = [
