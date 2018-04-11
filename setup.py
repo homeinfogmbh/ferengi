@@ -7,11 +7,10 @@ setup(
     version='latest',
     author='Richard Neumann',
     packages=['ferengi'],
-    scripts=['files/ferengi', 'files/ferengid'],
+    scripts=['files/ferengi'],
     data_files=[
         ('/usr/lib/systemd/system/',
-         ['files/ferengi.service',
-          'files/ferengi@.service',
+         ['files/ferengi@.service',
           'files/ferengi@.timer']),
         ('/usr/share/', ['files/roa.xz.b64'])],
     description=(
