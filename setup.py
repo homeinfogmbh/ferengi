@@ -6,7 +6,7 @@ setup(
     name='ferengi',
     version='latest',
     author='Richard Neumann',
-    packages=['ferengi'],
+    packages=['ferengi', 'ferengi.garbage_disposal'],
     scripts=['files/ferengi'],
     data_files=[
         ('/usr/lib/systemd/system/',

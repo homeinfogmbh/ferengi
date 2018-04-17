@@ -1,80 +1,19 @@
-"""Garbage disposal data."""
+"""ORM models for the garbage disposal module."""
 
-from datetime import datetime, timedelta
-from logging import getLogger
+from datetime import datetime
 from time import sleep
 
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     CharField, DateField, DateTimeField
 from requests.exceptions import ConnectionError
 
-from aha import LocationNotFound, AhaDisposalClient
-from configlib import INIParser
 from homeinfo.crm import Address
 from terminallib import Terminal
 
-from ferengi.api import get_database
-
-
-CONFIG = INIParser('/etc/ferengi.d/garbage_disposal.conf')
-DATABASE = get_database(CONFIG)
-LOGGER = getLogger(__file__)
-
-try:
-    INTERVAL = CONFIG['api']['interval']
-except KeyError:
-    INTERVAL = 24
-else:
-    INTERVAL = int(INTERVAL)
-
-try:
-    DISTRICTS = CONFIG['api']['districts']
-except KeyError:
-    DISTRICTS = ['Hannover']
-else:
-    DISTRICTS = DISTRICTS.split()
-
-try:
-    WAIT_TIME = CONFIG['api']['wait_time']
-except KeyError:
-    WAIT_TIME = 30
-else:
-    WAIT_TIME = int(WAIT_TIME)
-
-
-INTERVAL = timedelta(hours=INTERVAL)
-
-
-class NoInformation(Exception):
-    """Indicates that no pickup information is available."""
-
-    pass
-
-
-def _fix_street(street):
-    """Fixes the street name."""
-
-    street = street.replace('str.', 'straße')
-    return street.replace('Str.', 'Straße')
-
-
-def get_dispsal(address):
-    """Returns the respective disposal dictionary."""
-
-    aha_client = AhaDisposalClient(district=address.city or 'Hannover')
-
-    try:
-        pickup_information = aha_client.by_address(
-            _fix_street(address.street), address.house_number)
-    except LocationNotFound as location_not_found:
-        LOGGER.warning('Location not found: %s.', location_not_found)
-        raise NoInformation()
-
-    if pickup_information is None:
-        LOGGER.warning('No disposal information for address: %s.', address)
-        raise NoInformation()
-
-    return pickup_information.to_dict()
+from ferengi.garbage_disposal.config import LOGGER, INTERVAL, DISTRICTS, \
+    WAIT_TIME, DATABASE
+from ferengi.garbage_disposal.exceptions import NoInformation
+from ferengi.garbage_disposal.interface import get_dispsal
 
 
 class _GarbageDisposalModel(Model):
