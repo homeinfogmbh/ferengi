@@ -184,11 +184,10 @@ class Pickup(_GarbageDisposalModel):
         record.weekday = dictionary['weekday']
         record.interval = dictionary['interval']
         record.image_link = dictionary['image_link']
+        yield record
 
         for next_date in dictionary.get('next_dates', ()):
             yield PickupDate.from_dict(record, next_date)
-
-        yield record
 
     def to_dict(self):
         """Returns a JSON-ish dictionary."""
