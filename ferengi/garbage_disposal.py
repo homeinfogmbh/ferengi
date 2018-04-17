@@ -19,12 +19,28 @@ DATABASE = get_database(CONFIG)
 LOGGER = getLogger(__file__)
 
 
+class NoInformation(Exception):
+    """Indicates that no pickup information is available."""
+
+    pass
+
+
 def get_dispsal(address):
     """Returns the respective disposal dictionary."""
 
     aha_client = AhaDisposalClient(district=address.city or 'Hannover')
-    pickup_information = aha_client.by_address(
-        address.street, address.house_number)
+
+    try:
+        pickup_information = aha_client.by_address(
+            address.street, address.house_number)
+    except LocationNotFound:
+        LOGGER.warning('Location not found: %s.', location_not_found)
+        raise NoInformation()
+
+    if pickup_information is None:
+        LOGGER.warning('No disposal information for address: %s.', address)
+        raise NoInformation()
+
     return pickup_information.to_dict()
 
 
@@ -95,8 +111,8 @@ class GarbageDisposal(_GarbageDisposalModel):
         for address in addresses:
             try:
                 cls.refresh(address)
-            except LocationNotFound as location_not_found:
-                LOGGER.warning('Location not found: %s.', location_not_found)
+            except NoInformation:
+                continue
 
     @classmethod
     def update_all(cls):
