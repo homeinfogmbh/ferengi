@@ -25,6 +25,13 @@ except KeyError:
 else:
     INTERVAL = int(INTERVAL)
 
+try:
+    DISTRICTS = CONFIG['api']['districts']
+except KeyError:
+    DISTRICTS = ['Hannover']
+else:
+    DISTRICTS = DISTRICTS.split()
+
 
 INTERVAL = timedelta(hours=INTERVAL)
 
@@ -71,7 +78,7 @@ class Location(_GarbageDisposalModel):
     code = CharField(16)
     street = CharField(32)
     house_number = CharField(8)
-    district = CharField(32)
+    district = CharField(32, null=True)
 
     @classmethod
     def from_dict(cls, type_, dictionary):
@@ -128,6 +135,9 @@ class GarbageDisposal(_GarbageDisposalModel):
     def refresh_all(cls, addresses, force=False):
         """Refreshes all addresses."""
         for address in addresses:
+            if address.city not in DISTRICTS:
+                continue    # Skip non-requestsed districts.
+
             try:
                 cls.refresh(address, force=force)
             except NoInformation:
