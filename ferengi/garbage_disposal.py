@@ -12,7 +12,7 @@ from homeinfo.crm import Address
 from ferengi.api import get_database
 
 
-CONFIG = INIParser('/etc/ferengi.d/openweathermap.conf')
+CONFIG = INIParser('/etc/ferengi.d/garbage_disposal.conf')
 DATABASE = get_database(CONFIG)
 
 
