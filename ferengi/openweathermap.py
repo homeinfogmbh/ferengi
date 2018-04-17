@@ -317,4 +317,4 @@ class Client():
         return CONFIG['api']
 
 
-CLIENT = Client(units='metric', lang='de')   # Default client
+CLIENT = Client(units='metric', lang='de')   # Default client.
