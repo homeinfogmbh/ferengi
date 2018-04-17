@@ -1,17 +1,17 @@
 """Open Weather Map weather data import"""
 
-from datetime import datetime, timedelta
 from contextlib import suppress
+from datetime import datetime, timedelta
 from json import loads
 
-from requests import get
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
-from peeweeplus import dec2dict
+from requests import get
 
 from configlib import INIParser
+from peeweeplus import dec2dict
 
-from .api import UpToDate, APIError, get_database
+from ferengi.api import UpToDate, APIError, get_database
 
 __all__ = [
     'UpToDate',
@@ -81,8 +81,8 @@ class City(_WeatherModel):
         """Determines whether weather is up to date."""
         if self.last_update is None:
             return False
-        else:
-            return datetime.now() - self.last_update <= timedelta(days=1)
+
+        return datetime.now() - self.last_update <= timedelta(days=1)
 
     @property
     def forecasts(self):
