@@ -128,10 +128,10 @@ class GarbageDisposal(_GarbageDisposalModel):
             record.pickup_location = location
             yield location
 
+        yield record
+
         for pickup in dictionary.get('pickups', ()):
             yield from Pickup.from_dict(record, pickup)
-
-        yield record
 
     def delete_instance(self, recursive=False, delete_nullable=False):
         """Deletes this record."""
