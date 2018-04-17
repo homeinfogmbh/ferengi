@@ -53,6 +53,14 @@ class Location(_GarbageDisposalModel):
         record.district = dictionary['district']
         return record
 
+    def to_dict(self):
+        """Returns a JSON-ish dictionary."""
+        return {
+            'code': self.code,
+            'street': self.street,
+            'house_number': self.house_number,
+            'district': self.district}
+
 
 class GarbageDisposal(_GarbageDisposalModel):
     """Garbage disposal model."""
@@ -122,12 +130,25 @@ class GarbageDisposal(_GarbageDisposalModel):
 
         return result
 
+    def to_dict(self):
+        """Returns a JSON-ish dictionary."""
+        dictionary = {'pickups': [pickup.to_dict() for pickup in self.pickups]}
+
+        if self.loading_location is not None:
+            dictionary['loading_location'] = self.loading_location.to_dict()
+
+        if self.pickup_location is not None:
+            dictionary['pickup_location'] = self.pickup_location.to_dict()
+
+        return dictionary
+
 
 class Pickup(_GarbageDisposalModel):
     """Represents a pickup."""
 
     garbage_disposal = ForeignKeyField(
-        GarbageDisposal, column_name='garbage_disposal', on_delete='CASCADE')
+        GarbageDisposal, column_name='garbage_disposal', backref='pickups',
+        on_delete='CASCADE')
     type_ = CharField(18)
     weekday = CharField(10)
     interval = CharField(11)
@@ -148,11 +169,22 @@ class Pickup(_GarbageDisposalModel):
 
         yield record
 
+    def to_dict(self):
+        """Returns a JSON-ish dictionary."""
+        return {
+            'type': self.type_,
+            'weekday': self.weekday,
+            'interval': self.interval,
+            'image_link': self.image_link,
+            'next_dates': [date.to_dict() for date in self.next_dates]}
+
 
 class PickupDate(_GarbageDisposalModel):
     """Represents the next collection dates."""
 
-    pickup = ForeignKeyField(Pickup, column_name='pickup', on_delete='CASCADE')
+    pickup = ForeignKeyField(
+        Pickup, column_name='pickup', backref='next_dates',
+        on_delete='CASCADE')
     date = DateField()
     weekday = CharField(2)
     exceptional = BooleanField()
@@ -166,3 +198,10 @@ class PickupDate(_GarbageDisposalModel):
         record.weekday = dictionary['weekday']
         record.exceptional = dictionary['exceptional']
         return record
+
+    def to_dict(self):
+        """Returns a JSON-ish dictionary."""
+        return {
+            'date': self.date.strftime('%Y-%m-%d'),
+            'weekday': self.weekday,
+            'exceptional': self.exceptional}
