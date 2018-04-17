@@ -37,7 +37,7 @@ else:
 try:
     WAIT_TIME = CONFIG['api']['wait_time']
 except KeyError:
-    WAIT_TIME = 15
+    WAIT_TIME = 30
 else:
     WAIT_TIME = int(WAIT_TIME)
 
@@ -62,9 +62,6 @@ def get_dispsal(address):
     except LocationNotFound as location_not_found:
         LOGGER.warning('Location not found: %s.', location_not_found)
         raise NoInformation()
-    except ConnectionError:
-        LOGGER.warning('AHA cancelled connection.')
-        raise
 
     if pickup_information is None:
         LOGGER.warning('No disposal information for address: %s.', address)
