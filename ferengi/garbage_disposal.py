@@ -173,7 +173,7 @@ class Pickup(_GarbageDisposalModel):
         on_delete='CASCADE')
     type_ = CharField(18)
     weekday = CharField(10)
-    interval = CharField(11)
+    interval = CharField(16)
     image_link = CharField(255)
 
     @classmethod
