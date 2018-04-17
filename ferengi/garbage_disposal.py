@@ -90,17 +90,15 @@ class _GarbageDisposalModel(Model):
 class Location(_GarbageDisposalModel):
     """Represents loading locations."""
 
-    type_ = CharField(7)
     code = CharField(16)
     street = CharField(64)
     house_number = CharField(8)
     district = CharField(32, null=True)
 
     @classmethod
-    def from_dict(cls, type_, dictionary):
+    def from_dict(cls, dictionary):
         """Yields respective records."""
         record = cls()
-        record.type_ = type_
         record.code = dictionary['code']
         record.street = dictionary['street']
         record.house_number = dictionary['house_number']
@@ -198,13 +196,11 @@ class GarbageDisposal(_GarbageDisposalModel):
         record.location = address
 
         if 'loading_location' in dictionary:
-            location = Location.from_dict(
-                'loading', dictionary['loading_location'])
+            location = Location.from_dict(dictionary['loading_location'])
             record.loading_location = location
             yield location
         elif 'pickup_location' in dictionary:
-            location = Location.from_dict(
-                'pickup', dictionary['pickup_location'])
+            location = Location.from_dict(dictionary['pickup_location'])
             record.pickup_location = location
             yield location
 
