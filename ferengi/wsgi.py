@@ -63,4 +63,4 @@ def get_garbage_disposal(terminal):
 def debug_exceptions(_):
     """Prints a stack trace."""
 
-    return Response(format_exc(), mimetype='text/plain', status_code=500)
+    return Response(format_exc(), mimetype='text/plain', status=500)
