@@ -8,6 +8,7 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
 from aha import AhaDisposalClient
 from configlib import INIParser
 from homeinfo.crm import Address
+from terminallib import Terminal
 
 from ferengi.api import get_database
 
@@ -82,6 +83,19 @@ class GarbageDisposal(_GarbageDisposalModel):
 
         for record in cls.from_address(address):
             record.save()
+
+    @classmethod
+    def update_all(cls):
+        """Updates the garbage disposal for all active terminals."""
+        for terminal in Terminal.select().where(
+                (Terminal.delted >> None) & ~(Terminal.testing == 0)
+                & ~(Terminal.location >> None)):
+            try:
+                address = terminal.location.address
+            except AttributeError:
+                continue
+
+            cls.refresh(address)
 
     @classmethod
     def purge(cls, address):
