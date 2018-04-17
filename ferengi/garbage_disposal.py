@@ -70,8 +70,9 @@ class GarbageDisposal(_GarbageDisposalModel):
 
     location = ForeignKeyField(Address, column_name='location')
     loading_location = ForeignKeyField(
-        Location, column_name='loading_location')
-    pickup_location = ForeignKeyField(Location, column_name='pickup_location')
+        Location, null=True, column_name='loading_location')
+    pickup_location = ForeignKeyField(
+        Location, null=True, column_name='pickup_location')
 
     @classmethod
     def by_address(cls, address):
