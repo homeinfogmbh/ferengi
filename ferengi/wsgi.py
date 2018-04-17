@@ -56,7 +56,7 @@ def get_garbage_disposal(terminal):
     except GarbageDisposal.DoesNotExist:
         return ('No garbage disposal information available.', 404)
 
-    return Response(dumps(result), mimetype='application/json')
+    return Response(dumps(result.to_dict()), mimetype='application/json')
 
 
 @APPLICATION.errorhandler(Exception)
