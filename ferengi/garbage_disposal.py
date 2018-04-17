@@ -1,10 +1,10 @@
 """Garbage disposal data."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from logging import getLogger
 
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
-    CharField, DateField
+    CharField, DateField, DateTimeField
 
 from aha import LocationNotFound, AhaDisposalClient
 from configlib import INIParser
@@ -17,6 +17,16 @@ from ferengi.api import get_database
 CONFIG = INIParser('/etc/ferengi.d/garbage_disposal.conf')
 DATABASE = get_database(CONFIG)
 LOGGER = getLogger(__file__)
+
+try:
+    INTERVAL = CONFIG['api']['interval']
+except KeyError:
+    INTERVAL = 24
+else:
+    INTERVAL = int(INTERVAL)
+
+
+INTERVAL = timedelta(hours=INTERVAL)
 
 
 class NoInformation(Exception):
@@ -33,7 +43,7 @@ def get_dispsal(address):
     try:
         pickup_information = aha_client.by_address(
             address.street, address.house_number)
-    except LocationNotFound:
+    except LocationNotFound as location_not_found:
         LOGGER.warning('Location not found: %s.', location_not_found)
         raise NoInformation()
 
@@ -91,6 +101,7 @@ class GarbageDisposal(_GarbageDisposalModel):
         Location, null=True, column_name='loading_location')
     pickup_location = ForeignKeyField(
         Location, null=True, column_name='pickup_location')
+    timestamp = DateTimeField(default=datetime.now)
 
     @classmethod
     def by_address(cls, address):
@@ -98,24 +109,32 @@ class GarbageDisposal(_GarbageDisposalModel):
         return cls.get(cls.location == address)
 
     @classmethod
-    def refresh(cls, address):
+    def refresh(cls, address, force=False):
         """Updates the records for the respective address."""
-        cls.purge(address)
+        try:
+            garbage_disposal = cls.by_address(address)
+        except cls.DoesNotExist:
+            up2date = False
+        else:
+            up2date = garbage_disposal.timestamp + INTERVAL >= datetime.now()
 
-        for record in cls.from_address(address):
-            record.save()
+        if force or not up2date:
+            cls.purge(address)
+
+            for record in cls.from_address(address):
+                record.save()
 
     @classmethod
-    def refresh_all(cls, addresses):
+    def refresh_all(cls, addresses, force=False):
         """Refreshes all addresses."""
         for address in addresses:
             try:
-                cls.refresh(address)
+                cls.refresh(address, force=force)
             except NoInformation:
                 continue
 
     @classmethod
-    def update_all(cls):
+    def update_all(cls, force=False):
         """Updates the garbage disposal for all active terminals."""
         addresses = set()
 
@@ -129,7 +148,7 @@ class GarbageDisposal(_GarbageDisposalModel):
 
             addresses.add(address)
 
-        cls.refresh_all(addresses)
+        cls.refresh_all(addresses, force=force)
 
     @classmethod
     def purge(cls, address):

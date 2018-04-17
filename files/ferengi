@@ -12,7 +12,7 @@ Options:
     --help, -h      Show this page.
 """
 from logging import INFO, basicConfig, getLogger
-from sys import argv, stderr, exit as exit_
+from sys import argv, exit as exit_
 
 from docopt import docopt
 
@@ -38,7 +38,7 @@ def main(options):
                 'Caught API error (%i): %s.', int(api_error), str(api_error))
             return 1
     elif options['garbage-disposal']:
-        GarbageDisposal.update_all()
+        GarbageDisposal.update_all(force=force)
 
     return 0
 
