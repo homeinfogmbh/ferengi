@@ -6,7 +6,7 @@ from logging import getLogger
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     CharField, DateField
 
-from aha import AhaDisposalClient
+from aha import LocationNotFound, AhaDisposalClient
 from configlib import INIParser
 from homeinfo.crm import Address
 from terminallib import Terminal
@@ -90,8 +90,19 @@ class GarbageDisposal(_GarbageDisposalModel):
             record.save()
 
     @classmethod
+    def refresh_all(cls, addresses):
+        """Refreshes all addresses."""
+        for address in addresses:
+            try:
+                cls.refresh(address)
+            except LocationNotFound as location_not_found:
+                LOGGER.warning('Location not found: %s.', location_not_found)
+
+    @classmethod
     def update_all(cls):
         """Updates the garbage disposal for all active terminals."""
+        addresses = set()
+
         for terminal in Terminal.select().where(
                 (Terminal.deleted >> None) & ~(Terminal.testing == 0)
                 & ~(Terminal.location >> None)):
@@ -100,10 +111,9 @@ class GarbageDisposal(_GarbageDisposalModel):
             except AttributeError:
                 continue
 
-            try:
-                cls.refresh(address)
-            except LocationNotFound as location_not_found:
-                LOGGER.warning('Location not found: %s.', location_not_found)
+            addresses.add(address)
+
+        cls.refresh_all(addresses)
 
     @classmethod
     def purge(cls, address):
