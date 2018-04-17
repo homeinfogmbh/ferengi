@@ -26,7 +26,7 @@ def get_dispsal(address):
         raise NoInformation()
 
     if pickup_information is None:
-        LOGGER.warning('No disposal information for address: %s.', address)
+        LOGGER.warning('No disposal information for address: %r.', address)
         raise NoInformation()
 
     return pickup_information.to_dict()
