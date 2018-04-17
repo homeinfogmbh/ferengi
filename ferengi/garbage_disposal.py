@@ -2,9 +2,11 @@
 
 from datetime import datetime, timedelta
 from logging import getLogger
+from time import sleep
 
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     CharField, DateField, DateTimeField
+from requests.exceptions import ConnectionError
 
 from aha import LocationNotFound, AhaDisposalClient
 from configlib import INIParser
@@ -32,6 +34,13 @@ except KeyError:
 else:
     DISTRICTS = DISTRICTS.split()
 
+try:
+    WAIT_TIME = CONFIG['api']['wait_time']
+except KeyError:
+    WAIT_TIME = 15
+else:
+    WAIT_TIME = int(WAIT_TIME)
+
 
 INTERVAL = timedelta(hours=INTERVAL)
 
@@ -53,6 +62,9 @@ def get_dispsal(address):
     except LocationNotFound as location_not_found:
         LOGGER.warning('Location not found: %s.', location_not_found)
         raise NoInformation()
+    except ConnectionError:
+        LOGGER.warning('AHA cancelled connection.')
+        raise
 
     if pickup_information is None:
         LOGGER.warning('No disposal information for address: %s.', address)
@@ -142,6 +154,9 @@ class GarbageDisposal(_GarbageDisposalModel):
                 cls.refresh(address, force=force)
             except NoInformation:
                 continue
+            except ConnectionError:
+                LOGGER.warning('AHA cancelled connection.')
+                sleep(WAIT_TIME)
 
     @classmethod
     def update_all(cls, force=False):
