@@ -76,7 +76,7 @@ class Location(_GarbageDisposalModel):
 
     type_ = CharField(7)
     code = CharField(16)
-    street = CharField(32)
+    street = CharField(64)
     house_number = CharField(8)
     district = CharField(32, null=True)
 
