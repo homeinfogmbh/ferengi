@@ -51,6 +51,13 @@ class NoInformation(Exception):
     pass
 
 
+def _fix_street(street):
+    """Fixes the street name."""
+
+    street = street.replace('str.', 'straße')
+    return street.replace('Str.', 'Straße')
+
+
 def get_dispsal(address):
     """Returns the respective disposal dictionary."""
 
@@ -58,7 +65,7 @@ def get_dispsal(address):
 
     try:
         pickup_information = aha_client.by_address(
-            address.street, address.house_number)
+            _fix_street(address.street), address.house_number)
     except LocationNotFound as location_not_found:
         LOGGER.warning('Location not found: %s.', location_not_found)
         raise NoInformation()
