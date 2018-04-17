@@ -1,10 +1,11 @@
 """ORM models for the garbage disposal module."""
 
 from datetime import datetime
+from json import loads, dumps
 from time import sleep
 
-from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
-    CharField, DateField, DateTimeField
+from peewee import Model, PrimaryKeyField, ForeignKeyField, TextField, \
+    DateTimeField
 from requests.exceptions import ConnectionError
 
 from homeinfo.crm import Address
@@ -26,42 +27,12 @@ class _GarbageDisposalModel(Model):
     id = PrimaryKeyField()
 
 
-class Location(_GarbageDisposalModel):
-    """Represents loading locations."""
-
-    code = CharField(16)
-    street = CharField(64)
-    house_number = CharField(8)
-    district = CharField(32, null=True)
-
-    @classmethod
-    def from_dict(cls, dictionary):
-        """Yields respective records."""
-        record = cls()
-        record.code = dictionary['code']
-        record.street = dictionary['street']
-        record.house_number = dictionary['house_number']
-        record.district = dictionary['district']
-        return record
-
-    def to_dict(self):
-        """Returns a JSON-ish dictionary."""
-        return {
-            'code': self.code,
-            'street': self.street,
-            'house_number': self.house_number,
-            'district': self.district}
-
-
 class GarbageDisposal(_GarbageDisposalModel):
     """Garbage disposal model."""
 
     location = ForeignKeyField(Address, column_name='location')
-    loading_location = ForeignKeyField(
-        Location, null=True, column_name='loading_location')
-    pickup_location = ForeignKeyField(
-        Location, null=True, column_name='pickup_location')
     timestamp = DateTimeField(default=datetime.now)
+    json = TextField()
 
     @classmethod
     def by_address(cls, address):
@@ -80,9 +51,11 @@ class GarbageDisposal(_GarbageDisposalModel):
 
         if force or not up2date:
             cls.purge(address)
+            record = cls.from_address(address)
+            record.save()
+            return record
 
-            for record in cls.from_address(address):
-                record.save()
+        return None
 
     @classmethod
     def refresh_all(cls, addresses, force=False):
@@ -133,110 +106,9 @@ class GarbageDisposal(_GarbageDisposalModel):
         """Creates the respective records from the given dictionary."""
         record = cls()
         record.location = address
-
-        if 'loading_location' in dictionary:
-            location = Location.from_dict(dictionary['loading_location'])
-            record.loading_location = location
-            yield location
-        elif 'pickup_location' in dictionary:
-            location = Location.from_dict(dictionary['pickup_location'])
-            record.pickup_location = location
-            yield location
-
-        yield record
-
-        for pickup in dictionary.get('pickups', ()):
-            yield from Pickup.from_dict(record, pickup)
-
-    def delete_instance(self, recursive=False, delete_nullable=False):
-        """Deletes this record."""
-        rel_records = []
-
-        if self.loading_location is not None:
-            rel_records.append(self.loading_location)
-
-        if self.pickup_location is not None:
-            rel_records.append(self.pickup_location)
-
-        result = super().delete_instance(
-            recursive=recursive, delete_nullable=delete_nullable)
-
-        for rel_record in rel_records:
-            rel_record.delete_instance()
-
-        return result
-
-    def to_dict(self):
-        """Returns a JSON-ish dictionary."""
-        dictionary = {'pickups': [pickup.to_dict() for pickup in self.pickups]}
-
-        if self.loading_location is not None:
-            dictionary['loading_location'] = self.loading_location.to_dict()
-
-        if self.pickup_location is not None:
-            dictionary['pickup_location'] = self.pickup_location.to_dict()
-
-        return dictionary
-
-
-class Pickup(_GarbageDisposalModel):
-    """Represents a pickup."""
-
-    garbage_disposal = ForeignKeyField(
-        GarbageDisposal, column_name='garbage_disposal', backref='pickups',
-        on_delete='CASCADE')
-    type_ = CharField(32)
-    weekday = CharField(32)
-    interval = CharField(16)
-    image_link = CharField(255)
-
-    @classmethod
-    def from_dict(cls, garbage_disposal, dictionary):
-        """Yields the respective models."""
-        record = cls()
-        record.garbage_disposal = garbage_disposal
-        record.type_ = dictionary['type']
-        record.weekday = dictionary['weekday']
-        record.interval = dictionary['interval']
-        record.image_link = dictionary['image_link']
-        yield record
-
-        for next_date in dictionary.get('next_dates', ()):
-            yield PickupDate.from_dict(record, next_date)
-
-    def to_dict(self):
-        """Returns a JSON-ish dictionary."""
-        return {
-            'type': self.type_,
-            'weekday': self.weekday,
-            'interval': self.interval,
-            'image_link': self.image_link,
-            'next_dates': [date.to_dict() for date in self.next_dates]}
-
-
-class PickupDate(_GarbageDisposalModel):
-    """Represents the next collection dates."""
-
-    pickup = ForeignKeyField(
-        Pickup, column_name='pickup', backref='next_dates',
-        on_delete='CASCADE')
-    date = DateField()
-    weekday = CharField(2)
-    exceptional = BooleanField()
-
-    @classmethod
-    def from_dict(cls, pickup, dictionary):
-        """Returns the respective record."""
-        record = cls()
-        record.pickup = pickup
-        record.date = datetime.strptime(dictionary['date'], '%Y-%m-%d')
-        record.weekday = dictionary['weekday']
-        record.exceptional = dictionary['exceptional']
+        record.json = dumps(dictionary)
         return record
 
     def to_dict(self):
         """Returns a JSON-ish dictionary."""
-        return {
-            'date': self.date.strftime('%Y-%m-%d'),
-            'weekday': self.weekday,
-            'exceptional': self.exceptional}
+        return loads(self.json)
