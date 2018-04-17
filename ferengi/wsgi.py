@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from json import dumps
+from traceback import format_exc
 
 from flask import jsonify, Response, Flask
 
@@ -56,3 +57,10 @@ def get_garbage_disposal(terminal):
         return ('No garbage disposal information available.', 404)
 
     return Response(dumps(result), mimetype='application/json')
+
+
+@APPLICATION.errorhandler(Exception)
+def debug_exceptions(_):
+    """Prints a stack trace."""
+
+    return (format_exc(), 500)
