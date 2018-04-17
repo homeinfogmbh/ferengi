@@ -11,7 +11,7 @@ Options:
     --force, -f     Force data import.
     --help, -h      Show this page.
 """
-from logging import INFO, basicConfig
+from logging import INFO, basicConfig, getLogger
 from sys import argv, stderr, exit as exit_
 
 from docopt import docopt
@@ -19,6 +19,9 @@ from docopt import docopt
 from ferengi.api import APIError, roa
 from ferengi.garbage_disposal import GarbageDisposal
 from ferengi.openweathermap import City
+
+
+LOGGER = getLogger(__file__)
 
 
 def main(options):
@@ -31,16 +34,11 @@ def main(options):
         try:
             City.update_all()
         except APIError as api_error:
-            print('Caught API error ({}): {}'.format(
-                int(api_error), str(api_error)), file=stderr)
+            LOGGER.error(
+                'Caught API error (%i): %s.', int(api_error), str(api_error))
             return 1
     elif options['garbage-disposal']:
-        try:
-            GarbageDisposal.update_all()
-        except APIError as api_error:
-            print('Caught API error ({}): {}'.format(
-                int(api_error), str(api_error)), file=stderr)
-            return 1
+        GarbageDisposal.update_all()
 
     return 0
 
