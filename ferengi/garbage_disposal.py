@@ -84,6 +84,7 @@ class GarbageDisposal(_GarbageDisposalModel):
     @classmethod
     def refresh(cls, address):
         """Updates the records for the respective address."""
+        LOGGER.info('Updating %s.', address)
         cls.purge(address)
 
         for record in cls.from_address(address):
