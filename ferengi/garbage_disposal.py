@@ -84,7 +84,6 @@ class GarbageDisposal(_GarbageDisposalModel):
     @classmethod
     def refresh(cls, address):
         """Updates the records for the respective address."""
-        LOGGER.info('Updating %s.', address)
         cls.purge(address)
 
         for record in cls.from_address(address):
@@ -105,7 +104,7 @@ class GarbageDisposal(_GarbageDisposalModel):
         addresses = set()
 
         for terminal in Terminal.select().where(
-                (Terminal.deleted >> None) & ~(Terminal.testing == 0)
+                (Terminal.deleted >> None) & (Terminal.testing == 0)
                 & ~(Terminal.location >> None)):
             try:
                 address = terminal.location.address
