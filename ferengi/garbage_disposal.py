@@ -21,7 +21,9 @@ def get_dispsal(address):
     """Returns the respective disposal dictionary."""
 
     aha_client = AhaDisposalClient(district=address.city or 'Hannover')
-    return aha_client.by_address(address.street, address.house_number)
+    pickup_information = aha_client.by_address(
+        address.street, address.house_number)
+    return pickup_information.to_dict()
 
 
 class _GarbageDisposalModel(Model):
@@ -107,10 +109,10 @@ class GarbageDisposal(_GarbageDisposalModel):
     def from_address(cls, address):
         """Creates an entry from the respective address."""
         dictionary = get_dispsal(address)
-        return cls.from_dict(dictionary, address)
+        return cls.from_dict(address, dictionary)
 
     @classmethod
-    def from_dict(cls, dictionary, address):
+    def from_dict(cls, address, dictionary):
         """Creates the respective records from the given dictionary."""
         record = cls()
         record.location = address
