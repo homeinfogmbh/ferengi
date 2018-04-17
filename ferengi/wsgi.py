@@ -51,8 +51,8 @@ def get_garbage_disposal(terminal):
         return ('Terminal is not located.', 400)
 
     try:
-        garbage_disposal = GarbageDisposal.by_address(address)
+        result = GarbageDisposal.by_address(address)
     except GarbageDisposal.DoesNotExist:
         return ('No garbage disposal information available.', 404)
 
-    return jsonify(garbage_disposal.to_dict())
+    return Response(dumps(result), mimetype='application/json')
