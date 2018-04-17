@@ -202,8 +202,8 @@ class Pickup(_GarbageDisposalModel):
     garbage_disposal = ForeignKeyField(
         GarbageDisposal, column_name='garbage_disposal', backref='pickups',
         on_delete='CASCADE')
-    type_ = CharField(18)
-    weekday = CharField(10)
+    type_ = CharField(32)
+    weekday = CharField(32)
     interval = CharField(16)
     image_link = CharField(255)
 
