@@ -71,6 +71,11 @@ class GarbageDisposal(_GarbageDisposalModel):
     pickup_location = ForeignKeyField(Location, column_name='pickup_location')
 
     @classmethod
+    def by_address(cls, address):
+        """Returns the respective garbage disposal by address."""
+        return cls.get(cls.location == address)
+
+    @classmethod
     def refresh(cls, address):
         """Updates the records for the respective address."""
         cls.purge(address)
