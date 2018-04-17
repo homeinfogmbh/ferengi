@@ -18,6 +18,7 @@ try:
     INTERVAL = CONFIG['api']['interval']
 except KeyError:
     INTERVAL = 24
+    LOGGER.warning('Interval unconfigured. Defaulting to %ih.', INTERVAL)
 else:
     INTERVAL = int(INTERVAL)
 
@@ -27,6 +28,7 @@ try:
     DISTRICTS = CONFIG['api']['districts']
 except KeyError:
     DISTRICTS = ['Hannover']
+    LOGGER.warning('Districts unconfigured. Defaulting to %s.', DISTRICTS)
 else:
     DISTRICTS = DISTRICTS.split()
 
@@ -34,5 +36,6 @@ try:
     WAIT_TIME = CONFIG['api']['wait_time']
 except KeyError:
     WAIT_TIME = 30
+    LOGGER.warning('Wait time unconfigured. Defaulting to %is.', WAIT_TIME)
 else:
     WAIT_TIME = int(WAIT_TIME)
