@@ -100,7 +100,7 @@ class GarbageDisposal(_GarbageDisposalModel):
     @classmethod
     def purge(cls, address):
         """Purges records for the respective address."""
-        for record in cls.select().where(cls.address == address):
+        for record in cls.select().where(cls.location == address):
             record.delete_instance()
 
     @classmethod
