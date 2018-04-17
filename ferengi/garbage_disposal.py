@@ -88,7 +88,7 @@ class GarbageDisposal(_GarbageDisposalModel):
     def update_all(cls):
         """Updates the garbage disposal for all active terminals."""
         for terminal in Terminal.select().where(
-                (Terminal.delted >> None) & ~(Terminal.testing == 0)
+                (Terminal.deleted >> None) & ~(Terminal.testing == 0)
                 & ~(Terminal.location >> None)):
             try:
                 address = terminal.location.address
