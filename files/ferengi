@@ -5,6 +5,7 @@
 
 Usage:
     ferengi openweathermap [options]
+    ferengi garbage-disposal [options]
 
 Options:
     --force, -f     Force data import.
@@ -15,6 +16,7 @@ from sys import argv, stderr, exit as exit_
 from docopt import docopt
 
 from ferengi.api import APIError, roa
+from ferengi.garbage_disposal import GarbageDisposal
 from ferengi.openweathermap import City
 
 
@@ -26,6 +28,13 @@ def main(options):
     if options['openweathermap']:
         try:
             City.update_all()
+        except APIError as api_error:
+            print('Caught API error ({}): {}'.format(
+                int(api_error), str(api_error)), file=stderr)
+            return 1
+    elif options['garbage-disposal']:
+        try:
+            GarbageDisposal.update_all()
         except APIError as api_error:
             print('Caught API error ({}): {}'.format(
                 int(api_error), str(api_error)), file=stderr)
