@@ -33,7 +33,7 @@ def get_weather(city):
 
 @APPLICATION.route('/garbage-disposal/<terminal>')
 def get_garbage_disposal(terminal):
-    """Returns the respective weather forecasts."""
+    """Returns garbage disposal information for the respective terminal."""
 
     try:
         tid, cid = terminal.split('.')
