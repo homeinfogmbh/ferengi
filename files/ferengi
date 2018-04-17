@@ -11,6 +11,7 @@ Options:
     --force, -f     Force data import.
     --help, -h      Show this page.
 """
+from logging import INFO, basicConfig
 from sys import argv, stderr, exit as exit_
 
 from docopt import docopt
@@ -23,6 +24,7 @@ from ferengi.openweathermap import City
 def main(options):
     """Runs the FERENGI client."""
 
+    basicConfig(level=INFO)
     force = options['--force']
 
     if options['openweathermap']:

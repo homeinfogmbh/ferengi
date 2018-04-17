@@ -1,6 +1,7 @@
 """Garbage disposal data."""
 
 from datetime import datetime
+from logging import getLogger
 
 from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
     CharField, DateField
@@ -15,6 +16,7 @@ from ferengi.api import get_database
 
 CONFIG = INIParser('/etc/ferengi.d/garbage_disposal.conf')
 DATABASE = get_database(CONFIG)
+LOGGER = getLogger(__file__)
 
 
 def get_dispsal(address):
@@ -98,7 +100,10 @@ class GarbageDisposal(_GarbageDisposalModel):
             except AttributeError:
                 continue
 
-            cls.refresh(address)
+            try:
+                cls.refresh(address)
+            except LocationNotFound as location_not_found:
+                LOGGER.warning('Location not found: %s.', location_not_found)
 
     @classmethod
     def purge(cls, address):
