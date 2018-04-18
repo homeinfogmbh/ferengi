@@ -126,7 +126,7 @@ class Location(_GarbageDisposalModel):
         yield record
 
         for pickup in dictionary['pickups']:
-            yield Pickup.from_dict(record, pickup)
+            yield from Pickup.from_dict(record, pickup)
 
     def to_dict(self):
         """Returns a JSON-ish dictionary."""
