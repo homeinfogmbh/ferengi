@@ -46,6 +46,17 @@ class Location(_GarbageDisposalModel):
     timestamp = DateTimeField(default=datetime.now)
 
     @classmethod
+    def up2date(cls, address):
+        """Determines whether the respective address' data is up to date."""
+        garbage_disposals = tuple(cls.by_address(address))
+
+        if not garbage_disposals:
+            return False
+
+        return all(garbage_disposal.timestamp + INTERVAL >= datetime.now()
+                   for garbage_disposal in garbage_disposals)
+
+    @classmethod
     def by_address(cls, address):
         """Returns the respective garbage disposal by address."""
         return cls.select().where(cls.address == address)
@@ -53,14 +64,7 @@ class Location(_GarbageDisposalModel):
     @classmethod
     def refresh(cls, address, force=False):
         """Updates the records for the respective address."""
-        try:
-            garbage_disposal = cls.by_address(address)
-        except cls.DoesNotExist:
-            up2date = False
-        else:
-            up2date = garbage_disposal.timestamp + INTERVAL >= datetime.now()
-
-        if force or not up2date:
+        if force or not cls.up2date(address):
             cls.purge(address)
 
             for record in cls.from_address(address):
