@@ -142,7 +142,8 @@ class Pickup(_GarbageDisposalModel):
     """A garbage pickup."""
 
     location = ForeignKeyField(
-        Location, column_name='location', on_delete='CASCADE')
+        Location, column_name='location', backref='pickups',
+        on_delete='CASCADE')
     type_ = CharField(32)
     image_link = CharField(255)
     weekday = CharField(32)
