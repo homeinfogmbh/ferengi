@@ -17,7 +17,7 @@ from sys import argv, exit as exit_
 from docopt import docopt
 
 from ferengi.api import APIError, roa
-from ferengi.garbage_disposal import GarbageDisposal
+from ferengi.garbage_disposal import Location
 from ferengi.openweathermap import City
 
 
@@ -38,7 +38,7 @@ def main(options):
                 'Caught API error (%i): %s.', int(api_error), str(api_error))
             return 1
     elif options['garbage-disposal']:
-        GarbageDisposal.update_all(force=force)
+        Location.update_all(force=force)
 
     return 0
 

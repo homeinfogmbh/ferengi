@@ -4,11 +4,11 @@ from datetime import datetime
 from json import dumps
 from traceback import format_exc
 
-from flask import jsonify, Response, Flask
+from flask import Response, Flask
 
 from terminallib import Terminal
 
-from ferengi.garbage_disposal import GarbageDisposal
+from ferengi.garbage_disposal import Location
 from ferengi.openweathermap import City, Forecast
 
 __all__ = ['APPLICATION']
@@ -51,12 +51,13 @@ def get_garbage_disposal(terminal):
     except AttributeError:
         return ('Terminal is not located.', 400)
 
-    try:
-        result = GarbageDisposal.by_address(address)
-    except GarbageDisposal.DoesNotExist:
+    locations = [
+        location.to_dict() for location in Location.by_address(address)]
+
+    if not locations:
         return ('No garbage disposal information available.', 404)
 
-    return Response(dumps(result.to_dict()), mimetype='application/json')
+    return Response(dumps(locations), mimetype='application/json')
 
 
 @APPLICATION.errorhandler(Exception)

@@ -1,5 +1,5 @@
 """Garbage disposal module."""
 
-from ferengi.garbage_disposal.orm import GarbageDisposal
+from ferengi.garbage_disposal.orm import Location
 
-__all__ = ['GarbageDisposal']
+__all__ = ['Location']
