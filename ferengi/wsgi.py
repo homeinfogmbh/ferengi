@@ -40,7 +40,7 @@ def get_garbage_disposal(terminal):
     try:
         tid, cid = terminal.split('.')
     except ValueError:
-        return ('Invalig terminal ID.', 400)
+        return ('Invalid terminal ID.', 400)
 
     try:
         terminal = Terminal.by_ids(cid, tid)
