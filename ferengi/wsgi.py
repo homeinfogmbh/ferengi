@@ -4,16 +4,17 @@ from datetime import datetime
 from json import dumps
 from traceback import format_exc
 
-from flask import Response, Flask
+from flask import Response
 
 from terminallib import Terminal
+from wsgilib import Application
 
 from ferengi.garbage_disposal import Location
 from ferengi.openweathermap import City, Forecast
 
 __all__ = ['APPLICATION']
 
-APPLICATION = Flask('ferengi')
+APPLICATION = Application('ferengi', cors=True)
 
 
 @APPLICATION.route('/weather/<city>')
