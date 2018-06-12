@@ -128,7 +128,7 @@ class City(_WeatherModel):
 class Forecast(_WeatherModel):
     """Regional weather forecast."""
 
-    city = ForeignKeyField(City, db_column='city')
+    city = ForeignKeyField(City, column_name='city')
     dt = DateTimeField()
     temp = DecimalField(4, 2, null=True, default=None)
     temp_min = DecimalField(4, 2, null=True, default=None)
@@ -261,7 +261,7 @@ class Forecast(_WeatherModel):
 class Weather(_WeatherModel):
     """Weather details."""
 
-    forecast = ForeignKeyField(Forecast, db_column='forecast')
+    forecast = ForeignKeyField(Forecast, column_name='forecast')
     weather_id = SmallIntegerField()
     main = CharField(255)
     description = CharField(255)
