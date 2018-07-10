@@ -7,7 +7,7 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField, DateField, BooleanField
 from requests.exceptions import ConnectionError
 
-from homeinfo.crm import Address
+from mdb import Address
 from terminallib import Terminal
 
 from ferengi.garbage_disposal.config import LOGGER, INTERVAL, DISTRICTS, \
