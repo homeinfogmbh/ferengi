@@ -289,7 +289,7 @@ class Weather(_WeatherModel):
             'icon': self.icon}
 
 
-class Client():
+class Client:
     """Receive and store weather data."""
 
     def __init__(self, base_url=None, api_key=None, **params):
