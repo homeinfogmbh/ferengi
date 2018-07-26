@@ -125,7 +125,7 @@ def forecasts_to_dom(city, forecasts):
     day_after_tomorrow_forecast = _forecasts_to_dom(
         day_after_tomorrow_forecasts)
     forecast.day.append(day_after_tomorrow_forecast)
-    xml.forecast.append(forecast)
+    xml.forecast = forecast
     xml.name = city
     xml.pubdate = now.strftime('%Y-%m-%d %H:%Mi:%S')
     return xml
