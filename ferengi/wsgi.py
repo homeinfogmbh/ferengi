@@ -27,15 +27,14 @@ def get_weather(city):
     except City.DoesNotExist:
         return ('No such city.', 404)
 
-    forecasts = [
-        forecast.to_dict() for forecast in Forecast.select().where(
-            (Forecast.city == city) &
-            (Forecast.dt >= datetime.now()))]
+    forecasts = Forecast.select().where(
+        (Forecast.city == city) &
+        (Forecast.dt >= datetime.now()))
 
     if 'xml' in request.args:
         return XML(forecasts_to_dom(city, forecasts))
 
-    return JSON(forecasts)
+    return JSON([forecast.to_dict() for forecast in forecasts])
 
 
 @APPLICATION.route('/garbage-disposal/<terminal>')
