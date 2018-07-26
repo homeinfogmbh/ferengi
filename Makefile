@@ -1,8 +1,11 @@
 FILE_LIST = ./.installed_files.txt
 
-.PHONY: pull push clean install uninstall
+.PHONY: pull push clean generate-bindings install uninstall
 
-default: | pull clean install
+default: | pull clean generate-bindings install
+
+generate-bindings:
+	@ pyxbgen -u xsds/weather.xsd -m weather --module-prefix=ferengi.dom
 
 install:
 	@ ./setup.py install --record $(FILE_LIST)

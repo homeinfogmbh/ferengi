@@ -12,6 +12,8 @@ from configlib import INIParser
 from peeweeplus import dec2dict
 
 from ferengi.api import UpToDate, APIError, get_database
+from ferengi.dom import weather as weather_dom
+
 
 __all__ = [
     'UpToDate',
@@ -23,6 +25,110 @@ __all__ = [
 
 CONFIG = INIParser('/etc/ferengi.d/openweathermap.conf')
 DATABASE = get_database(CONFIG)
+ICONS = {
+    '01d': 22,
+    '02d': 13,
+    '04d': 12,
+    '03d': 5,
+    '50d': 8,
+    'Nebel mit Reifbildung': 5,
+    'Sprühregen': 15,
+    'leichter Sprühregen': 17,
+    'starker Sprühregen': 15,
+    'leichter Sprühregen, gefrierend': 17,
+    'starker Sprühregen, gefrierend': 15,
+    '10d': 15,
+    'leichter Regen': 2,
+    'mäßiger Regen': 17,
+    'starker Regen': 15,
+    'leichter Regen, gefrierend': 2,
+    'mäßiger od. starker Regen, gefrierend': 17,
+    'leichter Schnee-Regen': 16,
+    'starker Schnee-Regen': 16,
+    '13d': 20,
+    'leichter Schneefall': 20,
+    'mäßiger Schneefall': 20,
+    'starker Schneefall': 20,
+    'Schauer': 2,
+    'leichter Regen - Schauer': 2,
+    'Regen - Schauer': 2,
+    '09d': 4,
+    'leichter Schnee / Regen - Schauer': 18,
+    'starker Schnee / Regen - Schauer': 18,
+    'leichter Schnee - Schauer': 3,
+    'mäßiger od. starker Schnee - Schauer': 20,
+    '11d': 1,
+    'leichtes Gewitter': 1,
+    'starkes Gewitter': 1,
+    'k.A.': 6}
+
+
+def _forecasts_to_dom(forecasts):
+    """Converts a set of forecasts of the same day to DOM."""
+
+    day_forecast = weather_dom.DayForecast()
+
+    for forecast in forecasts:
+        for weather in forecast.weather:
+            day_forecast.icon_id = ICONS.get(weather.icon, 6)
+            day_forecast.weather_text = weather.description
+            break
+
+        temp_min = int(forecast.temp_min)
+
+        if day_forecast.tempmin is None or day_forecast.tempmin > temp_min:
+            day_forecast.tempmin = temp_min
+
+        temp_max = int(forecast.temp_max)
+
+        if day_forecast.tempmax is None or day_forecast.tempmax < temp_max:
+            day_forecast.tempmax = temp_max
+
+        dt_ = forecast.dt
+
+        if day_forecast.dtmin is None or day_forecast.dtmin > dt_:
+            day_forecast.dtmin = dt_
+
+        if day_forecast.dt is None or day_forecast.dt < dt_:
+            day_forecast.dt = dt_
+
+    return day_forecast
+
+
+def forecasts_to_dom(city, forecasts):
+    """Converts the forecasts to today's DOM."""
+
+    now = datetime.now()
+    today = now.date()
+    tomorrow = today + timedelta(days=1)
+    day_after_tomorrow = tomorrow + timedelta(days=1)
+    today_forecasts = []
+    tomorrow_forecasts = []
+    day_after_tomorrow_forecasts = []
+
+    for forecast in forecasts:
+        forecast_date = forecast.dt
+
+        if forecast_date == today:
+            today_forecasts.append(forecast)
+        elif forecast_date == tomorrow:
+            tomorrow_forecasts.append(forecast)
+        elif forecast_date == day_after_tomorrow:
+            day_after_tomorrow_forecasts.append(forecast)
+
+    xml = weather_dom.xml()
+    forecast = weather_dom.Forecast()
+    today_forecast = _forecasts_to_dom(today_forecasts)
+    forecast.day.append(today_forecast)
+    tomorrow_forecast = _forecasts_to_dom(tomorrow_forecasts)
+    forecast.day.append(tomorrow_forecast)
+    day_after_tomorrow_forecast = _forecasts_to_dom(
+        day_after_tomorrow_forecasts)
+    forecast.day.append(day_after_tomorrow_forecast)
+    xml.forecast.append(forecast)
+    xml.name = city
+    xml.pubdate = now.strftime('%Y-%m-%d %H:%Mi:%S')
+    return xml
 
 
 class _WeatherModel(Model):
@@ -42,7 +148,7 @@ class City(_WeatherModel):
     country = CharField(2)
     longitude = FloatField()
     latitude = FloatField()
-    last_update = DateTimeField(null=True, default=None)
+    last_update = DateTimeField(null=True)
     auto_update = BooleanField(default=False)
 
     def __str__(self):
@@ -84,11 +190,6 @@ class City(_WeatherModel):
 
         return datetime.now() - self.last_update <= timedelta(days=1)
 
-    @property
-    def forecasts(self):
-        """Yields the current forecasts for this city."""
-        return Forecast.select().where(Forecast.city == self)
-
     def to_dict(self):
         """Converts the record to a JSON-compilant dictionary."""
         dictionary = {
@@ -117,7 +218,7 @@ class City(_WeatherModel):
             self._update_forecast()
 
             for old_forecast in old_forecasts:
-                old_forecast.remove()
+                old_forecast.delete_instance()
 
             self.last_update = datetime.now()
             self.save()
@@ -128,20 +229,20 @@ class City(_WeatherModel):
 class Forecast(_WeatherModel):
     """Regional weather forecast."""
 
-    city = ForeignKeyField(City, column_name='city')
+    city = ForeignKeyField(City, column_name='city', backref='forecasts')
     dt = DateTimeField()
-    temp = DecimalField(4, 2, null=True, default=None)
-    temp_min = DecimalField(4, 2, null=True, default=None)
-    temp_max = DecimalField(4, 2, null=True, default=None)
-    pressure = DecimalField(6, 2, null=True, default=None)
-    sea_level = DecimalField(6, 2, null=True, default=None)
-    grnd_level = DecimalField(6, 2, null=True, default=None)
-    humidity = SmallIntegerField(null=True, default=None)
-    clouds_all = SmallIntegerField(null=True, default=None)
-    wind_speed = DecimalField(4, 2, null=True, default=None)
-    wind_deg = DecimalField(6, 3, null=True, default=None)
-    rain_3h = DecimalField(6, 3, null=True, default=None)
-    snow_3h = DecimalField(6, 3, null=True, default=None)
+    temp = DecimalField(4, 2, null=True)
+    temp_min = DecimalField(4, 2, null=True)
+    temp_max = DecimalField(4, 2, null=True)
+    pressure = DecimalField(6, 2, null=True)
+    sea_level = DecimalField(6, 2, null=True)
+    grnd_level = DecimalField(6, 2, null=True)
+    humidity = SmallIntegerField(null=True)
+    clouds_all = SmallIntegerField(null=True)
+    wind_speed = DecimalField(4, 2, null=True)
+    wind_deg = DecimalField(6, 3, null=True)
+    rain_3h = DecimalField(6, 3, null=True)
+    snow_3h = DecimalField(6, 3, null=True)
 
     @classmethod
     def from_dict(cls, city, dictionary):
@@ -242,26 +343,20 @@ class Forecast(_WeatherModel):
         if self.snow_3h is not None:
             dictionary['snow'] = {'3h': dec2dict(self.snow_3h)}
 
-        weather = [weather.to_dict() for weather in Weather.select().where(
-            Weather.forecast == self)]
+        weather = [weather.to_dict() for weather in self.weather]
 
         if weather:
             dictionary['weather'] = weather
 
         return dictionary
 
-    def remove(self):
-        """Removes this forecast."""
-        for weather in Weather.select().where(Weather.forecast == self):
-            weather.delete_instance()
-
-        self.delete_instance()
-
 
 class Weather(_WeatherModel):
     """Weather details."""
 
-    forecast = ForeignKeyField(Forecast, column_name='forecast')
+    forecast = ForeignKeyField(
+        Forecast, column_name='forecast', backref='weather',
+        on_delete='CASCADE')
     weather_id = SmallIntegerField()
     main = CharField(255)
     description = CharField(255)
@@ -306,7 +401,8 @@ class Client:
 
         if raw:
             return response
-        elif response.status_code == 200:
+
+        if response.status_code == 200:
             return loads(response.text)
 
         raise APIError(response)

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  XSD für Wetterinformationen.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://xml.homeinfo.de/schema/appcmd/cleaning"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://xml.homeinfo.de/schema/appcmd/cleaning">
+
+    <xs:element name="xml" type="Weather">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wurzelelement.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <xs:complexType name="Weather">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wetterinformationen.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="pubdate" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Datum der veröffentlichung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name des Ortes.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="forecast" type="Forecast">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Die Wettervorhersage.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Forecast">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wettervorhersagen.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="day" type="DayForecast" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Wettervorhersagen pro Tag.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="DayForecast">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wettervorhersage für einen Tag.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="icon_id" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    Wetter Icon.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="weather_text" type="xs:string">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    Wetterbeschreibung.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="tempmin" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    Minimale Temperatur.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="tempmax" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    Maximale Temperatur.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dtmin" type="xs:dateTime">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    ???.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dt" type="xs:dateTime">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    Datum und Uhrzeit.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

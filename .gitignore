@@ -3,3 +3,4 @@ build
 *.pyc
 *~
 .buildconfig
+ferengi/dom/[a-z]*.py
