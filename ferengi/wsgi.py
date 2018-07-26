@@ -1,11 +1,11 @@
 """WSGI services."""
 
-from datetime import datetime
 from traceback import format_exc
 
 from flask import request
 
 from terminallib import Terminal
+from timelib import today
 from wsgilib import Application, Error, JSON, XML
 
 from ferengi.garbage_disposal import Location
@@ -23,7 +23,7 @@ def get_weather(city):
     """Returns the respective weather forecasts."""
 
     try:
-        forecasts = Forecast.by_city(city, since=datetime.now())
+        forecasts = Forecast.by_city(city, since=today())
     except City.DoesNotExist:
         return ('No such city.', 404)
 
