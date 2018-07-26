@@ -1,18 +1,19 @@
 """WSGI services."""
 
 from datetime import datetime
-from json import dumps
 from traceback import format_exc
 
-from flask import Response
+from flask import request
 
 from terminallib import Terminal
-from wsgilib import Application
+from wsgilib import Application, Error, JSON, XML
 
 from ferengi.garbage_disposal import Location
-from ferengi.openweathermap import City, Forecast
+from ferengi.openweathermap import forecasts_to_dom, City, Forecast
+
 
 __all__ = ['APPLICATION']
+
 
 APPLICATION = Application('ferengi', cors=True)
 
@@ -30,7 +31,11 @@ def get_weather(city):
         forecast.to_dict() for forecast in Forecast.select().where(
             (Forecast.city == city) &
             (Forecast.dt >= datetime.now()))]
-    return Response(dumps(forecasts), mimetype='application/json')
+
+    if 'xml' in request.args:
+        return XML(forecasts_to_dom(city, forecasts))
+
+    return JSON(forecasts)
 
 
 @APPLICATION.route('/garbage-disposal/<terminal>')
@@ -58,11 +63,11 @@ def get_garbage_disposal(terminal):
     if not locations:
         return ('No garbage disposal information available.', 404)
 
-    return Response(dumps(locations), mimetype='application/json')
+    return JSON(locations)
 
 
 @APPLICATION.errorhandler(Exception)
 def debug_exceptions(_):
     """Prints a stack trace."""
 
-    return Response(format_exc(), mimetype='text/plain', status=500)
+    return Error(format_exc(), status=500)
