@@ -241,6 +241,24 @@ class Forecast(_WeatherModel):
     snow_3h = DecimalField(6, 3, null=True)
 
     @classmethod
+    def by_city(cls, city, since=None, until=None):
+        """Yields forecases of the specified
+        city within the specified time period.
+        """
+        if isinstance(city, str):
+            city = City.get(City.name == city)
+
+        expression = cls.city == city
+
+        if since is not None:
+            expression &= cls.dt >= since
+
+        if until is not None:
+            expression &= cls.dt < until
+
+        return cls.select().where(expression)
+
+    @classmethod
     def from_dict(cls, city, dictionary):
         """Creates a forecast for the respective
         city from the specified dictionary.

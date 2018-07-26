@@ -27,9 +27,7 @@ def get_weather(city):
     except City.DoesNotExist:
         return ('No such city.', 404)
 
-    forecasts = Forecast.select().where(
-        (Forecast.city == city) &
-        (Forecast.dt >= datetime.now()))
+    forecasts = Forecast.by_city(city, since=datetime.now())
 
     if 'xml' in request.args:
         return XML(forecasts_to_dom(city.name, forecasts))
