@@ -28,7 +28,7 @@ def get_weather(city):
         return ('No such city.', 404)
 
     if 'xml' in request.args:
-        return XML(forecasts_to_dom(city.name, forecasts))
+        return XML(forecasts_to_dom(city, forecasts))
 
     return JSON([forecast.to_dict() for forecast in forecasts])
 
