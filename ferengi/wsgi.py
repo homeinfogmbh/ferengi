@@ -23,11 +23,9 @@ def get_weather(city):
     """Returns the respective weather forecasts."""
 
     try:
-        city = City.get(City.name == city)
+        forecasts = Forecast.by_city(city, since=datetime.now())
     except City.DoesNotExist:
         return ('No such city.', 404)
-
-    forecasts = Forecast.by_city(city, since=datetime.now())
 
     if 'xml' in request.args:
         return XML(forecasts_to_dom(city.name, forecasts))
