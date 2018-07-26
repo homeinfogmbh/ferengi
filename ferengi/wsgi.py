@@ -32,7 +32,7 @@ def get_weather(city):
         (Forecast.dt >= datetime.now()))
 
     if 'xml' in request.args:
-        return XML(forecasts_to_dom(city, forecasts))
+        return XML(forecasts_to_dom(city.name, forecasts))
 
     return JSON([forecast.to_dict() for forecast in forecasts])
 
