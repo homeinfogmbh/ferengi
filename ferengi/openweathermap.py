@@ -63,7 +63,7 @@ ICONS = {
     'k.A.': 6}
 
 
-def _forecasts_to_dom(forecasts):
+def _day_dom(forecasts):
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = weather_dom.DayForecast()
@@ -107,7 +107,7 @@ def forecasts_to_dom(city, forecasts):
     day_after_tomorrow_forecasts = []
 
     for forecast in forecasts:
-        forecast_date = forecast.dt
+        forecast_date = forecast.dt.date()
 
         if forecast_date == today:
             today_forecasts.append(forecast)
@@ -118,13 +118,9 @@ def forecasts_to_dom(city, forecasts):
 
     xml = weather_dom.xml()
     forecast = weather_dom.Forecast()
-    today_forecast = _forecasts_to_dom(today_forecasts)
-    forecast.day.append(today_forecast)
-    tomorrow_forecast = _forecasts_to_dom(tomorrow_forecasts)
-    forecast.day.append(tomorrow_forecast)
-    day_after_tomorrow_forecast = _forecasts_to_dom(
-        day_after_tomorrow_forecasts)
-    forecast.day.append(day_after_tomorrow_forecast)
+    forecast.day.append(_day_dom(today_forecasts))
+    forecast.day.append(_day_dom(tomorrow_forecasts))
+    forecast.day.append(_day_dom(day_after_tomorrow_forecasts))
     xml.forecast = forecast
     xml.name = city
     xml.pubdate = now.strftime('%Y-%m-%d %H:%Mi:%S')
