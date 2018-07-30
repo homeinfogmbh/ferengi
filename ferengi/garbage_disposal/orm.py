@@ -92,13 +92,8 @@ class Location(_GarbageDisposalModel):
 
         for terminal in Terminal.select().where(
                 (Terminal.deleted >> None) & (Terminal.testing == 0)
-                & ~(Terminal.location >> None)):
-            try:
-                address = terminal.location.address
-            except AttributeError:
-                continue
-
-            addresses.add(address)
+                & ~(Terminal.address >> None)):
+            addresses.add(terminal.address)
 
         cls.refresh_all(addresses, force=force)
 
