@@ -47,13 +47,12 @@ def get_garbage_disposal(terminal):
     except Terminal.DoesNotExist:
         return ('No such terminal.', 404)
 
-    try:
-        address = terminal.location.address
-    except AttributeError:
+    if terminal.address is None:
         return ('Terminal is not located.', 400)
 
     locations = [
-        location.to_dict() for location in Location.by_address(address)]
+        location.to_dict() for location in
+        Location.by_address(terminal.address)]
 
     if not locations:
         return ('No garbage disposal information available.', 404)
