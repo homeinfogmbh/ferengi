@@ -3,8 +3,8 @@
 from datetime import datetime
 from time import sleep
 
-from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
-    DateTimeField, DateField, BooleanField
+from peewee import Model, ForeignKeyField, CharField, DateTimeField, \
+    DateField, BooleanField
 from requests.exceptions import ConnectionError
 
 from mdb import Address
@@ -31,8 +31,6 @@ class _GarbageDisposalModel(Model):
     class Meta:
         database = DATABASE
         schema = DATABASE.database
-
-    id = PrimaryKeyField()
 
 
 class Location(_GarbageDisposalModel):

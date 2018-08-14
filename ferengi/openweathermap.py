@@ -4,8 +4,8 @@ from contextlib import suppress
 from datetime import datetime, timedelta
 from json import loads
 
-from peewee import Model, PrimaryKeyField, ForeignKeyField, BooleanField, \
-    SmallIntegerField, CharField, DateTimeField, DecimalField, FloatField
+from peewee import Model, ForeignKeyField, BooleanField, SmallIntegerField, \
+    CharField, DateTimeField, DecimalField, FloatField
 from requests import get
 
 from configlib import INIParser
@@ -133,8 +133,6 @@ class _WeatherModel(Model):
     class Meta:
         database = DATABASE
         schema = DATABASE.database
-
-    id = PrimaryKeyField()
 
 
 class City(_WeatherModel):
