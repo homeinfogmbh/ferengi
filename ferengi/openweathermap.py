@@ -71,10 +71,9 @@ def _day_dom(forecasts):
     for forecast in forecasts:
         for weather in forecast.weather:
             if day_forecast.icon_id is None:
-                icon_id = ICONS.get(weather.icon)
+                day_forecast.icon_id = ICONS.get(weather.icon)
 
-                if icon_id is not None:
-                    day_forecast.icon_id = icon_id
+                if day_forecast.icon_id is not None:
                     day_forecast.weather_text = weather.description
                     break
 
