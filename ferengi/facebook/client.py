@@ -86,4 +86,4 @@ class Facebook(GraphAPI):
             yield Post(created, author, message, picture)
 
 
-FACEBOOK = Facebook.from_config(CONFIG['facebook'])
+FACEBOOK = Facebook.from_config(CONFIG['Facebook'])
