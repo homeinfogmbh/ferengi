@@ -1,10 +1,7 @@
-"""Common FERENGI API"""
+"""FERENGI's API."""
 
 from peeweeplus import MySQLDatabase
 from syslib import B64LZMA
-
-
-ROA = '/usr/share/roa.xz.b64'
 
 
 __all__ = [
@@ -14,31 +11,34 @@ __all__ = [
     'get_database']
 
 
+ROA = '/usr/share/roa.xz.b64'
+
+
 class UpToDate(Exception):
-    """Indicates that the record is up to date"""
+    """Indicates that the record is up to date."""
 
     pass
 
 
 class APIError(Exception):
-    """Indicates that data could not be received from the API"""
+    """Indicates that data could not be received from the API."""
 
     def __init__(self, response):
-        """Sets status code and response text"""
+        """Sets status code and response text."""
         super().__init__(response.text)
         self.response = response
 
     def __int__(self):
-        """Returns the status code"""
+        """Returns the status code."""
         return self.response.status_code
 
     def __str__(self):
-        """Returns the response text"""
+        """Returns the response text."""
         return self.response.text
 
 
 def ferengi_database(database, user=None, passwd=None):
-    """Returns a local, prefixed database configuration"""
+    """Returns a local, prefixed MySQL database."""
 
     return MySQLDatabase(
         'ferengi_{}'.format(database), host='localhost', user=user,

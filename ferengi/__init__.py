@@ -21,4 +21,4 @@ System for importing non-real estate related digital signage data.
             `----'~
 """
 __credits__ = ('* To Gene Roddenberry for Star Trek.\n'
-               '* To Joshua Bell for the Ferengi ascii logo')
+               '* To Joshua Bell for the Ferengi ascii logo.')
