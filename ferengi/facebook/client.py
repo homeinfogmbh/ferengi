@@ -26,6 +26,14 @@ class Post(namedtuple('FacebookPost', 'created author message image')):
         """Returns the message as HTML."""
         return self.message.replace(linesep, '<br/>')
 
+    def to_dict(self, html=False):
+        """Returns a JSON-ish dictionary."""
+        return {
+            'created': self.created,
+            'author': self.author,
+            'message': self.html if html else self.message,
+            'image': self.image}
+
 
 class Facebook(GraphAPI):
     """Extension of the facebook grapth API client."""
