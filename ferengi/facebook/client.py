@@ -16,7 +16,7 @@ __all__ = ['Facebook']
 User = namedtuple('FacebookUser', ('id', 'name'))
 
 
-class Post(namedtuple('FacebookPost', 'created author message picture')):
+class Post(namedtuple('FacebookPost', 'created author message image')):
     """A facebook post."""
 
     __slots__ = ()
@@ -82,8 +82,8 @@ class Facebook(GraphAPI):
                 created = strpdatetime(created)
 
             author = post.get('from', {}).get('name')
-            picture = post.get('full_picture')
-            yield Post(created, author, message, picture)
+            image = post.get('full_picture')
+            yield Post(created, author, message, image)
 
 
 FACEBOOK = Facebook.from_config(CONFIG['Facebook'])
