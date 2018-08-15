@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 from flask import request
 
-from wsgilib import XML
+from wsgilib import JSON, XML
 
 from ferengi.facebook.client import FACEBOOK
 from ferengi.facebook.functions import posts_to_dom
@@ -20,7 +20,11 @@ def get_posts(facebook_id):
     since = date.today() - timedelta(days=days)
     limit = int(request.args.get('limit', 10))
     posts = FACEBOOK.get_posts(facebook_id, since=since, limit=limit)
-    return XML(posts_to_dom(posts))
+
+    if 'xml' in request.args:
+        return XML(posts_to_dom(posts))
+
+    return JSON([post.to_dict(html=True) for post in posts])
 
 
 ROUTES = (('GET', '/facebook/<facebook_id>', get_posts, 'get_facebook_posts'),)
