@@ -16,6 +16,6 @@ def posts_to_dom(posts):
         content.from_ = post.author
         content.message = post.html
         content.image = post.image
-        channel.content.append(content)
+        channel.content_.append(content)
 
     return channel
