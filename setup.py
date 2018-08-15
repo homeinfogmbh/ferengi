@@ -6,7 +6,11 @@ setup(
     name='ferengi',
     version='latest',
     author='Richard Neumann',
-    packages=['ferengi', 'ferengi.openweathermap', 'ferengi.garbage_disposal'],
+    packages=[
+        'ferengi',
+        'ferengi.facebook',
+        'ferengi.openweathermap',
+        'ferengi.garbage_disposal'],
     scripts=['files/ferengi'],
     data_files=[
         ('/usr/lib/systemd/system/',
