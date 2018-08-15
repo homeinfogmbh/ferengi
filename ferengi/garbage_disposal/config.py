@@ -7,6 +7,7 @@ from configlib import INIParser
 
 from ferengi.api import get_database
 
+
 __all__ = ['CONFIG', 'DATABASE', 'INTERVAL', 'DISTRICTS', 'WAIT_TIME']
 
 

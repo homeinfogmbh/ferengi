@@ -1,5 +1,6 @@
 """Garbage disposal interface exceptions."""
 
+
 __all__ = ['NoInformation']
 
 

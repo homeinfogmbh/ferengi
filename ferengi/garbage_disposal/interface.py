@@ -5,6 +5,7 @@ from aha import LocationNotFound, AhaDisposalClient
 from ferengi.garbage_disposal.config import LOGGER
 from ferengi.garbage_disposal.exceptions import NoInformation
 
+
 __all__ = ['get_disposals']
 
 

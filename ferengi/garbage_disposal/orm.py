@@ -15,6 +15,7 @@ from ferengi.garbage_disposal.config import LOGGER, INTERVAL, DISTRICTS, \
 from ferengi.garbage_disposal.exceptions import NoInformation
 from ferengi.garbage_disposal.interface import get_disposals
 
+
 __all__ = ['create_tables', 'Location']
 
 
