@@ -4,3 +4,4 @@ build
 *~
 .buildconfig
 ferengi/dom/[a-z]*.py
+**/dom.py

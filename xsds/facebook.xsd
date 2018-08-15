@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  XSD für Facebook Nachrichten mit fbneu.xml Kompatibilität.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://xml.homeinfo.de/schema/ferengi/facebook"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://xml.homeinfo.de/schema/ferengi/facebook">
+
+    <xs:element name="channel" type="Channel">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wurzelelement.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <xs:complexType name="Channel">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Gruppiert Posts.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="content" type="Content" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Einzelnde Posts.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Content">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Ein Post.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="created_time" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Erstellungsdatum.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="from" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Autor.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="message" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Nachricht im HTML Format.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="image" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Pfad zum Bildanhang.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
