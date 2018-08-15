@@ -70,13 +70,12 @@ def _day_dom(forecasts):
 
     for forecast in forecasts:
         for weather in forecast.weather:
-            day_forecast.icon_id = ICONS.get(weather.icon)
+            icon_id = ICONS.get(weather.icon)
 
-            if day_forecast.icon_id is None:
-                continue
-
-            day_forecast.weather_text = weather.description
-            break
+            if icon_id is not None:
+                day_forecast.icon_id = icon_id
+                day_forecast.weather_text = weather.description
+                break
 
         temp_min = int(forecast.temp_min)
 
