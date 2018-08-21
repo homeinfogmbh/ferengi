@@ -16,7 +16,7 @@ __all__ = ['Facebook']
 User = namedtuple('FacebookUser', ('id', 'name'))
 
 
-class Post(namedtuple('FacebookPost', 'created author message image')):
+class Post(namedtuple('Post', ('created', 'author', 'message', 'image'))):
     """A facebook post."""
 
     __slots__ = ()
@@ -35,8 +35,28 @@ class Post(namedtuple('FacebookPost', 'created author message image')):
             'image': self.image}
 
 
+class Fields(tuple):
+    """Class to represent fields selections for the graph API."""
+
+    def __new__(cls, *items):
+        """Returns a new tuple."""
+        return super().__new__(cls, items)
+
+    def __str__(self):
+        """Returns the comma-joint items."""
+        return ','.join(str(item) for item in self)
+
+    def to_dict(self):
+        """Returns a dictionary to be used as query parameter."""
+        return {'fields': str(self)}
+
+
+USER_FIELDS = Fields('id', 'name')
+POST_FIELDS = Fields('full_picture', 'message', 'created_time', 'from', 'type')
+
+
 class Facebook(GraphAPI):
-    """Extension of the facebook grapth API client."""
+    """Extension of the facebook GraphAPI client."""
 
     @classmethod
     def from_id_and_secret(cls, app_id, app_secret):
@@ -56,24 +76,23 @@ class Facebook(GraphAPI):
         return cls.from_id_and_secret(
             config_section['app_id'], config_section['app_secret'])
 
-    def get_user(self, facebook_id):
+    def get_user(self, facebook_id, fields=USER_FIELDS):
         """Returns a user by the respective facebook ID."""
-        fields = ('id', 'name')
-        args = {'fields': ','.join(fields)}
-        dictionary = self.request('/{}'.format(facebook_id), args=args)
-        return User(dictionary['id'], dictionary['name'])
+        json = self.request('/{}'.format(facebook_id), args=fields.to_dict())
+        return User(json['id'], json['name'])
 
-    def get_posts(self, facebook_id, *, limit=10, since=None):
+    def get_posts(self, facebook_id, *, limit=10, since=None,
+                  fields=POST_FIELDS):
         """Yields posts of the respective user."""
-        fields = ('full_picture', 'message', 'created_time', 'from', 'type')
-        args = {'fields': ','.join(fields), 'limit': limit}
+        args = {'limit': limit}
 
         if since is not None:
             args['since'] = since.strftime('%s')
 
-        dictionary = self.request('/{}/posts'.format(facebook_id), args=args)
+        args.update(fields.to_dict())
+        json = self.request('/{}/posts'.format(facebook_id), args=args)
 
-        for post in dictionary['data']:
+        for post in json['data']:
             # Skip links.
             if post['type'] == 'link':
                 continue
