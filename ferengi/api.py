@@ -42,7 +42,7 @@ def ferengi_database(database, user=None, passwd=None):
 
     return MySQLDatabase(
         'ferengi_{}'.format(database), host='localhost', user=user,
-        passwd=passwd, retry=True)
+        passwd=passwd, closing=True)
 
 
 def get_database(config):
