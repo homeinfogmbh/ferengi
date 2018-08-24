@@ -26,7 +26,7 @@ class Post(namedtuple('Post', ('created', 'author', 'message', 'image'))):
         """Returns the message as HTML."""
         return self.message.replace(linesep, '<br/>')
 
-    def to_dict(self, html=False):
+    def to_json(self, html=False):
         """Returns a JSON-ish dictionary."""
         return {
             'created': self.created,

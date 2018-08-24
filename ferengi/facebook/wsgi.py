@@ -24,7 +24,7 @@ def get_posts(facebook_id):
     if 'xml' in request.args:
         return XML(posts_to_dom(posts))
 
-    return JSON([post.to_dict(html=True) for post in posts])
+    return JSON([post.to_json(html=True) for post in posts])
 
 
 ROUTES = (('GET', '/facebook/<facebook_id>', get_posts, 'get_facebook_posts'),)

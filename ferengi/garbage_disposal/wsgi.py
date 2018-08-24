@@ -26,7 +26,7 @@ def get_garbage_disposal(terminal):
         return ('Terminal is not located.', 400)
 
     locations = [
-        location.to_dict() for location in
+        location.to_json() for location in
         Location.by_address(terminal.address)]
 
     if not locations:

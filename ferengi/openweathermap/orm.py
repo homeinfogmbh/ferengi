@@ -77,8 +77,8 @@ class City(_WeatherModel):
 
         return datetime.now() - self.last_update <= timedelta(days=1)
 
-    def to_dict(self):
-        """Converts the record to a JSON-compilant dictionary."""
+    def to_json(self):
+        """Converts the record to a JSON-ish dictionary."""
         dictionary = {
             'id': self.id,
             'name': self.name,
@@ -199,8 +199,8 @@ class Forecast(_WeatherModel):
         for weather in dictionary['weather']:
             yield Weather.from_dict(forecast, weather)
 
-    def to_dict(self):
-        """Converts the forecast into a JSON-compliant dictionary."""
+    def to_json(self):
+        """Converts the forecast into a JSON-ish dictionary."""
         dictionary = {'dt': self.dt.isoformat()}
         main = {}
 
@@ -248,7 +248,7 @@ class Forecast(_WeatherModel):
         if self.snow_3h is not None:
             dictionary['snow'] = {'3h': dec2dict(self.snow_3h)}
 
-        weather = [weather.to_dict() for weather in self.weather]
+        weather = [weather.to_json() for weather in self.weather]
 
         if weather:
             dictionary['weather'] = weather
@@ -280,8 +280,8 @@ class Weather(_WeatherModel):
         weather.icon = dictionary['icon']
         return weather
 
-    def to_dict(self):
-        """Converts the weather into a JSON-compliant dictionary."""
+    def to_json(self):
+        """Converts the weather into a JSON-ish dictionary."""
         return {
             'id': self.weather_id,
             'main': self.main,

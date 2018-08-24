@@ -23,7 +23,7 @@ def get_weather(city):
     if 'xml' in request.args:
         return XML(forecasts_to_dom(city, forecasts))
 
-    return JSON([forecast.to_dict() for forecast in forecasts])
+    return JSON([forecast.to_json() for forecast in forecasts])
 
 
 ROUTES = (('GET', '/weather/<city>', get_weather, 'get_weather'),)

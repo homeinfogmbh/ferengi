@@ -106,7 +106,7 @@ class Location(_GarbageDisposalModel):
     def from_address(cls, address):
         """Creates an entry from the respective address."""
         for pickup_solution in get_disposals(address):
-            yield from cls.from_dict(address, pickup_solution.to_dict())
+            yield from cls.from_dict(address, pickup_solution.to_json())
 
     @classmethod
     def from_dict(cls, address, dictionary):
@@ -122,14 +122,14 @@ class Location(_GarbageDisposalModel):
         for pickup in dictionary['pickups']:
             yield from Pickup.from_dict(record, pickup)
 
-    def to_dict(self):
+    def to_json(self):
         """Returns a JSON-ish dictionary."""
         return {
             'code': self.code,
             'street': self.street,
             'house_number': self.house_number,
             'district': self.district,
-            'pickups': [pickup.to_dict() for pickup in self.pickups]}
+            'pickups': [pickup.to_json() for pickup in self.pickups]}
 
 
 class Pickup(_GarbageDisposalModel):
@@ -157,14 +157,14 @@ class Pickup(_GarbageDisposalModel):
         for date in dictionary.get('next_dates', ()):
             yield PickupDate.from_dict(record, date)
 
-    def to_dict(self):
+    def to_json(self):
         """Returns a JSON-ish dictionary."""
         return {
             'type': self.type_,
             'image_link': self.image_link,
             'weekday': self.weekday,
             'interval': self.interval,
-            'next_dates': [date.to_dict() for date in self.next_dates]}
+            'next_dates': [date.to_json() for date in self.next_dates]}
 
 
 class PickupDate(_GarbageDisposalModel):
@@ -187,7 +187,7 @@ class PickupDate(_GarbageDisposalModel):
         record.exceptional = dictionary['exceptional']
         return record
 
-    def to_dict(self):
+    def to_json(self):
         """Returns a JSON-ish dictionary."""
         return {
             'date': self.date.strftime('%Y-%m-%d'),
