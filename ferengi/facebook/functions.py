@@ -14,7 +14,7 @@ HOST = 'ferengi.homeinfo.de'
 IMG_PATH = '/facebook/image'
 
 
-def encode_image_url(url, path=IMG_PATH):
+def encode_image_url(url, img_path=IMG_PATH):
     """Translates URLSs to be proxied."""
 
     url = urlparse(url)
@@ -25,15 +25,16 @@ def encode_image_url(url, path=IMG_PATH):
     params = ';{}'.format(url.netloc)
     query = '?{}'.format(url.query) if url.query else ''
     return '{}://{}{}{}{}{}'.format(
-        SCHEME, HOST, path, url.path, params, query)
+        SCHEME, HOST, img_path, url.path, params, query)
 
 
-def decode_image_url(url):
+def decode_image_url(url, img_path=IMG_PATH):
     """Translates URLSs to be proxied."""
 
     url = urlparse(url)
     path = Path(url.path)
-    parts = path.parts[2:]
+    img_path = Path(IMG_PATH)
+    parts = path.parts[len(img_path.parts):]
     path = '/' + '/'.join(parts)
     host = url.params
     query = '?{}'.format(url.query) if url.query else ''
