@@ -36,7 +36,8 @@ def get_image(path):
     response = get(url)
 
     if response.status_code == 200:
-        return Response(response.content, mimetype=response.content_type)
+        mimetype = response.headers['content-type']
+        return Response(response.content, mimetype=mimetype)
 
     return Error(response.text)
 
