@@ -32,7 +32,9 @@ def get_posts(facebook_id):
 def get_image(path):
     """Proxies images from Facebook."""
 
-    url = decode_image_url(request.url.replace('%3B', ';'))
+    url = request.url
+    url = url.replace('%3B', ';')   # Compensate for flask's encoding.
+    url = decode_image_url(url)
     response = get(url)
 
     if response.status_code == 200:
