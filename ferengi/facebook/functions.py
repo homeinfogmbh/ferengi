@@ -31,14 +31,13 @@ def encode_image_url(url, path=IMG_PATH):
 def decode_image_url(url):
     """Translates URLSs to be proxied."""
 
-    print('URL:', url, flush=True)
     url = urlparse(url)
     path = Path(url.path)
     parts = path.parts[2:]
     path = '/' + '/'.join(parts)
     host = url.params
     query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}{}'.format(SCHEME, host, path, url.path, query)
+    return '{}://{}{}{}{}'.format(SCHEME, host, path, query)
 
 
 def posts_to_dom(posts, proxy=False):
