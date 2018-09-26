@@ -11,7 +11,7 @@ __all__ = ['encode_image_url', 'decode_image_url', 'posts_to_dom']
 
 SCHEME = 'https'
 HOST = 'ferengi.homeinfo.de'
-IMG_PATH = '/facebook/image'
+IMG_PATH = Path('/facebook/image')
 
 
 def encode_image_url(url, img_path=IMG_PATH):
@@ -34,7 +34,8 @@ def decode_image_url(url, img_path=IMG_PATH):
     url = urlparse(url)
     path = Path(url.path)
     img_path = Path(IMG_PATH)
-    parts = path.parts[len(img_path.parts):]
+    offset = len(img_path.parts)
+    parts = path.parts[offset:]
     path = '/' + '/'.join(parts)
     host = url.params
     query = '?{}'.format(url.query) if url.query else ''
