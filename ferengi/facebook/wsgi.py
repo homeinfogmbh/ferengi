@@ -33,6 +33,7 @@ def get_image(path):
     """Proxies images from Facebook."""
 
     url = decode_image_url(request.url.replace('%3B', ';'))
+    print('URL2:', url, flush=True)
     response = get(url)
 
     if response.status_code == 200:
