@@ -19,13 +19,13 @@ def encode_image_url(url, path=IMG_PATH):
 
     url = urlparse(url)
 
-    if url.fragment:
-        raise ValueError('Cannot encode URL with fragment.')
+    if url.params:
+        raise ValueError('Cannot encode URL with params.')
 
-    params = ';{}'.format(url.params) if url.params else ''
+    params = ';{}'.format(url.netloc)
     query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}{}{}#{}'.format(
-        SCHEME, HOST, path, url.path, params, query, url.netloc)
+    return '{}://{}{}{}{}{}'.format(
+        SCHEME, HOST, path, url.path, params, query)
 
 
 def decode_image_url(url):
@@ -35,11 +35,9 @@ def decode_image_url(url):
     path = Path(url.path)
     parts = path.parts[2:]
     path = '/' + '/'.join(parts)
-    host = url.fragment
-    params = ';{}'.format(url.params) if url.params else ''
+    host = url.params
     query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}{}{}'.format(
-        SCHEME, host, path, url.path, params, query)
+    return '{}://{}{}{}{}'.format(SCHEME, host, path, url.path, query)
 
 
 def posts_to_dom(posts, proxy=False):
