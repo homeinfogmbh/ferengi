@@ -31,7 +31,7 @@ def encode_image_url(url, path=IMG_PATH):
 def decode_image_url(url):
     """Translates URLSs to be proxied."""
 
-    url = urlparse(url)
+    url = urlparse(url.replace('%3B', ';'))
     path = Path(url.path)
     parts = path.parts[2:]
     path = '/' + '/'.join(parts)
