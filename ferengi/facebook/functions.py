@@ -37,7 +37,7 @@ def decode_image_url(url):
     path = '/' + '/'.join(parts)
     host = url.params
     query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}{}'.format(SCHEME, host, path, query)
+    return '{}://{}{}{}'.format(SCHEME, host, path, query)
 
 
 def posts_to_dom(posts, proxy=False):
