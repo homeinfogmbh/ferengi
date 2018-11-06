@@ -21,12 +21,16 @@ def get_posts(facebook_id):
     since = date.today() - timedelta(days=days)
     limit = int(request.args.get('limit', 10))
     posts = FACEBOOK.get_posts(facebook_id, since=since, limit=limit)
+    content_type = request.headers.get('Accept', 'application/json')
 
-    if 'xml' in request.args:
+    if content_type == 'application/xml':
         proxy = 'proxy' in request.args
         return XML(posts_to_dom(posts, proxy=proxy))
 
-    return JSON([post.to_json(html=True) for post in posts])
+    if content_type == 'application/json':
+        return JSON([post.to_json(html=True) for post in posts])
+
+    raise Error('Invalid content type.')
 
 
 def get_image(path):
