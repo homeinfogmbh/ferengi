@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from flask import request, Response
 from requests import get
 
-from wsgilib import JSON, XML, Error
+from wsgilib import JSON, XML
 
 from ferengi.facebook.client import FACEBOOK
 from ferengi.facebook.functions import posts_to_dom, decode_image_url
@@ -30,7 +30,7 @@ def get_posts(facebook_id):
     if content_type == 'application/json':
         return JSON([post.to_json(html=True) for post in posts])
 
-    raise Error('Invalid content type.')
+    return ('Invalid content type.', 406)
 
 
 def get_image(path):
@@ -45,7 +45,7 @@ def get_image(path):
         mimetype = response.headers['content-type']
         return Response(response.content, mimetype=mimetype)
 
-    return Error(response.text)
+    return (response.text, 400)
 
 
 ROUTES = (

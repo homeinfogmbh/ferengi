@@ -3,7 +3,7 @@
 from flask import request
 
 from timelib import today
-from wsgilib import JSON, XML, Error
+from wsgilib import JSON, XML
 
 from ferengi.openweathermap.functions import forecasts_to_dom
 from ferengi.openweathermap.orm import City, Forecast
@@ -28,7 +28,7 @@ def get_weather(city):
     if content_type == 'application/json':
         return JSON([forecast.to_json() for forecast in forecasts])
 
-    raise Error('Invalid content type.')
+    return ('Invalid content type.', 406)
 
 
 ROUTES = (('GET', '/weather/<city>', get_weather, 'get_weather'),)
