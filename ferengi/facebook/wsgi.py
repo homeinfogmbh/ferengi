@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from flask import request, Response
 from requests import get
 
-from wsgilib import JSON, XML
+from wsgilib import ACCEPT, JSON, XML
 
 from ferengi.facebook.client import FACEBOOK
 from ferengi.facebook.functions import posts_to_dom, decode_image_url
@@ -21,13 +21,12 @@ def get_posts(facebook_id):
     since = date.today() - timedelta(days=days)
     limit = int(request.args.get('limit', 10))
     posts = FACEBOOK.get_posts(facebook_id, since=since, limit=limit)
-    content_type = request.headers.get('Accept', 'application/json')
 
-    if content_type == 'application/xml':
+    if 'application/xml' in ACCEPT:
         proxy = 'proxy' in request.args
         return XML(posts_to_dom(posts, proxy=proxy))
 
-    if content_type == 'application/json':
+    if 'application/json' in ACCEPT:
         return JSON([post.to_json(html=True) for post in posts])
 
     return ('Invalid content type.', 406)
