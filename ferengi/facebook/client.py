@@ -16,10 +16,17 @@ __all__ = ['Facebook']
 User = namedtuple('FacebookUser', ('id', 'name'))
 
 
-class Post(namedtuple('Post', ('created', 'author', 'message', 'image'))):
+class Post:
     """A facebook post."""
 
-    __slots__ = ()
+    __slots__ = ('created', 'author', 'message', 'image')
+
+    def __init__(self, created, author, message, image):
+        """Creates a new post."""
+        self.created = created
+        self.author = author
+        self.message = message
+        self.image = image
 
     @property
     def html(self):
