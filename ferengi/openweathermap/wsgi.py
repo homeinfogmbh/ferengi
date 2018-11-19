@@ -18,10 +18,10 @@ def get_weather(city):
     except City.DoesNotExist:
         return ('No such city.', 404)
 
-    if 'application/xml' in ACCEPT:
+    if 'application/xml' in ACCEPT or '*/*' in ACCEPT:
         return XML(forecasts_to_dom(city, forecasts))
 
-    if 'application/json' in ACCEPT or '*/*' in ACCEPT:
+    if 'application/json' in ACCEPT:
         return JSON([forecast.to_json() for forecast in forecasts])
 
     return ('Invalid content type.', 406)
