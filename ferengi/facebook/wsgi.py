@@ -26,7 +26,7 @@ def get_posts(facebook_id):
         proxy = 'proxy' in request.args
         return XML(posts_to_dom(posts, proxy=proxy))
 
-    if 'application/json' in ACCEPT:
+    if 'application/json' in ACCEPT or '*/*' in ACCEPT:
         return JSON([post.to_json(html=True) for post in posts])
 
     return ('Invalid content type.', 406)
