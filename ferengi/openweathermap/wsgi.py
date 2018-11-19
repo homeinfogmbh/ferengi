@@ -21,7 +21,7 @@ def get_weather(city):
     if 'application/xml' in ACCEPT:
         return XML(forecasts_to_dom(city, forecasts))
 
-    if 'application/json' in ACCEPT:
+    if 'application/json' in ACCEPT or '*/*' in ACCEPT:
         return JSON([forecast.to_json() for forecast in forecasts])
 
     return ('Invalid content type.', 406)
