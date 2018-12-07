@@ -1,9 +1,9 @@
 """Facebook configuration."""
 
-from configlib import INIParser
+from ferengi.config import ferengi_config
 
 
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/etc/ferengi.d/facebook.conf')
+CONFIG = ferengi_config('facebook.conf')

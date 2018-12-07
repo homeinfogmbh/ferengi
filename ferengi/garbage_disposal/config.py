@@ -3,16 +3,15 @@
 from datetime import timedelta
 from logging import getLogger
 
-from configlib import INIParser
-
 from ferengi.api import get_database
+from ferengi.config import ferengi_config
 
 
 __all__ = ['CONFIG', 'DATABASE', 'INTERVAL', 'DISTRICTS', 'WAIT_TIME']
 
 
 LOGGER = getLogger('Garbage disposal')
-CONFIG = INIParser('/etc/ferengi.d/garbage_disposal.conf')
+CONFIG = ferengi_config('garbage_disposal.conf')
 DATABASE = get_database(CONFIG)
 
 try:

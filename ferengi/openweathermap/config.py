@@ -1,9 +1,9 @@
 """Configuration parsing."""
 
-from configlib import INIParser
+from ferengi.config import ferengi_config
 
 
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/etc/ferengi.d/openweathermap.conf')
+CONFIG = ferengi_config('openweathermap.conf')

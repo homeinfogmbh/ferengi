@@ -11,7 +11,7 @@ __all__ = [
     'get_database']
 
 
-ROA = '/usr/share/roa.xz.b64'
+ROA = '/usr/local/share/roa.xz.b64'
 
 
 class UpToDate(Exception):

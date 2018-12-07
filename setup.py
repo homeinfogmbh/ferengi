@@ -14,9 +14,8 @@ setup(
     scripts=['files/ferengi'],
     data_files=[
         ('/usr/lib/systemd/system/',
-         ['files/ferengi@.service',
-          'files/ferengi@.timer']),
-        ('/usr/share/', ['files/roa.xz.b64'])],
+         ['files/ferengi@.service', 'files/ferengi@.timer']),
+        ('/usr/local/share/', ['files/roa.xz.b64'])],
     description=(
         'Frankly Everything, but Real Estates'
         ' Notoriously Greedy Importer.'))
