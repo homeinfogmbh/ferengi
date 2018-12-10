@@ -59,8 +59,7 @@ class Fields(tuple):
 
 
 USER_FIELDS = Fields('id', 'name')
-POST_FIELDS = Fields(
-    'full_picture', 'message', 'created_time', 'from', 'type')
+POST_FIELDS = Fields('full_picture', 'message', 'created_time', 'from', 'type')
 
 
 class Facebook(GraphAPI):
