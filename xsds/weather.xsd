@@ -103,17 +103,10 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="dtmin" type="xs:dateTime">
+        <xs:attribute name="date" type="xs:date">
             <xs:annotation>
                 <xs:documentation xml:lang="de">
-                    ???.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="dt" type="xs:dateTime">
-            <xs:annotation>
-                <xs:documentation xml:lang="de">
-                    Datum und Uhrzeit.
+                    Datum der Wettervorhersage.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

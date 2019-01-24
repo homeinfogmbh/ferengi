@@ -1,8 +1,9 @@
 """Utility functions."""
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 
-from ferengi.openweathermap import dom
+from ferengi.openweathermap import dom  # pylint: disable=E0611
 
 
 __all__ = ['forecasts_to_dom']
@@ -46,37 +47,42 @@ ICONS = {
     'k.A.': 6}
 
 
-def _day_dom(forecasts):
+def _day_dom(forecasts, date):
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = dom.DayForecast()
+    day_forecast.tempmin = min(
+        int(forecast.temp_min) for forecast in forecasts)
+    day_forecast.tempmax = max(
+        int(forecast.temp_min) for forecast in forecasts)
+    day_forecast.date = date
+    icon_ids = defaultdict(int)
+    weather_texts = defaultdict(int)
 
     for forecast in forecasts:
         for weather in forecast.weather:
-            if day_forecast.icon_id is None:
-                day_forecast.icon_id = ICONS.get(weather.icon)
+            icon_id = ICONS.get(weather.icon)
 
-                if day_forecast.icon_id is not None:
-                    day_forecast.weather_text = weather.description
-                    break
+            if icon_id is not None:
+                icon_ids[icon_id] += 1
 
-        temp_min = int(forecast.temp_min)
+            weather_text = weather.description
 
-        if day_forecast.tempmin is None or day_forecast.tempmin > temp_min:
-            day_forecast.tempmin = temp_min
+            if weather_text:
+                weather_texts[weather_text] += 1
 
-        temp_max = int(forecast.temp_max)
+    max_icon_id_occurance = max(icon_ids.values())
+    max_weather_text_occurance = max(weather_texts.values())
 
-        if day_forecast.tempmax is None or day_forecast.tempmax < temp_max:
-            day_forecast.tempmax = temp_max
+    for icon_id, occurance in icon_ids.items():
+        if occurance == max_icon_id_occurance:
+            day_forecast.icon_id = icon_id
+            break
 
-        dt_ = forecast.dt
-
-        if day_forecast.dtmin is None or day_forecast.dtmin > dt_:
-            day_forecast.dtmin = dt_
-
-        if day_forecast.dt is None or day_forecast.dt < dt_:
-            day_forecast.dt = dt_
+    for weather_text, occurance in weather_texts.items():
+        if occurance == max_weather_text_occurance:
+            day_forecast.weather_text = weather_text
+            break
 
     return day_forecast
 
@@ -104,9 +110,10 @@ def forecasts_to_dom(city, forecasts):
 
     xml = dom.xml()
     forecast = dom.Forecast()
-    forecast.day.append(_day_dom(today_forecasts))
-    forecast.day.append(_day_dom(tomorrow_forecasts))
-    forecast.day.append(_day_dom(day_after_tomorrow_forecasts))
+    forecast.day = [
+        _day_dom(today_forecasts, today),
+        _day_dom(tomorrow_forecasts, tomorrow),
+        _day_dom(day_after_tomorrow_forecasts, day_after_tomorrow)]
     xml.forecast = forecast
     xml.name = city
     xml.pubdate = now.strftime('%Y-%m-%d %H:%M:%S')
