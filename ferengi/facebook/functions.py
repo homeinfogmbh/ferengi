@@ -53,10 +53,11 @@ def posts_to_dom(posts, proxy=False):
         content.from_ = post.author
         content.message = post.html
 
-        if proxy:
-            content.image = encode_image_url(post.image)
-        else:
-            content.image = post.image
+        if post.image is not None:
+            if proxy:
+                content.image = encode_image_url(post.image)
+            else:
+                content.image = post.image
 
         channel.content_.append(content)
 
