@@ -12,39 +12,22 @@ __all__ = ['forecasts_to_dom']
 ICONS = {
     '01d': 22,
     '02d': 13,
-    '04d': 12,
     '03d': 5,
-    '50d': 8,
-    'Nebel mit Reifbildung': 5,
-    'Sprühregen': 15,
-    'leichter Sprühregen': 17,
-    'starker Sprühregen': 15,
-    'leichter Sprühregen, gefrierend': 17,
-    'starker Sprühregen, gefrierend': 15,
-    '10d': 15,
-    'leichter Regen': 2,
-    'mäßiger Regen': 17,
-    'starker Regen': 15,
-    'leichter Regen, gefrierend': 2,
-    'mäßiger od. starker Regen, gefrierend': 17,
-    'leichter Schnee-Regen': 16,
-    'starker Schnee-Regen': 16,
-    '13d': 20,
-    'leichter Schneefall': 20,
-    'mäßiger Schneefall': 20,
-    'starker Schneefall': 20,
-    'Schauer': 2,
-    'leichter Regen - Schauer': 2,
-    'Regen - Schauer': 2,
+    '04d': 12,
     '09d': 4,
-    'leichter Schnee / Regen - Schauer': 18,
-    'starker Schnee / Regen - Schauer': 18,
-    'leichter Schnee - Schauer': 3,
-    'mäßiger od. starker Schnee - Schauer': 20,
+    '10d': 15,
     '11d': 1,
-    'leichtes Gewitter': 1,
-    'starkes Gewitter': 1,
-    'k.A.': 6}
+    '13d': 20,
+    '50d': 8,
+    '01n': 22,
+    '02n': 13,
+    '03n': 5,
+    '04n': 12,
+    '09n': 4,
+    '10n': 15,
+    '11n': 1,
+    '13n': 20,
+    '50n': 8}
 
 
 def _day_dom(forecasts, date):
@@ -61,11 +44,8 @@ def _day_dom(forecasts, date):
 
     for forecast in forecasts:
         for weather in forecast.weather:
-            icon_id = ICONS.get(weather.icon)
-
-            if icon_id is not None:
-                icon_ids[icon_id] += 1
-
+            icon_id = ICONS.get(weather.icon, 6)
+            icon_ids[icon_id] += 1
             weather_text = weather.description
 
             if weather_text:
