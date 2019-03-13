@@ -4,8 +4,9 @@
     Greedy data acquisition.
 
 Usage:
-    ferengi openweathermap [options]
     ferengi garbage-disposal [options]
+    ferengi openligadb [options]
+    ferengi openweathermap [options]
 
 Options:
     --force, -f     Force data import.
@@ -18,6 +19,7 @@ from docopt import docopt
 
 from ferengi.api import APIError, roa
 from ferengi.garbage_disposal import Location
+from ferengi.openligadb import Team
 from ferengi.openweathermap import City
 
 
@@ -30,15 +32,17 @@ def main(options):
     basicConfig(level=INFO)
     force = options['--force']
 
-    if options['openweathermap']:
+    if options['garbage-disposal']:
+        Location.update_all(force=force)
+    elif options['openligadb']:
+        Team.update_from_api()
+    elif options['openweathermap']:
         try:
             City.update_all()
         except APIError as api_error:
             LOGGER.error(
                 'Caught API error (%i): %s.', int(api_error), str(api_error))
             return 1
-    elif options['garbage-disposal']:
-        Location.update_all(force=force)
 
     return 0
 
