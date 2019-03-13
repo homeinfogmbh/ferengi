@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  XSD für openligadb.de.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://xml.homeinfo.de/schema/ferengi/facebook"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://xml.homeinfo.de/schema/ferengi/facebook">
+
+    <xs:element name="ArrayOfMatch" type="ArrayOfMatchType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wurzelelement.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <xs:complexType name="ArrayOfMatchType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Liste von Spielen.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Match" type="MatchType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Einzelne Spiele.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="MatchType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Ein Spiel.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Goals" type="GoalsType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Tore.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Group" type="GroupType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Gruppe.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LastUpdateDateTime" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Datum und Uhrzeit der letzten Aktualisierung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LeagueId" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID der Liga.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LeagueName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name der Liga.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Location" type="LocationType" nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID der Liga.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchDateTime" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Datum und Uhrzeit des Spiels in Ortszeit.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchDateTimeUTC" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Datum und Uhrzeit des Spiels in UTC.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID des Spiels.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchIsFinished" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Ist das Spiel beendet?
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchResults" type="MatchResultsType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Details zum Spielausgang.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberOfViewers" type="xs:unsignedInt" nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl der Zuschauer.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Team1" type="TeamType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Heimteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Team2" type="TeamType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Gastteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TimeZoneID" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name der Zeitzone.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GoalsType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Liste von Toren.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Goal" type="GoalType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Tore.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GoalType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Informationen zu einem Tor.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Comment" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Kommentar zum Tor.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GoalGetterID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Spieler ID des Torschützen.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GoalGetterName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name des Torschützen.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GoalID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID des Tors.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IsOvertime" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Ist das Tor in der Nachspielzeit gefallen?
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IsOwnGoal" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Handelt es sich um ein Eigentor?
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IsPenalty" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Ist das Tor im Rahmen eines Strafstoßes gefallen?
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MatchMinute" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Spielminute, in welcher das Tor gefallen ist.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ScoreTeam1" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Torstand Heimteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ScoreTeam2" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Torstand Gastteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GroupType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Informationen zur Spielgruppe.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="GroupID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID der Gruppe.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GroupName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name der Gruppe.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GroupOrderID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Sortierindex der Gruppe.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="LocationType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Informationen zum Spielort.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="LocationCity" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name der Stadt.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LocationID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID des Spielorts.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LocationStadium" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Name des Stadions.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="MatchResultsType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Spielausgänge und Zwischenstände.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="MatchResult" type="MatchResultType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Ergebnistypen.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="MatchResultType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Spielausgangs- und Zwischenstands-Informationen.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="PointsTeam1" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Punkte für Heimteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PointsTeam2" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Punkte für Gastteam.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResultDescription" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Textbeschreibung des Ergebnis.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResultID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID des Spienstands.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResultName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Textbeschreibung des Spielstands.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResultOrderID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Sortierindex.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResultTypeID" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Typ des Ergebnisses oder Zwischenstands.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="TeamType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Informationen zum einem Team.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ShortName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Kürzel des Teams.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamGroupName" type="xs:string" nillable="true">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Gruppenname des Teams. (?)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamIconUrl" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        URL zum Teamlogo.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamId" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID des Teams.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Voller Name des Teams.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
