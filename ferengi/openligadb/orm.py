@@ -5,7 +5,7 @@ from peewee import IntegerField
 from peewee import Model
 
 from ferengi.openligadb.config import DATABASE, LOGGER
-from ferengi.openligadb.dom import BlTableTeam  # pylint: disable=E0611,E0401
+from ferengi.openligadb.dom import BlTableTeamType
 
 
 __all__ = ['create_tables', 'Team']
@@ -54,7 +54,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
 
     @classmethod
     def from_dom(cls, dom):
-        """Returns a record from a BlTableTeam DOM instance."""
+        """Returns a record from a BlTableTeamType instance."""
         record = cls()
         record.draw = dom.Draw
         record.goals = dom.Goals
@@ -70,8 +70,8 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         return record
 
     def to_dom(self):
-        """Returns a BlTableTeam DOM instance from the record."""
-        dom = BlTableTeam()
+        """Returns a BlTableTeamType instance from the record."""
+        dom = BlTableTeamType()
         dom.Draw = self.draw
         dom.Goals = self.goals
         dom.Lost = self.lost
