@@ -3,9 +3,12 @@
 from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
+from requests import get
+
+from filedb import FileProperty
 
 from ferengi.openligadb.client import get_table
-from ferengi.openligadb.config import DATABASE, LOGGER
+from ferengi.openligadb.config import CONFIG, DATABASE, LOGGER
 from ferengi.openligadb.dom import BlTableTeamType
 
 
@@ -36,7 +39,8 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     opponent_goals = IntegerField()
     points = IntegerField()
     short_name = CharField(255)
-    team_icon_url = CharField(255)
+    _team_icon = IntegerField(column_name='team_icon')
+    team_icon = FileProperty(_team_icon)
     team_info_id = IntegerField()
     team_name = CharField(255)
     won = IntegerField()
@@ -69,7 +73,8 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         record.opponent_goals = dom.OpponentGoals
         record.points = dom.Points
         record.short_name = dom.ShortName
-        record.team_icon_url = dom.TeamIconUrl
+        response = get(dom.TeamIconUrl)
+        record.team_icon = response.content
         record.team_info_id = dom.TeamInfoId
         record.team_name = dom.TeamName
         record.won = dom.Won
@@ -85,7 +90,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         dom.OpponentGoals = self.opponent_goals
         dom.Points = self.points
         dom.ShortName = self.short_name
-        dom.TeamIconUrl = self.team_icon_url
+        dom.TeamIconUrl = CONFIG['api']['icon_url'].format(self._team_icon)
         dom.TeamInfoId = self.team_info_id
         dom.TeamName = self.team_name
         dom.Won = self.won
