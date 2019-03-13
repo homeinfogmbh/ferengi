@@ -1,11 +1,10 @@
 """ORM models for the garbage disposal module."""
 
+from peewee import BlobField
 from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
 from requests import get
-
-from filedb import FileProperty
 
 from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import CONFIG, DATABASE, LOGGER
@@ -39,8 +38,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     opponent_goals = IntegerField()
     points = IntegerField()
     short_name = CharField(255)
-    _team_icon = IntegerField(column_name='team_icon')
-    team_icon = FileProperty(_team_icon)
+    team_icon = BlobField()
     team_info_id = IntegerField()
     team_name = CharField(255)
     won = IntegerField()
@@ -90,7 +88,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         dom.OpponentGoals = self.opponent_goals
         dom.Points = self.points
         dom.ShortName = self.short_name
-        dom.TeamIconUrl = CONFIG['api']['icon_url'].format(self._team_icon)
+        dom.TeamIconUrl = CONFIG['api']['icon_url'].format(self.id)
         dom.TeamInfoId = self.team_info_id
         dom.TeamName = self.team_name
         dom.Won = self.won
