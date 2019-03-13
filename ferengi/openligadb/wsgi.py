@@ -15,15 +15,15 @@ __all__ = ['ROUTES']
 def get_table():
     """Returns the table of the 1st Bundesliga."""
 
-    table = ArrayOfBlTableTeam()
+    array_of_bl_table_team = ArrayOfBlTableTeam()
 
     for record in Team:
         team_icon_url = CONFIG['api']['icon_url'].format(record.id)
         bl_table_team = record.to_dom()
         bl_table_team.TeamIconUrl = team_icon_url
-        table.append(bl_table_team)
+        array_of_bl_table_team.BlTableTeam.append(bl_table_team)
 
-    return XML(table)
+    return XML(array_of_bl_table_team)
 
 
 def get_icon(ident):
