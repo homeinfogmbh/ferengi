@@ -27,7 +27,7 @@ def get_table():
 
 
 def get_icon(ident):
-    """Returns the respective team's icon."""
+    """Proxy the respecive team icons."""
 
     try:
         team = Team.get(Team.id == ident)
