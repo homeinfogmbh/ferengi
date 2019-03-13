@@ -4,7 +4,7 @@ from datetime import date
 
 from requests import get
 
-from ferengi.openligadb.config import CONFIG
+from ferengi.openligadb.config import CONFIG, LOGGER
 from ferengi.openligadb.dom import CreateFromDocument
 
 
@@ -22,5 +22,6 @@ def get_table(year=None, *, headers=HEADERS):
 
     template = CONFIG['api']['table_url']
     url = template.format(year)
+    LOGGER.info('Retrieving data from: %s', url)
     response = get(url, headers=headers)
     return CreateFromDocument(response.text)
