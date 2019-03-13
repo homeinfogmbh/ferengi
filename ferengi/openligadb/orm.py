@@ -50,8 +50,8 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
 
         for team in dom.BlTableTeam:
             record = cls.from_dom(team)
-            LOGGER.debug('Adding: %i', record)
             record.save()
+            LOGGER.debug('Added: %i', record)
 
     @classmethod
     def update_from_api(cls):
