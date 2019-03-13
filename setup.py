@@ -9,6 +9,7 @@ setup(
     packages=[
         'ferengi',
         'ferengi.facebook',
+        'ferengi.openligadb',
         'ferengi.openweathermap',
         'ferengi.garbage_disposal'],
     scripts=['files/ferengi'],
