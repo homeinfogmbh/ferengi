@@ -3,15 +3,22 @@
 from datetime import datetime
 from time import sleep
 
-from peewee import Model, ForeignKeyField, CharField, DateTimeField, \
-    DateField, BooleanField
-from requests.exceptions import ConnectionError
+from peewee import BooleanField
+from peewee import CharField
+from peewee import DateField
+from peewee import DateTimeField
+from peewee import ForeignKeyField
+from peewee import Model
+from requests.exceptions import ConnectionError     # pylint: disable=W0622
 
 from mdb import Address
 from terminallib import Terminal
 
-from ferengi.garbage_disposal.config import LOGGER, INTERVAL, DISTRICTS, \
-    WAIT_TIME, DATABASE
+from ferengi.garbage_disposal.config import DATABASE
+from ferengi.garbage_disposal.config import DISTRICTS
+from ferengi.garbage_disposal.config import INTERVAL
+from ferengi.garbage_disposal.config import LOGGER
+from ferengi.garbage_disposal.config import WAIT_TIME
 from ferengi.garbage_disposal.exceptions import NoInformation
 from ferengi.garbage_disposal.interface import get_disposals
 
@@ -29,7 +36,7 @@ def create_tables():
 class _GarbageDisposalModel(Model):
     """Base Model."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111,R0903
         database = DATABASE
         schema = DATABASE.database
 

@@ -6,5 +6,3 @@ __all__ = ['NoInformation']
 
 class NoInformation(Exception):
     """Indicates that no pickup information is available."""
-
-    pass
