@@ -4,7 +4,7 @@ from traceback import format_exc
 
 from wsgilib import Application, Error
 
-from ferengi import facebook, openweathermap, garbage_disposal
+from ferengi import facebook, openligadb, openweathermap, garbage_disposal
 
 
 __all__ = ['APPLICATION']
@@ -12,7 +12,8 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Application('ferengi', cors=True)
 APPLICATION.add_routes(
-    facebook.ROUTES + openweathermap.ROUTES + garbage_disposal.ROUTES)
+    facebook.ROUTES + openligadb.ROUTES + openweathermap.ROUTES
+    + garbage_disposal.ROUTES)
 
 
 @APPLICATION.errorhandler(Exception)
