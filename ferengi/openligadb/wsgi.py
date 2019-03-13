@@ -1,7 +1,10 @@
 """WSGI interface."""
 
+from requests import get
+
 from wsgilib import Binary, Error, XML
 
+from ferengi.openligadb.config import CONFIG
 from ferengi.openligadb.dom import ArrayOfBlTableTeam
 from ferengi.openligadb.orm import Team
 
@@ -15,7 +18,10 @@ def get_table():
     table = ArrayOfBlTableTeam()
 
     for record in Team:
-        table.append(record.to_dom())
+        team_icon_url = CONFIG['api']['icon_url'].format(record.id)
+        bl_table_team = record.to_dom()
+        bl_table_team.TeamIconUrl = team_icon_url
+        table.append(bl_table_team)
 
     return XML(table)
 
@@ -28,7 +34,8 @@ def get_icon(ident):
     except Team.DoesNotExist:
         return Error('No such team.', status=404)
 
-    return Binary(team.team_icon)
+    response = get(team.team_icon_url)
+    return Binary(response.content)
 
 
 ROUTES = (
