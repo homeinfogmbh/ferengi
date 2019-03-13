@@ -89,4 +89,4 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         dom.TeamInfoId = self.team_info_id
         dom.TeamName = self.team_name
         dom.Won = self.won
-        return self
+        return dom
