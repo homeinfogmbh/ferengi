@@ -5,7 +5,7 @@ from datetime import date
 from requests import get
 
 from ferengi.openligadb.config import CONFIG
-from ferengi.openligadb.dom import CreateFromDocument   # pylint: disable=E0611
+from ferengi.openligadb.dom import CreateFromDocument
 
 
 __all__ = ['get_table']
