@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  XSDs für openligadb.de.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
+            elementFormDefault="qualified">
+    <xs:include schemaLocation="ArrayOfBlTableTeam.xsd"/>
+    <xs:include schemaLocation="ArrayOfMatch.xsd"/>
+    <xs:include schemaLocation="Match.xsd"/>
+</xs:schema>

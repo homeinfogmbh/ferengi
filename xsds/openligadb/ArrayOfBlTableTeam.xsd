@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  Spieltabelle von openligadb.de.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
+            elementFormDefault="qualified">
+
+    <xs:element name="ArrayOfBlTableTeam" type="ArrayOfBlTableTeamType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Wurzelelement.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <xs:complexType name="ArrayOfBlTableTeamType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Liste von Mannschaften in der Tabelle.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BlTableTeam" type="BlTableTeamType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Einzelne Spiele.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="BlTableTeamType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Mannschaftsinformation für die Tabelle.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Draw" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Unentschieden.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Goals" type="xs:unsignedShort">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Tore.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Lost" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Niederlagen.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Matches" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Spiele.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OpponentGoals" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Gegentore.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Points" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Punkte.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShortName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Kürzel des Mannschaftsnamens.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamIconUrl" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        URL zum Teamlogo.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamInfoId" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        ID der Mannschaftsinformation in der Tabelle.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TeamName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Voller Name der Mannschaft.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Won" type="xs:unsignedByte">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Anzahl Siege.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
