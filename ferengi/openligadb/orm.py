@@ -4,6 +4,7 @@ from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
 
+from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import DATABASE, LOGGER
 from ferengi.openligadb.dom import BlTableTeamType
 
@@ -51,6 +52,11 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
             record = cls.from_dom(team)
             LOGGER.debug('Adding: %i', record)
             record.save()
+
+    @classmethod
+    def update_from_api(cls):
+        """Runs an update from the API."""
+        cls.update_from_dom(get_table())
 
     @classmethod
     def from_dom(cls, dom):
