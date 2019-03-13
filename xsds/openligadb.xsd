@@ -6,9 +6,10 @@
   Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
 -->
 
-<xs:schema  xmlns="http://xml.homeinfo.de/schema/ferengi/facebook"
+<xs:schema  xmlns="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
             xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
-            targetNamespace="http://xml.homeinfo.de/schema/ferengi/facebook">
+            targetNamespace="http://schemas.datacontract.org/2004/07/OLDB.Spa.Models.Api"
+            elementFormDefault="qualified">
 
     <xs:element name="ArrayOfMatch" type="ArrayOfMatchType">
         <xs:annotation>
