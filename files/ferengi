@@ -17,7 +17,7 @@ from sys import argv, exit as exit_
 
 from docopt import docopt
 
-from ferengi.api import APIError, roa
+from ferengi.api import ROA, APIError
 from ferengi.garbage_disposal import Location
 from ferengi.openligadb import Team
 from ferengi.openweathermap import City
@@ -49,7 +49,7 @@ def main(options):
 
 if __name__ == '__main__':
     if '--rules-of-acquisition' in argv:
-        print(roa())
+        print(ROA)
         exit_(0)
     else:
         exit_(main(docopt(__doc__)))
