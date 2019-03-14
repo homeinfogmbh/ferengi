@@ -40,8 +40,7 @@ def main(options):
         try:
             City.update_all()
         except APIError as api_error:
-            LOGGER.error(
-                'Caught API error (%i): %s.', int(api_error), str(api_error))
+            LOGGER.error('Caught API error (%i): %s.', api_error, api_error)
             return 1
 
     return 0
