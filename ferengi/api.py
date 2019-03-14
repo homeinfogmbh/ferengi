@@ -4,11 +4,7 @@ from peeweeplus import MySQLDatabase
 from syslib import B64LZMA
 
 
-__all__ = [
-    'UpToDate',
-    'APIError',
-    'ferengi_database',
-    'get_database']
+__all__ = ['UpToDate', 'APIError', 'ferengi_database', 'get_database']
 
 
 ROA = B64LZMA(
