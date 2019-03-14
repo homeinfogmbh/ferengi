@@ -6,7 +6,7 @@ from peewee import Model
 
 from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import DATABASE, LOGGER
-from ferengi.openligadb.dom import BlTableTeamType
+from ferengi.openligadb.dom import ArrayOfBlTableTeam, BlTableTeamType
 
 
 __all__ = ['create_tables', 'Team']
@@ -79,6 +79,17 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         record.team_name = dom.TeamName
         record.won = dom.Won
         return record
+
+    @classmethod
+    def dump_dom(cls):
+        """Returns an ArrayOfBlTableTeam."""
+        array_of_bl_table_team = ArrayOfBlTableTeam()
+
+        for record in cls:
+            bl_table_team = record.to_dom()
+            array_of_bl_table_team.BlTableTeam.append(bl_table_team)
+
+        return array_of_bl_table_team
 
     def to_dom(self):
         """Returns a BlTableTeamType instance from the record."""
