@@ -1,6 +1,6 @@
 """FERENGI's API."""
 
-from subprocess import check_output
+from subprocess import Popen
 
 from peeweeplus import MySQLDatabase
 from syslib import B64LZMA
@@ -175,4 +175,5 @@ def get_database(config):
 def roa():
     """Prints the rules of acquisition."""
 
-    check_output(('/usr/bin/less',), input=str(ROA), universal_newlines=True)
+    with Popen(('/usr/bin/less',)) as process:
+        process.communicate(input=str(ROA))
