@@ -176,5 +176,5 @@ def get_database(config):
 def roa():
     """Prints the rules of acquisition."""
 
-    stdin = BytesIO(bytes(ROA))
+    stdin = BytesIO(ROA.__bytes__())
     return Popen(('/usr/bin/less',), stdin=stdin)
