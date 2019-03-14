@@ -1,5 +1,7 @@
 """FERENGI's API."""
 
+from subprocess import check_output
+
 from peeweeplus import MySQLDatabase
 from syslib import B64LZMA
 
@@ -168,3 +170,9 @@ def get_database(config):
     return ferengi_database(
         config['db']['database'], user=config['db']['user'],
         passwd=config['db']['passwd'])
+
+
+def roa():
+    """Prints the rules of acquisition."""
+
+    check_output(('/usr/bin/less',), input=str(ROA), universal_newlines=True)
