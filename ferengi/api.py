@@ -1,5 +1,6 @@
 """FERENGI's API."""
 
+from io import BytesIO
 from subprocess import Popen
 
 from peeweeplus import MySQLDatabase
@@ -175,5 +176,5 @@ def get_database(config):
 def roa():
     """Prints the rules of acquisition."""
 
-    with Popen(('/usr/bin/less',)) as process:
-        process.communicate(input=str(ROA))
+    stdin = BytesIO(bytes(ROA))
+    return Popen(('/usr/bin/less',), stdin=stdin)
