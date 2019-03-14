@@ -81,12 +81,17 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         return record
 
     @classmethod
-    def dump_dom(cls):
+    def dump_dom(cls, url_template=None):
         """Returns an ArrayOfBlTableTeam."""
         array_of_bl_table_team = ArrayOfBlTableTeam()
 
         for record in cls:
             bl_table_team = record.to_dom()
+
+            if url_template is not None:
+                team_icon_url = url_template.format(record.id)
+                bl_table_team.TeamIconUrl = team_icon_url
+
             array_of_bl_table_team.BlTableTeam.append(bl_table_team)
 
         return array_of_bl_table_team

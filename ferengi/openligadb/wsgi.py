@@ -5,7 +5,6 @@ from requests import get
 from wsgilib import Binary, Error, XML
 
 from ferengi.openligadb.config import CONFIG
-from ferengi.openligadb.dom import ArrayOfBlTableTeam
 from ferengi.openligadb.orm import Team
 
 
@@ -15,14 +14,8 @@ __all__ = ['ROUTES']
 def get_table():
     """Returns the table of the 1st Bundesliga."""
 
-    array_of_bl_table_team = ArrayOfBlTableTeam()
-
-    for record in Team:
-        team_icon_url = CONFIG['api']['icon_url'].format(record.id)
-        bl_table_team = record.to_dom()
-        bl_table_team.TeamIconUrl = team_icon_url
-        array_of_bl_table_team.BlTableTeam.append(bl_table_team)
-
+    template = CONFIG['api']['icon_url']
+    array_of_bl_table_team = Team.dump_dom(url_template=template)
     return XML(array_of_bl_table_team)
 
 
