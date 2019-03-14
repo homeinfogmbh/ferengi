@@ -140,8 +140,6 @@ ROA = B64LZMA(
 class UpToDate(Exception):
     """Indicates that the record is up to date."""
 
-    pass
-
 
 class APIError(Exception):
     """Indicates that data could not be received from the API."""
