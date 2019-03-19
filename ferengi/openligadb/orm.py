@@ -65,7 +65,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         dom = get_table(year=year)
 
         if not dom.BlTableTeam:
-            LOGGER.info('No data for %i.', year)
+            LOGGER.warning('No data for %i.', year)
             year -= 1
             LOGGER.info('Getting Bundesliga table for %i.', year)
             dom = get_table(year=year)
