@@ -1,23 +1,17 @@
 """FERENGI's API."""
 
+from subprocess import PIPE, Popen
+
 from peeweeplus import MySQLDatabase
-from syslib import B64LZMA
+
+from ferengi.roa import ROA
 
 
-__all__ = [
-    'UpToDate',
-    'APIError',
-    'ferengi_database',
-    'get_database']
-
-
-ROA = '/usr/local/share/roa.xz.b64'
+__all__ = ['UpToDate', 'APIError', 'ferengi_database', 'get_database']
 
 
 class UpToDate(Exception):
     """Indicates that the record is up to date."""
-
-    pass
 
 
 class APIError(Exception):
@@ -54,7 +48,7 @@ def get_database(config):
 
 
 def roa():
-    """Reads and returns the rules of acquisition."""
+    """Prints the rules of acquisition."""
 
-    with open(ROA, 'r') as file:
-        return B64LZMA(file.read())
+    with Popen(('/usr/bin/less',), stdin=PIPE) as process:
+        process.communicate(input=ROA.__bytes__())
