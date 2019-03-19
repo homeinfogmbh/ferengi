@@ -61,10 +61,14 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     def update_from_api(cls):
         """Runs an update from the API."""
         year = date.today().year
+        LOGGER.info('Getting Bundesliga table for %i.', year)
         dom = get_table(year=year)
 
         if not dom.BlTableTeam:
-            dom = get_table(year=year-1)
+            LOGGER.info('No data for %i.', year)
+            year -= 1
+            LOGGER.info('Getting Bundesliga table for %i.', year)
+            dom = get_table(year=year)
 
         return cls.update_from_dom(dom)
 
