@@ -1,5 +1,7 @@
 """ORM models for the garbage disposal module."""
 
+from datetime import date
+
 from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
@@ -44,9 +46,6 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     @classmethod
     def update_from_dom(cls, dom):
         """Updates the entire table from the given ArrayOfBlTableTeam."""
-        if not dom.BlTableTeam:
-            return False
-
         for record in cls:
             LOGGER.info('Removing: %i', record)
             record.delete_instance()
@@ -61,7 +60,13 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     @classmethod
     def update_from_api(cls):
         """Runs an update from the API."""
-        cls.update_from_dom(get_table())
+        year = date.today().year
+        dom = get_table(year=year)
+
+        if not dom.BlTableTeam:
+            dom = get_table(year=year-1)
+
+        return cls.update_from_dom(dom)
 
     @classmethod
     def from_dom(cls, dom):
