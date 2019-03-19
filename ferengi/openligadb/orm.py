@@ -47,13 +47,13 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     def update_from_dom(cls, dom):
         """Updates the entire table from the given ArrayOfBlTableTeam."""
         for record in cls:
-            LOGGER.info('Removing: %i', record.id)
+            LOGGER.info('Removing: %s', record.short_name)
             record.delete_instance()
 
         for team in dom.BlTableTeam:
             record = cls.from_dom(team)
             record.save()
-            LOGGER.info('Added: %i', record.id)
+            LOGGER.info('Added: %s', record.short_name)
 
         return True
 
