@@ -12,7 +12,7 @@ from peewee import Model
 from requests.exceptions import ConnectionError     # pylint: disable=W0622
 
 from mdb import Address
-from terminallib import Terminal
+from terminallib import System
 
 from ferengi.garbage_disposal.config import DATABASE
 from ferengi.garbage_disposal.config import DISTRICTS
@@ -93,13 +93,12 @@ class Location(_GarbageDisposalModel):
 
     @classmethod
     def update_all(cls, force=False):
-        """Updates the garbage disposal for all active terminals."""
+        """Updates the garbage disposal for all active systems."""
         addresses = set()
 
-        for terminal in Terminal.select().where(
-                (Terminal.deleted >> None) & (Terminal.testing == 0)
-                & ~(Terminal.address >> None)):
-            addresses.add(terminal.address)
+        for system in System.select().where(
+                (System.testing == 0) & ~(System.location >> None)):
+            addresses.add(system.location.address)
 
         cls.refresh_all(addresses, force=force)
 
