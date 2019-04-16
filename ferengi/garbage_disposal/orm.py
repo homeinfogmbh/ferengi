@@ -97,8 +97,8 @@ class Location(_GarbageDisposalModel):
         addresses = set()
 
         for system in System.select().where(
-                (System.testing == 0) & ~(System.location >> None)):
-            addresses.add(system.location.address)
+                (System.testing == 0) & ~(System.deployment >> None)):
+            addresses.add(system.deployment.address)
 
         cls.refresh_all(addresses, force=force)
 
