@@ -1,6 +1,6 @@
 """WSGI interface."""
 
-from terminallib import Terminal
+from terminallib import System
 from wsgilib import JSON
 
 from ferengi.garbage_disposal.orm import Location
@@ -9,25 +9,25 @@ from ferengi.garbage_disposal.orm import Location
 __all__ = ['ROUTES']
 
 
-def get_garbage_disposal(terminal):
+def get_garbage_disposal(ident):
     """Returns garbage disposal information for the respective terminal."""
 
     try:
-        tid, cid = terminal.split('.')
+        ident = int(ident)
     except ValueError:
-        return ('Invalid terminal ID.', 400)
+        return ('Invalid system ID.', 400)
 
     try:
-        terminal = Terminal.by_ids(cid, tid)
-    except Terminal.DoesNotExist:
-        return ('No such terminal.', 404)
+        system = System[ident]
+    except System.DoesNotExist:
+        return ('No such system.', 404)
 
-    if terminal.address is None:
-        return ('Terminal is not located.', 400)
+    if system.deployment is None:
+        return ('System is not deployed.', 400)
 
     locations = [
         location.to_json() for location in
-        Location.by_address(terminal.address)]
+        Location.by_address(system.deployment.address)]
 
     if not locations:
         return ('No garbage disposal information available.', 404)
@@ -36,5 +36,5 @@ def get_garbage_disposal(terminal):
 
 
 ROUTES = (
-    ('GET', '/garbage-disposal/<terminal>', get_garbage_disposal,
+    ('GET', '/garbage-disposal/<ident>', get_garbage_disposal,
      'get_garbage_disposal'),)
