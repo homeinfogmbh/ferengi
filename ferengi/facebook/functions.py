@@ -22,10 +22,8 @@ def encode_image_url(url, img_path=IMG_PATH):
     if url.params:
         raise ValueError('Cannot encode URL with params.')
 
-    params = ';{}'.format(url.netloc)
-    query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}{}{}'.format(
-        SCHEME, HOST, img_path, url.path, params, query)
+    query = f'?{url.query}' if url.query else ''
+    return f'{SCHEME}://{HOST}{img_path}{url.path};{url.netloc}{query}'
 
 
 def decode_image_url(url, img_path=IMG_PATH):
@@ -38,8 +36,8 @@ def decode_image_url(url, img_path=IMG_PATH):
     parts = path.parts[offset:]
     path = '/' + '/'.join(parts)
     host = url.params
-    query = '?{}'.format(url.query) if url.query else ''
-    return '{}://{}{}{}'.format(SCHEME, host, path, query)
+    query = f'?{url.query}' if url.query else ''
+    return f'{SCHEME}://{host}{path}{query}'
 
 
 def posts_to_dom(posts, proxy=False):

@@ -2,6 +2,7 @@
 
 from collections import namedtuple
 from os import linesep
+from typing import NamedTuple
 
 from facebook import GraphAPI
 
@@ -16,17 +17,13 @@ __all__ = ['Facebook']
 User = namedtuple('FacebookUser', ('id', 'name'))
 
 
-class Post:
+class Post(NamedTuple):
     """A facebook post."""
 
-    __slots__ = ('created', 'author', 'message', 'image')
-
-    def __init__(self, created, author, message, image):
-        """Creates a new post."""
-        self.created = created
-        self.author = author
-        self.message = message
-        self.image = image
+    created: str
+    author: str
+    message: str
+    image: str
 
     @property
     def html(self):
@@ -90,7 +87,7 @@ class Facebook(GraphAPI):
 
     def get_user(self, facebook_id, fields=USER_FIELDS):
         """Returns a user by the respective facebook ID."""
-        json = self.request('/{}'.format(facebook_id), args=fields.to_dict())
+        json = self.request(f'/{facebook_id}', args=fields.to_dict())
         return User(json['id'], json['name'])
 
     def get_posts(self, facebook_id, *, limit=10, since=None,
@@ -102,7 +99,7 @@ class Facebook(GraphAPI):
             args['since'] = since.strftime('%s')
 
         args.update(fields.to_dict())
-        json = self.request('/{}/posts'.format(facebook_id), args=args)
+        json = self.request(f'/{facebook_id}/posts', args=args)
 
         for post in json['data']:
             # Skip links.

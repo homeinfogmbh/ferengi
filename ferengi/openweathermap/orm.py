@@ -65,9 +65,9 @@ class City(_WeatherModel):
             try:
                 city.update_forecast(force=force)
             except UpToDate:
-                print('Forecast for {} is already up-to-date.'.format(city))
+                print(f'Forecast for {city} is already up-to-date.')
             else:
-                print('Updated forecast for {}.'.format(city))
+                print(f'Updated forecast for {city}.')
 
     @property
     def up2date(self):

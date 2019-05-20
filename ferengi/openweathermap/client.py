@@ -22,8 +22,7 @@ class Client:
 
     def __call__(self, city_id, raw=False):
         """Retrievels weather data for the respective city ID."""
-        self.params.update(
-            {'id': city_id, 'appid': self.api_key})
+        self.params.update({'id': city_id, 'appid': self.api_key})
         response = get(self.base_url, params=self.params)
 
         if raw:
