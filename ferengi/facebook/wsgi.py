@@ -7,7 +7,7 @@ from requests import get
 
 from wsgilib import ACCEPT, JSON, XML
 
-from ferengi.facebook.client import FACEBOOK
+from ferengi.facebook.client import Facebook
 from ferengi.facebook.functions import posts_to_dom, decode_image_url
 
 
@@ -20,7 +20,8 @@ def get_posts(facebook_id):
     days = int(request.args.get('days', 14))
     since = date.today() - timedelta(days=days)
     limit = int(request.args.get('limit', 10))
-    posts = FACEBOOK.get_posts(facebook_id, since=since, limit=limit)
+    facebook = Facebook.default_instance()
+    posts = facebook.get_posts(facebook_id, since=since, limit=limit)
 
     if 'application/xml' in ACCEPT or '*/*' in ACCEPT:
         proxy = 'proxy' in request.args

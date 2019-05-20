@@ -83,6 +83,11 @@ class Facebook(GraphAPI):
         return cls.from_id_and_secret(
             config_section['app_id'], config_section['app_secret'])
 
+    @classmethod
+    def default_instance(cls):
+        """Returns the default instance."""
+        return cls.from_config(CONFIG['Facebook'])
+
     def get_user(self, facebook_id, fields=USER_FIELDS):
         """Returns a user by the respective facebook ID."""
         json = self.request('/{}'.format(facebook_id), args=fields.to_dict())
@@ -118,6 +123,3 @@ class Facebook(GraphAPI):
             author = post.get('from', {}).get('name')
             image = post.get('full_picture')
             yield Post(created, author, message, image)
-
-
-FACEBOOK = Facebook.from_config(CONFIG['Facebook'])
