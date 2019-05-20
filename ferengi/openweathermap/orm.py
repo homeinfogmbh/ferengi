@@ -22,7 +22,7 @@ DATABASE = get_database(CONFIG)
 class _WeatherModel(Model):
     """Abstract, basic weather DB model."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111,R0903
         database = DATABASE
         schema = DATABASE.database
 
