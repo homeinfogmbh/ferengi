@@ -90,18 +90,23 @@ class Facebook(GraphAPI):
         json = self.request(f'/{facebook_id}', args=fields.to_dict())
         return User(json['id'], json['name'])
 
-    def get_posts(self, facebook_id, *, limit=10, since=None,
+    def get_posts(self, facebook_id, *, limit=10, since=None, api_limit=None,
                   fields=POST_FIELDS):
         """Yields posts of the respective user."""
-        args = {'limit': limit}
+        args = fields.to_dict()
+
+        if api_limit is not None:
+            args['limit'] = api_limit
 
         if since is not None:
             args['since'] = since.strftime('%s')
 
-        args.update(fields.to_dict())
         json = self.request(f'/{facebook_id}/posts', args=args)
 
-        for post in json['data']:
+        for count, post in enumerate(json['data'], start=1):
+            if limit and count > limit:
+                break
+
             # Skip links.
             if post['type'] == 'link':
                 continue
