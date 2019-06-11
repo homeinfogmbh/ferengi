@@ -17,6 +17,14 @@ __all__ = ['Facebook']
 User = namedtuple('FacebookUser', ('id', 'name'))
 
 
+def _filter_links(posts):
+    """Filters out links from posts."""
+
+    for post in posts:
+        if post['type'] != 'link':
+            yield post
+
+
 class Post(NamedTuple):
     """A facebook post."""
 
@@ -103,13 +111,9 @@ class Facebook(GraphAPI):
 
         json = self.request(f'/{facebook_id}/posts', args=args)
 
-        for count, post in enumerate(json['data'], start=1):
+        for count, post in enumerate(_filter_links(json['data']), start=1):
             if limit and count > limit:
                 break
-
-            # Skip links.
-            if post['type'] == 'link':
-                continue
 
             message = post.get('message')
 
