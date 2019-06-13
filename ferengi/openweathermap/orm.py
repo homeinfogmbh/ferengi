@@ -3,8 +3,15 @@
 from contextlib import suppress
 from datetime import datetime, timedelta
 
-from peewee import Model, ForeignKeyField, IntegerField, SmallIntegerField, \
-    BooleanField, CharField, DateTimeField, DecimalField, FloatField
+from peewee import BooleanField
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import DecimalField
+from peewee import FloatField
+from peewee import ForeignKeyField
+from peewee import IntegerField
+from peewee import Model
+from peewee import SmallIntegerField
 
 from peeweeplus import dec2dict
 
@@ -57,17 +64,6 @@ class City(_WeatherModel):
         """Initializes table from dictionary list."""
         for dictionary in list_:
             cls.from_dict(dictionary).save()
-
-    @classmethod
-    def update_all(cls, force=False):
-        """Updates all cities set to be auto updated."""
-        for city in cls.select().where(cls.auto_update == 1):
-            try:
-                city.update_forecast(force=force)
-            except UpToDate:
-                print(f'Forecast for {city} is already up-to-date.')
-            else:
-                print(f'Updated forecast for {city}.')
 
     @property
     def up2date(self):

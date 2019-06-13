@@ -1,53 +1,55 @@
 #! /usr/bin/env python3
-"""ferengi.
+"""Greedy data acquisition."""
 
-    Greedy data acquisition.
+from argparse import ArgumentParser
+from logging import DEBUG, INFO, basicConfig, getLogger
+from sys import exit    # pylint: disable=W0622
 
-Usage:
-    ferengi garbage-disposal [options]
-    ferengi openligadb [options]
-    ferengi openweathermap [options]
-
-Options:
-    --force, -f     Force data import.
-    --help, -h      Show this page.
-"""
-from logging import INFO, basicConfig, getLogger
-from sys import argv, exit as exit_
-
-from docopt import docopt
-
-from ferengi.api import APIError, roa
+from ferengi.api import roa
 from ferengi.garbage_disposal import Location
 from ferengi.openligadb import Team
-from ferengi.openweathermap import City
+from ferengi.openweathermap import openweathermap
 
 
 LOGGER = getLogger(__file__)
 
 
-def main(options):
+def get_args():
+    """Returns the command line arguments."""
+
+    parser = ArgumentParser(description='Greedy data acquisition.')
+    parser.add_argument(
+        '-v', '--verbose', action='store_true', help='enable verbose logging')
+    parser.add_argument(
+        '-f', '--force', action='store_true', help='force data import')
+    parser.add_argument(
+        '--rules-of-acquisition', action='store_true',
+        help='print the rules of acquisition')
+    subparsers = parser.add_subparsers(dest='module')
+    subparsers.add_parser(
+        'garbage-disposal', help='import garbage disposal information')
+    subparsers.add_parser('openligadb', help='import soccer league tables')
+    subparsers.add_parser('openweathermap', help='import weather information')
+    return parser.parse_args()
+
+
+def main():
     """Runs the FERENGI client."""
 
-    basicConfig(level=INFO)
-    force = options['--force']
+    args = get_args()
+    basicConfig(level=DEBUG if args.verbose else INFO)
 
-    if options['garbage-disposal']:
-        Location.update_all(force=force)
-    elif options['openligadb']:
+    if args.rules_of_acquisition:
+        roa()
+    elif args.module == 'garbage-disposal':
+        Location.update_all(force=args.force)
+    elif args.module == 'openligadb':
         Team.update_from_api()
-    elif options['openweathermap']:
-        try:
-            City.update_all()
-        except APIError as api_error:
-            LOGGER.error('Caught API error (%i): %s.', api_error, api_error)
-            return 1
+    elif args.module == 'openweathermap':
+        openweathermap(force=args.force)
 
-    return 0
+    exit(0)
 
 
 if __name__ == '__main__':
-    if '--rules-of-acquisition' in argv:
-        roa()
-    else:
-        exit_(main(docopt(__doc__)))
+    main()
