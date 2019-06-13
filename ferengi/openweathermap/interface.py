@@ -33,7 +33,7 @@ def update(force=False):
         try:
             city = City.get((City.name == city) & (City.country << COUNTRIES))
         except City.DoesNotExist:
-            LOGGER.warning('No such city: %s', city)
+            LOGGER.warning('No such city: "%s".', city)
             continue
 
         try:
