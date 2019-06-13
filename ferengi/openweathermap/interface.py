@@ -5,13 +5,13 @@ from logging import getLogger
 from terminallib import Deployment
 
 from ferengi.api import APIError, UpToDate
+from ferengi.openweathermap.config import CONFIG
 from ferengi.openweathermap.orm import City
 
 
 __all__ = ['cities', 'update']
 
 
-COUNTRIES = {'DE', 'AT'}
 LOGGER = getLogger('OpenWeatherMap')
 
 
@@ -23,9 +23,11 @@ def cities():
     for deployment in Deployment:
         names.add(deployment.address.city)
 
+    countries = CONFIG['config']['countries'].split()
+
     for name in names:
         try:
-            yield City.get((City.name == name) & (City.country << COUNTRIES))
+            yield City.get((City.name == name) & (City.country << countries))
         except City.DoesNotExist:
             LOGGER.warning('No such city: "%s".', name)
 

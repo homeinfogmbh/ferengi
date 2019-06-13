@@ -3,7 +3,6 @@
 from contextlib import suppress
 from datetime import datetime, timedelta
 
-from peewee import BooleanField
 from peewee import CharField
 from peewee import DateTimeField
 from peewee import DecimalField
@@ -131,7 +130,8 @@ class Forecast(_WeatherModel):
         city within the specified time period.
         """
         if isinstance(city, str):
-            city = City.get(City.name == city)
+            countries = CONFIG['config']['countries'].split()
+            city = City.get((City.name == city) & (City.country << countries))
 
         expression = cls.city == city
 
