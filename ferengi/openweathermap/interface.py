@@ -5,14 +5,14 @@ from logging import getLogger
 from terminallib import Deployment
 
 from ferengi.api import APIError, UpToDate
-from ferengi.openweathermap.aliases import load_aliases
 from ferengi.openweathermap.orm import City
 
 
-LOGGER = getLogger('OpenWeatherMap')
-
-
 __all__ = ['update']
+
+
+COUNTRIES = {'DE', 'AT'}
+LOGGER = getLogger('OpenWeatherMap')
 
 
 def used_cities():
@@ -23,8 +23,7 @@ def used_cities():
     for deployment in Deployment:
         cities.add(deployment.address.city)
 
-    aliases = load_aliases()
-    return {aliases.get(city, city) for city in cities}
+    return cities
 
 
 def update(force=False):
@@ -32,7 +31,7 @@ def update(force=False):
 
     for city in used_cities():
         try:
-            city = City.get(City.name == city)
+            city = City.get((City.name == city) & (City.country << COUNTRIES))
         except City.DoesNotExist:
             LOGGER.warning('No such city: %s', city)
             continue
