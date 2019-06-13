@@ -18,6 +18,11 @@ def get_weather(city):
     except City.DoesNotExist:
         return ('No such city.', 404)
 
+    forecasts = tuple(forecasts)
+
+    if not forecasts:
+        return (f'No forecasts for {city}.', 404)
+
     if 'application/xml' in ACCEPT or '*/*' in ACCEPT:
         return XML(forecasts_to_dom(city, forecasts))
 
