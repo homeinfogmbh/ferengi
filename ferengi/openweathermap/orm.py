@@ -43,7 +43,6 @@ class City(_WeatherModel):
     longitude = FloatField()
     latitude = FloatField()
     last_update = DateTimeField(null=True)
-    auto_update = BooleanField(default=False)
 
     def __str__(self):
         return self.name
