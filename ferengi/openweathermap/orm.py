@@ -79,8 +79,7 @@ class City(_WeatherModel):
             'name': self.name,
             'country': self.country,
             'longitude': self.longitude,
-            'latitude': self.latitude,
-            'auto_update': self.auto_update}
+            'latitude': self.latitude}
 
         if self.last_update is not None:
             dictionary['last_update'] = self.last_update.isoformat()
