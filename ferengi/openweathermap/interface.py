@@ -8,34 +8,32 @@ from ferengi.api import APIError, UpToDate
 from ferengi.openweathermap.orm import City
 
 
-__all__ = ['update']
+__all__ = ['cities', 'update']
 
 
 COUNTRIES = {'DE', 'AT'}
 LOGGER = getLogger('OpenWeatherMap')
 
 
-def used_cities():
+def cities():
     """Yields used city names."""
 
-    cities = set()
+    names = set()
 
     for deployment in Deployment:
-        cities.add(deployment.address.city)
+        names.add(deployment.address.city)
 
-    return cities
+    for name in names:
+        try:
+            yield City.get((City.name == name) & (City.country << COUNTRIES))
+        except City.DoesNotExist:
+            LOGGER.warning('No such city: "%s".', name)
 
 
 def update(force=False):
     """Updates all weather."""
 
-    for city in used_cities():
-        try:
-            city = City.get((City.name == city) & (City.country << COUNTRIES))
-        except City.DoesNotExist:
-            LOGGER.warning('No such city: "%s".', city)
-            continue
-
+    for city in cities():
         try:
             city.update_forecast(force=force)
         except UpToDate:
