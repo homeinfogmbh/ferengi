@@ -8,18 +8,18 @@ from urllib.request import urlopen
 
 from peewee import CharField, DateTimeField, IntegerField, TextField
 
-from configlib import loadcfg
 from filedb import FileError, add, delete
-from peeweeplus import MySQLDatabase, JSONModel
+from peeweeplus import JSONModel
 
+from ferengi.api import get_database
+from ferengi.weltnews.config import CONFIG
 from ferengi.weltnews.dom import CreateFromDocument
 
 
 __all__ = ['News']
 
 
-CONFIG = loadcfg('weltlib.conf')
-DATABASE = MySQLDatabase.from_config(CONFIG['db'])
+DATABASE = get_database(CONFIG)
 DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
