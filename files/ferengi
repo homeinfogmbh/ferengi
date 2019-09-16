@@ -5,6 +5,8 @@ from argparse import ArgumentParser
 from logging import DEBUG, INFO, basicConfig, getLogger
 from sys import exit    # pylint: disable=W0622
 
+from weltlib import update as update_welt_news
+
 from ferengi.api import roa
 from ferengi.garbage_disposal import Location
 from ferengi.openligadb import Team
@@ -30,6 +32,7 @@ def get_args():
         'garbage-disposal', help='import garbage disposal information')
     subparsers.add_parser('openligadb', help='import soccer league tables')
     subparsers.add_parser('openweathermap', help='import weather information')
+    subparsers.add_parser('weltnews', help='import news from welt.de')
     return parser.parse_args()
 
 
@@ -47,6 +50,8 @@ def main():
         Team.update_from_api()
     elif args.module == 'openweathermap':
         openweathermap(force=args.force)
+    elif args.module == 'weltnews':
+        update_welt_news()
 
     exit(0)
 
