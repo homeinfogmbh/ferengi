@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+XML Schema Definitions for weltoohservice.de/xml XML files.
+
+Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:element name="n24news" type="N24News"/>
+
+    <xs:complexType name="N24News">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Root-Element Typ.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="news" type="News" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Nachrichten.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="News">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Nachrichten Typ.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="subline" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Untertitel.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="headline" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Titel.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="source" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Quellenangabe.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="textmessage" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Nachrichtentext.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="published" type="TypedString">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Angabe zur Veröffentlichung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="image" type="TypedString" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Titelbild.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="thumb" type="TypedString" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Miniaturbild.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="video" type="TypedString" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Video.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="webUrl" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Link zum Onlineartikel.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="TypedString">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Zeichenkette mit Attribut "type".
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            Typ der Information.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

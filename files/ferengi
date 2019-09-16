@@ -5,12 +5,11 @@ from argparse import ArgumentParser
 from logging import DEBUG, INFO, basicConfig, getLogger
 from sys import exit    # pylint: disable=W0622
 
-from weltlib import update as update_welt_news
-
 from ferengi.api import roa
 from ferengi.garbage_disposal import Location
 from ferengi.openligadb import Team
 from ferengi.openweathermap import openweathermap
+from ferengi.weltnews import update as update_welt_news
 
 
 LOGGER = getLogger(__file__)

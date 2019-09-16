@@ -8,6 +8,7 @@ bindings:
 	@ pyxbgen -u xsds/facebook.xsd -m dom --module-prefix=ferengi.facebook
 	@ pyxbgen -u xsds/openligadb/openligadb.xsd -m dom --module-prefix=ferengi.openligadb
 	@ pyxbgen -u xsds/weather.xsd -m dom --module-prefix=ferengi.openweathermap
+	@ pyxbgen -u xsds/welt.xsd -m dom --module-prefix=ferengi.weltnews
 
 install:
 	@ ./setup.py install --record $(FILE_LIST)
