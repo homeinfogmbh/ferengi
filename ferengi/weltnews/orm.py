@@ -26,6 +26,10 @@ DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 class News(JSONModel):  # pylint: disable=R0902
     """News model."""
 
+    class Meta:     # pylint: disable=C0111,R0903
+        database = DATABASE
+        schema = database.database
+
     filename = CharField(255)   # Meta information.
     subline = CharField(255)
     headline = CharField(255)
