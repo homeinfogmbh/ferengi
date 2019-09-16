@@ -11,7 +11,8 @@ setup(
         'ferengi.facebook',
         'ferengi.openligadb',
         'ferengi.openweathermap',
-        'ferengi.garbage_disposal'],
+        'ferengi.garbage_disposal',
+        'ferengi.weltnews'],
     scripts=['files/ferengi'],
     data_files=[
         ('/usr/lib/systemd/system/',
