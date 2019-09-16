@@ -2,13 +2,14 @@
 
 from urllib.parse import urljoin
 
+from ferengi.weltnews.config import CONFIG
 from ferengi.weltnews.orm import News
 
 
 __all__ = ['urls', 'update']
 
 
-BASE_URL = 'http://homeinfo.weltoohservice.de/xml/'
+BASE_URL = CONFIG['api']['base_url']
 FILES = (
     'auto', 'karriere', 'kultur', 'leute', 'multimedia', 'olympia2018',
     'panorama', 'politik', 'reise', 'sport', 'test', 'wirtschaft', 'wissen',
