@@ -54,13 +54,13 @@ class News(JSONModel):  # pylint: disable=R0902
             news.published.value(), DATETIME_FORMAT)
 
         if news.image.value():
-            record.image = add(news.image.value())
+            record.image = add(news.image.value())['id']
 
         if news.thumb.value():
-            record.thumb = add(news.thumb.value())
+            record.thumb = add(news.thumb.value())['id']
 
         if news.video.value():
-            record.video = add(news.video.value())
+            record.video = add(news.video.value())['id']
 
         record.web_url = news.webUrl
         return record
