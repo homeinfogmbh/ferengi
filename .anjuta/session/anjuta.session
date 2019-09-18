@@ -2,6 +2,9 @@
 Maximized=1
 Geometry=1920x983+0+0
 
+[File Loader]
+Files=../../ferengi/weltnews/__init__.py#1%%%../../ferengi/weltnews/orm.py#37
+
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
 
