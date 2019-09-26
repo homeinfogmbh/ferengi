@@ -8,12 +8,13 @@ from urllib.request import urlopen
 
 from peewee import CharField, DateTimeField, IntegerField, TextField
 
-from filedb import FileError, add, delete
+from filedb import FileError, delete
 from peeweeplus import JSONModel
 
 from ferengi.api import get_database
 from ferengi.weltnews.config import CONFIG
 from ferengi.weltnews.dom import CreateFromDocument
+from ferengi.weltnews.functions import add_file_from_url
 
 
 __all__ = ['News']
@@ -54,13 +55,13 @@ class News(JSONModel):  # pylint: disable=R0902
             news.published.value(), DATETIME_FORMAT)
 
         if news.image.value():
-            record.image = add(news.image.value())['id']
+            record.image = add_file_from_url(news.image.value())
 
         if news.thumb.value():
-            record.thumb = add(news.thumb.value())['id']
+            record.thumb = add_file_from_url(news.thumb.value())
 
         if news.video.value():
-            record.video = add(news.video.value())['id']
+            record.video = add_file_from_url(news.video.value())
 
         record.web_url = news.webUrl
         return record
