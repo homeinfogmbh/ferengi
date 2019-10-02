@@ -20,6 +20,9 @@ def cities():
 
     names = set()
 
+    for name in CONFIG['config'].get('cities', '').split():
+        names.add(name)
+
     for deployment in Deployment:
         names.add(deployment.address.city)
 

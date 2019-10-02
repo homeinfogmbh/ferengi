@@ -27,7 +27,8 @@ ICONS = {
     '10n': 15,
     '11n': 1,
     '13n': 20,
-    '50n': 8}
+    '50n': 8
+}
 
 
 def _day_dom(forecasts, date):
