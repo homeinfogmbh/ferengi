@@ -2,6 +2,7 @@
 
 from logging import getLogger
 
+from functoolsplus import coerce
 from terminallib import Deployment
 
 from ferengi.api import APIError, UpToDate
@@ -15,20 +16,23 @@ __all__ = ['cities', 'update']
 LOGGER = getLogger('OpenWeatherMap')
 
 
+@coerce(set)
+def names():
+    """Yields targeted city names."""
+
+    for name in CONFIG['config'].get('cities', '').split():
+        yield name
+
+    for deployment in Deployment:
+        yield deployment.address.city
+
+
 def cities():
     """Yields used city names."""
 
-    names = set()
-
-    for name in CONFIG['config'].get('cities', '').split():
-        names.add(name)
-
-    for deployment in Deployment:
-        names.add(deployment.address.city)
-
     countries = CONFIG['config']['countries'].split()
 
-    for name in names:
+    for name in names():
         try:
             yield City.get((City.name == name) & (City.country << countries))
         except City.DoesNotExist:
