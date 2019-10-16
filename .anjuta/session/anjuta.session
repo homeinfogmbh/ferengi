@@ -3,7 +3,7 @@ Maximized=1
 Geometry=1920x983+0+27
 
 [File Loader]
-Files=../../ferengi/weltnews/__init__.py#7%%%../../ferengi/weltnews/orm.py#29%%%../../ferengi/weltnews/functions.py#17
+Files=../../ferengi/weltnews/__init__.py#7%%%../../ferengi/weltnews/orm.py#29%%%../../ferengi/weltnews/functions.py#17%%%../../ferengi/openweathermap/functions.py#93%%%../../ferengi/openweathermap/orm.py#1%%%../../ferengi/openweathermap/interface.py#26
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
