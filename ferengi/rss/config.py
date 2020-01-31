@@ -10,5 +10,5 @@ __all__ = ['CONFIG', 'DATABASE']
 
 
 LOGGER = getLogger('openligadb')
-CONFIG = ferengi_config('rssfeed.conf')
+CONFIG = ferengi_config('rss.conf')
 DATABASE = get_database(CONFIG)
