@@ -116,7 +116,7 @@ class Channel(RSSFeedModel):
             ttl=xml.ttl)
         yield channel
 
-        for item in xml.items:
+        for item in xml.item:
             yield Item.from_dom(item, channel=channel)
 
     def to_dom(self):
