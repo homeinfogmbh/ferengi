@@ -1,6 +1,6 @@
 """API to be invoked."""
 
-from ferengi.orm import Source
+from ferengi.rss.orm import Source
 
 
 __all__ = ['update']
