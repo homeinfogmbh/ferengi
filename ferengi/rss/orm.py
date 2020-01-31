@@ -153,7 +153,7 @@ class Item(RSSFeedModel):
     pub_date = DateTimeField(null=True)
 
     @classmethod
-    def fom_dom(cls, xml, channel):
+    def from_dom(cls, xml, channel):
         """Creates an item from an XML DOM."""
         return cls(
             channel=channel,
