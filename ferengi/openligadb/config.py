@@ -1,4 +1,4 @@
-"""Garbage disposal module configuration."""
+"""Openligadb module configuration."""
 
 from logging import getLogger
 
