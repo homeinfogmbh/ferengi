@@ -9,10 +9,14 @@ from peewee import ForeignKeyField
 from peewee import IntegerField
 from peewee import Model
 from peewee import TextField
+from requests import get
 
 from ferengi.rss import dom  # pylint: disable=E0611
 from ferengi.rss.config import DATABASE
 from ferengi.rss.functions import strprssdatetime, strfrssdatetime
+
+
+__all__ = ['MODELS', 'create_tables', 'Source', 'RSS', 'Channel', 'Item']
 
 
 def create_tables():
@@ -37,6 +41,18 @@ class Source(RSSFeedModel):
     url = TextField()
     description = CharField(255, null=True)
 
+    def update_feed(self, delete_old=True):
+        """Updates the RSS feed from the respective source."""
+        response = get(self.url)
+        xml = dom.CreateFromDocument(response.text)
+
+        if delete_old:
+            for rss in self.feeds:
+                rss.delete_instance()
+
+        for record in RSS.from_dom(xml, self, retrieved=datetime.now()):
+            record.save()
+
 
 class RSS(RSSFeedModel):
     """An RSS feed."""
@@ -47,13 +63,13 @@ class RSS(RSSFeedModel):
     version = CharField(3)
 
     @classmethod
-    def from_dom(cls, dom, source, retrieved=None):     # pylint: disable=W0621
+    def from_dom(cls, xml, source, retrieved=None):
         """Creates a new RSS feed from an XML DOM."""
         retrieved = datetime.now() if retrieved is None else retrieved
-        rss = cls(source=source, retrieved=retrieved, version=dom.version)
+        rss = cls(source=source, retrieved=retrieved, version=xml.version)
         yield rss
 
-        for channel in dom.channel:
+        for channel in xml.channel:
             yield from Channel.from_dom(channel, rss=rss)
 
     def to_dom(self):
@@ -84,23 +100,23 @@ class Channel(RSSFeedModel):
     ttl = IntegerField(null=True)
 
     @classmethod
-    def from_dom(cls, dom, rss):    # pylint: disable=W0621
+    def from_dom(cls, xml, rss):
         """Creates a channel from an XML DOM."""
         channel = cls(
             rss=rss,
-            title=dom.title,
-            link=dom.link,
-            description=dom.description,
-            language=dom.language,
-            copyright=dom.copyright,
-            pub_date=strprssdatetime(dom.pubDate),
-            last_build_date=strprssdatetime(dom.lastBuildDate),
-            category=dom.category,
-            generator=dom.generator,
-            ttl=dom.ttl)
+            title=xml.title,
+            link=xml.link,
+            description=xml.description,
+            language=xml.language,
+            copyright=xml.copyright,
+            pub_date=strprssdatetime(xml.pubDate),
+            last_build_date=strprssdatetime(xml.lastBuildDate),
+            category=xml.category,
+            generator=xml.generator,
+            ttl=xml.ttl)
         yield channel
 
-        for item in dom.items:
+        for item in xml.items:
             yield Item.from_dom(item, channel=channel)
 
     def to_dom(self):
@@ -137,17 +153,17 @@ class Item(RSSFeedModel):
     pub_date = DateTimeField(null=True)
 
     @classmethod
-    def fom_dom(cls, dom, channel):     # pylint: disable=W0621
+    def fom_dom(cls, xml, channel):
         """Creates an item from an XML DOM."""
         return cls(
             channel=channel,
-            category=dom.category,
-            title=dom.title,
-            description=dom.description,
-            link=dom.link,
-            guid=dom.guid.value(),
-            guid_is_permalink=dom.guid.isPermaLink,
-            pub_date=strprssdatetime(dom.pubDate)
+            category=xml.category,
+            title=xml.title,
+            description=xml.description,
+            link=xml.link,
+            guid=xml.guid.value(),
+            guid_is_permalink=xml.guid.isPermaLink,
+            pub_date=strprssdatetime(xml.pubDate)
         )
 
     def to_dom(self):
