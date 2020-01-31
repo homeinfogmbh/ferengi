@@ -10,10 +10,7 @@ __all__ = [
     'ROUTES',
     'cities',
     'forecasts_to_dom',
-    'openweathermap',
     'update',
     'City',
-    'Forecast']
-
-
-openweathermap = update     # pylint: disable=C0103
+    'Forecast'
+]
