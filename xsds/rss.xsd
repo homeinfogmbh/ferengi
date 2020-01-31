@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+XML Schema Definitions for RSS feeds.
+
+Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:element name="rss" type="RSS"/>
+
+    <xs:complexType name="RSS">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                RSS Wurzelelement.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="channel" type="Channel" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        RSS-Kanäle.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="version" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="de">
+                    RSS Version.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="Channel">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                RSS Kanal.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="title" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Title.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="link" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        URL zum Kanal.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Beschreibung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="language" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Sprache.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="copyright" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Angaben zum Copyright.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="pubDate" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Veröffentlichungsdatum.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastBuildDate" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Datum der letzten Generierung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="category" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Kategorie.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="generator" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Angaben zum RSS Generator.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ttl" type="xs:nonNegativeInteger" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Gültigkeitsdauer.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="item" type="Item" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Elemente.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Item">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Kanalelemente.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="category" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Kategorie.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="title" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Titel.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Beschreibung.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="link" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        URL zum Element.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="guid" type="GUID" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Angaben zum Copyright.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="pubDate" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Veröffentlichungsdatum.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GUID">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Globally Unique Identifier.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="isPermaLink" type="xs:boolean">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            Ist die GUID ein Permalink?.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>
