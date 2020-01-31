@@ -1,6 +1,6 @@
 """Generic RSS feed importer."""
 
-from ferengi.rss.orm import Source, RSS
+from ferengi.rss.api import update
 
 
-__all__ = ['Source', 'RSS']
+__all__ = ['update']
