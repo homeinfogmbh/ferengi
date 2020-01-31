@@ -1,7 +1,16 @@
 """RSS feed database."""
 
-from peewee import Model
+from datetime import datetime
 
+from peewee import BooleanField
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import ForeignKeyField
+from peewee import IntegerField
+from peewee import Model
+from peewee import TextField
+
+from ferengi.rss import dom  # pylint: disable=E0611
 from ferengi.rss.config import DATABASE
 from ferengi.rss.functions import strprssdatetime, strfrssdatetime
 
@@ -9,7 +18,8 @@ from ferengi.rss.functions import strprssdatetime, strfrssdatetime
 def create_tables():
     """Creates the respective tables."""
 
-    Team.create_table()
+    for model in MODELS:
+        model.create_table()
 
 
 class RSSFeedModel(Model):
@@ -37,10 +47,10 @@ class RSS(RSSFeedModel):
     version = CharField(3)
 
     @classmethod
-    def from_dom(cls, dom, source, retrieved=None):
+    def from_dom(cls, dom, source, retrieved=None):     # pylint: disable=W0621
         """Creates a new RSS feed from an XML DOM."""
         retrieved = datetime.now() if retrieved is None else retrieved
-        rss = cls(source=source, retrieved=retrieved, version=version)
+        rss = cls(source=source, retrieved=retrieved, version=dom.version)
         yield rss
 
         for channel in dom.channel:
@@ -74,7 +84,7 @@ class Channel(RSSFeedModel):
     ttl = IntegerField(null=True)
 
     @classmethod
-    def from_dom(cls, dom, rss):
+    def from_dom(cls, dom, rss):    # pylint: disable=W0621
         """Creates a channel from an XML DOM."""
         channel = cls(
             rss=rss,
@@ -127,7 +137,7 @@ class Item(RSSFeedModel):
     pub_date = DateTimeField(null=True)
 
     @classmethod
-    def fom_dom(cls, dom, channel):
+    def fom_dom(cls, dom, channel):     # pylint: disable=W0621
         """Creates an item from an XML DOM."""
         return cls(
             channel=channel,
@@ -153,3 +163,6 @@ class Item(RSSFeedModel):
 
         item.pubDate = strfrssdatetime(self.pub_date)
         return item
+
+
+MODELS = (Source, RSS, Channel, Item)
