@@ -13,4 +13,4 @@ def add_file_from_url(url):
     and adds it to the filedb returning its ID.
     """
 
-    return File.from_bytes(get(url).content, save=True)
+    return File.from_bytes(get(url).content)

@@ -88,3 +88,16 @@ class News(JSONModel):  # pylint: disable=R0902
 
         for record in cls.from_url(url):
             record.save()
+
+    def save(self, *args, **kwargs):
+        """Saves the record."""
+        if self.image:
+            self.image.save(*args, **kwargs)
+
+        if self.thumb:
+            self.thumb.save(*args, **kwargs)
+
+        if self.video:
+            self.video.save(*args, **kwargs)
+
+        return super().save(*args, **kwargs)
