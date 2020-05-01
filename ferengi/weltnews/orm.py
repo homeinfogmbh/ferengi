@@ -1,14 +1,13 @@
 """Library to store news from weltoohservice.de/xml/."""
 
-from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
-from peewee import CharField, DateTimeField, IntegerField, TextField
+from peewee import CharField, DateTimeField, ForeignKeyField, TextField
 
-from filedb import FileError, delete
+from filedb import File
 from peeweeplus import JSONModel
 
 from ferengi.api import get_database
@@ -37,9 +36,9 @@ class News(JSONModel):  # pylint: disable=R0902
     source = CharField(255)
     textmessage = TextField()
     published = DateTimeField()
-    image = IntegerField(null=True)
-    thumb = IntegerField(null=True)
-    video = IntegerField(null=True)
+    image = ForeignKeyField(File, column_name='image', null=True)
+    thumb = ForeignKeyField(File, column_name='thumb', null=True)
+    video = ForeignKeyField(File, column_name='video', null=True)
     web_url = TextField()
 
     @classmethod
@@ -89,12 +88,3 @@ class News(JSONModel):  # pylint: disable=R0902
 
         for record in cls.from_url(url):
             record.save()
-
-    def delete_instance(self, *args, **kwargs):
-        """Deletes this record and related files."""
-        for file in (self.image, self.thumb, self.video):
-            if file is not None:
-                with suppress(FileError):
-                    delete(file)
-
-        return super().delete_instance(*args, **kwargs)
