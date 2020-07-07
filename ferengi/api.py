@@ -51,4 +51,4 @@ def roa():
     """Prints the rules of acquisition."""
 
     with Popen(('/usr/bin/less',), stdin=PIPE) as process:
-        process.communicate(input=ROA.__bytes__())
+        process.communicate(input=bytes(ROA))
