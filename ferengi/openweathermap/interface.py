@@ -3,7 +3,7 @@
 from logging import getLogger
 
 from functoolsplus import coerce
-from terminallib import Deployment
+from hwdb import Deployment
 
 from ferengi.api import APIError, UpToDate
 from ferengi.openweathermap.config import CONFIG
