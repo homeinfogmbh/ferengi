@@ -11,9 +11,14 @@ __all__ = ['urls', 'update']
 
 BASE_URL = CONFIG['api']['base_url']
 FILES = (
-    'auto', 'karriere', 'kultur', 'leute', 'multimedia', 'olympia2018',
-    'panorama', 'politik', 'reise', 'sport', 'test', 'wirtschaft', 'wissen',
-    'wissenschaft', 'wm2018'
+    #'auto',
+    'karriere', 'kultur', 'leute', 'multimedia',
+    #'olympia2018',
+    'panorama', 'politik', 'reise', 'sport',
+    #'test',
+    'wirtschaft', 'wissen',
+    'wissenschaft'
+    #, 'wm2018'
 )
 
 
