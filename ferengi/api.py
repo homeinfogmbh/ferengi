@@ -35,8 +35,8 @@ def ferengi_database(database, user=None, passwd=None):
     """Returns a local, prefixed MySQL database."""
 
     return MySQLDatabase(
-        'ferengi_{}'.format(database), host='localhost', user=user,
-        passwd=passwd, closing=True)
+        f'ferengi_{database}', host='localhost', user=user, passwd=passwd,
+        closing=True)
 
 
 def get_database(config):
@@ -51,4 +51,4 @@ def roa():
     """Prints the rules of acquisition."""
 
     with Popen(('/usr/bin/less',), stdin=PIPE) as process:
-        process.communicate(input=ROA.__bytes__())
+        process.communicate(input=bytes(ROA))

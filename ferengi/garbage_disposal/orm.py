@@ -11,8 +11,8 @@ from peewee import ForeignKeyField
 from peewee import Model
 from requests.exceptions import ConnectionError     # pylint: disable=W0622
 
+from hwdb import Deployment
 from mdb import Address
-from terminallib import Deployment
 
 from ferengi.garbage_disposal.config import DATABASE
 from ferengi.garbage_disposal.config import DISTRICTS

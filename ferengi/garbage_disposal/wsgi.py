@@ -1,6 +1,6 @@
 """WSGI interface."""
 
-from terminallib import System
+from hwdb import System
 from wsgilib import JSON
 
 from ferengi.garbage_disposal.orm import Location
