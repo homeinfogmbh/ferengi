@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
 
 from peewee import CharField, DateTimeField, ForeignKeyField, TextField
@@ -79,15 +79,22 @@ class News(JSONModel):  # pylint: disable=R0902
             yield cls.from_dom(news, filename)
 
     @classmethod
-    def update_from_url(cls, url):
+    def update_from_url(cls, url, active=True):
         """Updates the records from the respective URL."""
         filename = Path(urlparse(url).path).name
 
         for record in cls.select().where(cls.filename == filename):
             record.delete_instance()
 
-        for record in cls.from_url(url):
-            record.save()
+        if active:
+            for record in cls.from_url(url):
+                record.save()
+
+    @classmethod
+    def update_from_file(cls, file, active=True):
+        """Updates from a news file name."""
+        url = urljoin(CONFIG['api']['base_url'], f'{file}.xml')
+        return cls.update_from_url(url, active=active)
 
     def save(self, *args, **kwargs):
         """Saves the record."""

@@ -1,36 +1,32 @@
 """HTTP client."""
 
-from urllib.parse import urljoin
-
-from ferengi.weltnews.config import CONFIG
 from ferengi.weltnews.orm import News
 
 
-__all__ = ['urls', 'update']
+__all__ = ['update']
 
 
-BASE_URL = CONFIG['api']['base_url']
-FILES = (
-    #'auto',
-    'karriere', 'kultur', 'leute', 'multimedia',
-    #'olympia2018',
-    'panorama', 'politik', 'reise', 'sport',
-    #'test',
-    'wirtschaft', 'wissen',
-    'wissenschaft'
-    #, 'wm2018'
-)
+FILES = {
+    'auto': False,
+    'karriere': True,
+    'kultur': True,
+    'leute': True,
+    'multimedia': True,
+    'olympia2018': False,
+    'panorama': True,
+    'politik': True,
+    'reise': True,
+    'sport': True,
+    'test': False,
+    'wirtschaft': True,
+    'wissen': True,
+    'wissenschaft': True,
+    'wm2018': False
+}
 
 
-def urls(base_url=BASE_URL, files=FILES):
-    """Yields complete URLs to XML files."""
-
-    for file in files:
-        yield urljoin(base_url, f'{file}.xml')
-
-
-def update(base_url=BASE_URL, files=FILES):
+def update():
     """Updates the records."""
 
-    for url in urls(base_url=base_url, files=files):
-        News.update_from_url(url)
+    for file, active in FILES.items():
+        News.update_from_file(file, active)
