@@ -1,4 +1,4 @@
-"""Frankly Everything, but Real Estates Notoriously Greedy Importer.
+"""Frankly Everything but Real Estates Notoriously Greedy Importer.
 
 System for importing non-real estate related digital signage data.
 
