@@ -6,9 +6,9 @@ from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
 
+from ferengi.openligadb import dom
 from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import DATABASE, LOGGER
-from ferengi.openligadb.dom import ArrayOfBlTableTeam, BlTableTeamType
 
 
 __all__ = ['create_tables', 'Team']
@@ -44,7 +44,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
     won = IntegerField()
 
     @classmethod
-    def update_from_dom(cls, dom):
+    def update_from_dom(cls, dom: dom.ArrayOfBlTableTeamType) -> bool:
         """Updates the entire table from the given ArrayOfBlTableTeam."""
         for record in cls:
             LOGGER.info('Removing: %s', record.short_name)
@@ -58,7 +58,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         return True
 
     @classmethod
-    def update_from_api(cls):
+    def update_from_api(cls) -> bool:
         """Runs an update from the API."""
         year = date.today().year
         LOGGER.info('Getting Bundesliga table for %i.', year)
@@ -73,7 +73,7 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         return cls.update_from_dom(dom)
 
     @classmethod
-    def from_dom(cls, dom):
+    def from_dom(cls, dom: dom.BlTableTeamType) -> Team:
         """Returns a record from a BlTableTeamType instance."""
         record = cls()
         record.draw = dom.Draw
@@ -90,9 +90,9 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
         return record
 
     @classmethod
-    def dump_dom(cls, url_template=None):
+    def dump_dom(cls, url_template: str = None) -> dom.ArrayOfBlTableTeam:
         """Returns an ArrayOfBlTableTeam."""
-        array_of_bl_table_team = ArrayOfBlTableTeam()
+        array_of_bl_table_team = dom.ArrayOfBlTableTeam()
 
         for record in cls:
             bl_table_team = record.to_dom()
@@ -105,18 +105,18 @@ class Team(_OpenLigaDBModel):   # pylint: disable=R0902
 
         return array_of_bl_table_team
 
-    def to_dom(self):
+    def to_dom(self) -> dom.BlTableTeamType:
         """Returns a BlTableTeamType instance from the record."""
-        dom = BlTableTeamType()
-        dom.Draw = self.draw
-        dom.Goals = self.goals
-        dom.Lost = self.lost
-        dom.Matches = self.matches
-        dom.OpponentGoals = self.opponent_goals
-        dom.Points = self.points
-        dom.ShortName = self.short_name
-        dom.TeamIconUrl = self.team_icon_url
-        dom.TeamInfoId = self.team_info_id
-        dom.TeamName = self.team_name
-        dom.Won = self.won
-        return dom
+        xml = dom.BlTableTeamType()
+        xml.Draw = self.draw
+        xml.Goals = self.goals
+        xml.Lost = self.lost
+        xml.Matches = self.matches
+        xml.OpponentGoals = self.opponent_goals
+        xml.Points = self.points
+        xml.ShortName = self.short_name
+        xml.TeamIconUrl = self.team_icon_url
+        xml.TeamInfoId = self.team_info_id
+        xml.TeamName = self.team_name
+        xml.Won = self.won
+        return xml
