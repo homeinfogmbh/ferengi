@@ -1,6 +1,9 @@
 """FERENGI's API."""
 
+from configparser import ConfigParser
 from subprocess import PIPE, Popen
+
+from flask import Response
 
 from peeweeplus import MySQLDatabase
 
@@ -17,7 +20,7 @@ class UpToDate(Exception):
 class APIError(Exception):
     """Indicates that data could not be received from the API."""
 
-    def __init__(self, response):
+    def __init__(self, response: Response):
         """Sets status code and response text."""
         super().__init__(response.text)
         self.response = response
@@ -31,7 +34,8 @@ class APIError(Exception):
         return self.response.text
 
 
-def ferengi_database(database, user=None, passwd=None):
+def ferengi_database(database: str, user: str = None,
+                     passwd: str = None) -> MySQLDatabase:
     """Returns a local, prefixed MySQL database."""
 
     return MySQLDatabase(
@@ -39,7 +43,7 @@ def ferengi_database(database, user=None, passwd=None):
         closing=True)
 
 
-def get_database(config):
+def get_database(config: ConfigParser) -> MySQLDatabase:
     """Returns the database by config."""
 
     return ferengi_database(
