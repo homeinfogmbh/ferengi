@@ -1,6 +1,7 @@
 """Interface functions."""
 
 from logging import getLogger
+from typing import Iterator
 
 from functoolsplus import coerce
 from hwdb import Deployment
@@ -17,7 +18,7 @@ LOGGER = getLogger('OpenWeatherMap')
 
 
 @coerce(set)
-def names():
+def names() -> Iterator[str]:
     """Yields targeted city names."""
 
     for name in CONFIG['config'].get('cities', '').split():
@@ -27,7 +28,7 @@ def names():
         yield deployment.address.city
 
 
-def cities():
+def cities() -> Iterator[City]:
     """Yields used city names."""
 
     countries = CONFIG['config']['countries'].split()
@@ -39,7 +40,7 @@ def cities():
             LOGGER.warning('No such city: "%s".', name)
 
 
-def update(force=False):
+def update(force: bool = False) -> None:
     """Updates all weather."""
 
     for city in cities():
