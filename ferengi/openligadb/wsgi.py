@@ -11,7 +11,7 @@ from ferengi.openligadb.orm import Team
 __all__ = ['ROUTES']
 
 
-def get_table():
+def get_table() -> XML:
     """Returns the table of the 1st Bundesliga."""
 
     template = CONFIG['api']['icon_url']
@@ -19,7 +19,7 @@ def get_table():
     return XML(array_of_bl_table_team)
 
 
-def get_icon(ident):
+def get_icon(ident: int) -> Binary:
     """Proxy the respecive team icons."""
 
     try:
@@ -31,7 +31,7 @@ def get_icon(ident):
     return Binary(response.content)
 
 
-ROUTES = (
-    ('GET', '/openligadb/table', get_table, 'get_openligadb_table'),
-    ('GET', '/openligadb/icon/<int:ident>', get_icon,
-     'get_openligadb_team_icon'))
+ROUTES = [
+    ('GET', '/openligadb/table', get_table),
+    ('GET', '/openligadb/icon/<int:ident>', get_icon)
+]
