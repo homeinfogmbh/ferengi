@@ -49,5 +49,6 @@ def get_image(path):
 
 
 ROUTES = (
-    ('GET', '/facebook/<facebook_id>', get_posts, 'get_facebook_posts'),
-    ('GET', '/facebook/image/<path:path>', get_image, 'get_facebook_image'))
+    ('GET', '/facebook/<facebook_id>', get_posts),
+    ('GET', '/facebook/image/<path:path>', get_image)
+)

@@ -11,9 +11,11 @@ __all__ = ['APPLICATION']
 
 
 APPLICATION = Application('ferengi', cors=True)
-APPLICATION.add_routes(
-    facebook.ROUTES + openligadb.ROUTES + openweathermap.ROUTES
-    + garbage_disposal.ROUTES)
+ROUTES = (
+    *facebook.ROUTES, *openligadb.ROUTES, *openweathermap.ROUTES,
+    *garbage_disposal.ROUTES
+)
+APPLICATION.add_routes(ROUTES)
 
 
 @APPLICATION.errorhandler(Exception)

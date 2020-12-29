@@ -35,6 +35,4 @@ def get_garbage_disposal(ident):
     return JSON(locations)
 
 
-ROUTES = (
-    ('GET', '/garbage-disposal/<ident>', get_garbage_disposal,
-     'get_garbage_disposal'),)
+ROUTES = (('GET', '/garbage-disposal/<ident>', get_garbage_disposal),)

@@ -32,6 +32,6 @@ def get_icon(ident):
 
 
 ROUTES = (
-    ('GET', '/openligadb/table', get_table, 'get_openligadb_table'),
-    ('GET', '/openligadb/icon/<int:ident>', get_icon,
-     'get_openligadb_team_icon'))
+    ('GET', '/openligadb/table', get_table),
+    ('GET', '/openligadb/icon/<int:ident>', get_icon)
+)
