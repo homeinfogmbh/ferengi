@@ -9,13 +9,8 @@ from ferengi.garbage_disposal.orm import Location
 __all__ = ['ROUTES']
 
 
-def get_garbage_disposal(ident):
+def get_garbage_disposal(ident: int) -> JSON:
     """Returns garbage disposal information for the respective terminal."""
-
-    try:
-        ident = int(ident)
-    except ValueError:
-        return ('Invalid system ID.', 400)
 
     try:
         system = System[ident]
@@ -35,4 +30,4 @@ def get_garbage_disposal(ident):
     return JSON(locations)
 
 
-ROUTES = (('GET', '/garbage-disposal/<ident>', get_garbage_disposal),)
+ROUTES = [('GET', '/garbage-disposal/<int:ident>', get_garbage_disposal)]

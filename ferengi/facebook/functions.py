@@ -1,9 +1,11 @@
 """Miscellaneous functions."""
 
 from pathlib import Path
+from typing import Iterable
 from urllib.parse import urlparse
 
 from ferengi.facebook import dom
+from ferengi.facebook.client import Post
 
 
 __all__ = ['encode_image_url', 'decode_image_url', 'posts_to_dom']
@@ -14,7 +16,7 @@ HOST = 'ferengi.homeinfo.de'
 IMG_PATH = Path('/facebook/image')
 
 
-def encode_image_url(url, img_path=IMG_PATH):
+def encode_image_url(url: str, img_path: Path = IMG_PATH) -> str:
     """Translates URLSs to be proxied."""
 
     url = urlparse(url)
@@ -26,7 +28,7 @@ def encode_image_url(url, img_path=IMG_PATH):
     return f'{SCHEME}://{HOST}{img_path}{url.path};{url.netloc}{query}'
 
 
-def decode_image_url(url, img_path=IMG_PATH):
+def decode_image_url(url: str, img_path: Path = IMG_PATH) -> str:
     """Translates URLSs to be proxied."""
 
     url = urlparse(url)
@@ -40,7 +42,7 @@ def decode_image_url(url, img_path=IMG_PATH):
     return f'{SCHEME}://{host}{path}{query}'
 
 
-def posts_to_dom(posts, proxy=False):
+def posts_to_dom(posts: Iterable[Post], proxy: bool = False) -> dom.channel:
     """Converts the given posts to XML dom."""
 
     channel = dom.channel()

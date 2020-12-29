@@ -14,7 +14,7 @@ __all__ = ['CLIENT']
 class Client:
     """Receive and store weather data."""
 
-    def __init__(self, base_url=None, api_key=None, **params):
+    def __init__(self, base_url: str = None, api_key=None, **params):
         """Sets base URL and API key"""
         self.base_url = base_url or self.config['base_url']
         self.api_key = api_key or self.config['api_key']

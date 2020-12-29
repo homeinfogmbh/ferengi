@@ -1,9 +1,11 @@
 """Utility functions."""
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from typing import Iterable
 
 from ferengi.openweathermap import dom  # pylint: disable=E0611
+from ferengi.openweathermap.orm import City, Forecast
 
 
 __all__ = ['forecasts_to_dom']
@@ -31,15 +33,15 @@ ICONS = {
 }
 
 
-def _day_dom(forecasts, date):
+def _day_dom(forecasts: Iterable[Forecast], date_: date) -> dom.DayForecast:
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = dom.DayForecast()
-    day_forecast.tempmin = min(
-        int(forecast.temp_min) for forecast in forecasts)
-    day_forecast.tempmax = max(
-        int(forecast.temp_min) for forecast in forecasts)
-    day_forecast.date = date
+    min_temps = (forecast.temp_min for forecast in forecasts)
+    day_forecast.tempmin = min(map(round, min_temps))
+    max_temps = (forecast.temp_max for forecast in forecasts)
+    day_forecast.tempmax = max(map(round, max_temps))
+    day_forecast.date = date_
     icon_ids = defaultdict(int)
     weather_texts = defaultdict(int)
 
@@ -68,7 +70,7 @@ def _day_dom(forecasts, date):
     return day_forecast
 
 
-def forecasts_to_dom(city, forecasts):
+def forecasts_to_dom(city: City, forecasts: Iterable[Forecast]) -> dom.xml:
     """Converts the forecasts to today's DOM."""
 
     now = datetime.now()
@@ -94,7 +96,8 @@ def forecasts_to_dom(city, forecasts):
     forecast.day = [
         _day_dom(today_forecasts, today),
         _day_dom(tomorrow_forecasts, tomorrow),
-        _day_dom(day_after_tomorrow_forecasts, day_after_tomorrow)]
+        _day_dom(day_after_tomorrow_forecasts, day_after_tomorrow)
+    ]
     xml.forecast = forecast
     xml.name = city
     xml.pubdate = now.strftime('%Y-%m-%d %H:%M:%S')

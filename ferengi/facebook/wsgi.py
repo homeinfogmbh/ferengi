@@ -1,6 +1,7 @@
 """WGSI application to retrieve facebook data."""
 
 from datetime import date, timedelta
+from typing import Tuple
 
 from flask import request, Response
 from requests import get
@@ -14,7 +15,7 @@ from ferengi.facebook.functions import posts_to_dom, decode_image_url
 __all__ = ['ROUTES']
 
 
-def get_posts(facebook_id):
+def get_posts(facebook_id: str) -> Tuple[str, int]:
     """Returns Facebook posts."""
 
     days = int(request.args.get('days', 14))
@@ -33,7 +34,7 @@ def get_posts(facebook_id):
     return ('Invalid content type.', 406)
 
 
-def get_image(path):
+def get_image(path: str) -> Tuple[str, int]:
     """Proxies images from Facebook."""
 
     url = request.url

@@ -1,5 +1,7 @@
 """WGSI application to retrieve weather data."""
 
+from typing import Tuple
+
 from timelib import today
 from wsgilib import ACCEPT, JSON, XML
 
@@ -10,7 +12,7 @@ from ferengi.openweathermap.orm import City, Forecast
 __all__ = ['ROUTES']
 
 
-def get_weather(city):
+def get_weather(city: City) -> Tuple[str, int]:
     """Returns the respective weather forecasts."""
 
     try:
@@ -32,4 +34,4 @@ def get_weather(city):
     return ('Invalid content type.', 406)
 
 
-ROUTES = (('GET', '/weather/<city>', get_weather),)
+ROUTES = [('GET', '/weather/<city>', get_weather)]

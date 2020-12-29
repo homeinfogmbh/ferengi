@@ -1,7 +1,9 @@
 """Open Weather Map weather data import"""
 
+from __future__ import annotations
 from contextlib import suppress
 from datetime import datetime, timedelta
+from typing import Iterable, Iterator, List
 
 from peewee import CharField
 from peewee import DateTimeField
@@ -47,38 +49,39 @@ class City(_WeatherModel):
         return self.name
 
     @classmethod
-    def from_dict(cls, dictionary):
-        """Creates a city from a dictionary."""
+    def from_dict(cls, dct: dict) -> City:
+        """Creates a city from a dict."""
         city = cls()
-        city.id = dictionary['_id']
-        city.name = dictionary['name']
-        city.country = dictionary['country']
-        city.longitude = dictionary['coord']['lon']
-        city.latitude = dictionary['coord']['lat']
+        city.id = dct['_id']
+        city.name = dct['name']
+        city.country = dct['country']
+        city.longitude = dct['coord']['lon']
+        city.latitude = dct['coord']['lat']
         return city
 
     @classmethod
-    def initialize(cls, list_):
+    def initialize(cls, list_: List[dict]):
         """Initializes table from dictionary list."""
-        for dictionary in list_:
-            cls.from_dict(dictionary).save()
+        for dct in list_:
+            cls.from_dict(dct).save()
 
     @property
-    def up2date(self):
+    def up2date(self) -> bool:
         """Determines whether weather is up to date."""
         if self.last_update is None:
             return False
 
         return datetime.now() - self.last_update <= timedelta(days=1)
 
-    def to_json(self):
+    def to_json(self) -> dict:
         """Converts the record to a JSON-ish dictionary."""
         dictionary = {
             'id': self.id,
             'name': self.name,
             'country': self.country,
             'longitude': self.longitude,
-            'latitude': self.latitude}
+            'latitude': self.latitude
+        }
 
         if self.last_update is not None:
             dictionary['last_update'] = self.last_update.isoformat()
@@ -125,7 +128,8 @@ class Forecast(_WeatherModel):
     snow_3h = DecimalField(6, 3, null=True)
 
     @classmethod
-    def by_city(cls, city, since=None, until=None):
+    def by_city(cls, city: City, since: datetime = None,
+                until: datetime = None) -> Iterable[Forecast]:
         """Yields forecases of the specified
         city within the specified time period.
         """
@@ -144,56 +148,56 @@ class Forecast(_WeatherModel):
         return cls.select().where(expression)
 
     @classmethod
-    def from_dict(cls, city, dictionary):
+    def from_dict(cls, city: City, dct: dict) -> Iterator[Weather]:
         """Creates a forecast for the respective
-        city from the specified dictionary.
+        city from the specified dict.
         """
         forecast = cls()
         forecast.city = city
-        forecast.dt = datetime.fromtimestamp(dictionary['dt'])
+        forecast.dt = datetime.fromtimestamp(dct['dt'])
 
         with suppress(KeyError):
-            forecast.temp = dictionary['main']['temp']
+            forecast.temp = dct['main']['temp']
 
         with suppress(KeyError):
-            forecast.temp_min = dictionary['main']['temp_min']
+            forecast.temp_min = dct['main']['temp_min']
 
         with suppress(KeyError):
-            forecast.temp_max = dictionary['main']['temp_max']
+            forecast.temp_max = dct['main']['temp_max']
 
         with suppress(KeyError):
-            forecast.pressure = dictionary['main']['pressure']
+            forecast.pressure = dct['main']['pressure']
 
         with suppress(KeyError):
-            forecast.sea_level = dictionary['main']['sea_level']
+            forecast.sea_level = dct['main']['sea_level']
 
         with suppress(KeyError):
-            forecast.grnd_level = dictionary['main']['grnd_level']
+            forecast.grnd_level = dct['main']['grnd_level']
 
         with suppress(KeyError):
-            forecast.humidity = dictionary['main']['humidity']
+            forecast.humidity = dct['main']['humidity']
 
         with suppress(KeyError):
-            forecast.clouds_all = dictionary['clouds']['all']
+            forecast.clouds_all = dct['clouds']['all']
 
         with suppress(KeyError):
-            forecast.wind_speed = dictionary['wind']['speed']
+            forecast.wind_speed = dct['wind']['speed']
 
         with suppress(KeyError):
-            forecast.wind_deg = dictionary['wind']['deg']
+            forecast.wind_deg = dct['wind']['deg']
 
         with suppress(KeyError):
-            forecast.rain_3h = dictionary['rain']['3h']
+            forecast.rain_3h = dct['rain']['3h']
 
         with suppress(KeyError):
-            forecast.snow_3h = dictionary['snow']['3h']
+            forecast.snow_3h = dct['snow']['3h']
 
         yield forecast
 
-        for weather in dictionary['weather']:
+        for weather in dct['weather']:
             yield Weather.from_dict(forecast, weather)
 
-    def to_json(self):
+    def to_json(self) -> dict:
         """Converts the forecast into a JSON-ish dictionary."""
         dictionary = {'dt': self.dt.isoformat()}
         main = {}
@@ -262,22 +266,23 @@ class Weather(_WeatherModel):
     icon = CharField(255)
 
     @classmethod
-    def from_dict(cls, forecast, dictionary):
+    def from_dict(cls, forecast: Forecast, dct: dict):
         """Creates a weather record for the respective
-        forecast from the specified dictionary.
+        forecast from the specified dict.
         """
         weather = cls()
         weather.forecast = forecast
-        weather.weather_id = dictionary['id']
-        weather.main = dictionary['main']
-        weather.description = dictionary['description']
-        weather.icon = dictionary['icon']
+        weather.weather_id = dct['id']
+        weather.main = dct['main']
+        weather.description = dct['description']
+        weather.icon = dct['icon']
         return weather
 
-    def to_json(self):
-        """Converts the weather into a JSON-ish dictionary."""
+    def to_json(self) -> dict:
+        """Converts the weather into a JSON-ish dict."""
         return {
             'id': self.weather_id,
             'main': self.main,
             'description': self.description,
-            'icon': self.icon}
+            'icon': self.icon
+        }

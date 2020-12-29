@@ -1,9 +1,8 @@
 #! /usr/bin/env python3
 """Greedy data acquisition."""
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig, getLogger
-from sys import exit    # pylint: disable=W0622
 
 from ferengi.api import roa
 from ferengi.garbage_disposal import Location
@@ -15,7 +14,7 @@ from ferengi.weltnews import update as update_welt_news
 LOGGER = getLogger(__file__)
 
 
-def get_args():
+def get_args() -> Namespace:
     """Returns the command line arguments."""
 
     parser = ArgumentParser(description='Greedy data acquisition.')
@@ -51,8 +50,6 @@ def main():
         update_openweathermap(force=args.force)
     elif args.module == 'weltnews':
         update_welt_news()
-
-    exit(0)
 
 
 if __name__ == '__main__':
