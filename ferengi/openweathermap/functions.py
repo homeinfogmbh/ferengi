@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from datetime import date, datetime, timedelta
-from typing import Iterable
+from typing import Iterable, Iterator, Tuple
 
 from ferengi.openweathermap import dom  # pylint: disable=E0611
 from ferengi.openweathermap.orm import City, Forecast
@@ -33,14 +33,43 @@ ICONS = {
 }
 
 
+def _min_temps(forecasts: Iterable[Forecast]) -> Iterator[int]:
+    """Yields minimum temperatures of forecasts."""
+
+    for forecast in forecasts:
+        if forecast.temp_min is not None:
+            yield round(forecast.temp_min)
+
+
+def _max_temps(forecasts: Iterable[Forecast]) -> Iterator[int]:
+    """Yields maximum temperatures of forecasts."""
+
+    for forecast in forecasts:
+        if forecast.temp_max is not None:
+            yield round(forecast.temp_max)
+
+
+def _get_temps(forecasts: Iterable[Forecast]) -> Tuple[int, int]:
+    """Returns the min and max temperature."""
+
+    try:
+        min_ = min(_min_temps(forecasts))
+    except ValueError:
+        min_ = None
+
+    try:
+        max_ = max(_max_temps(forecasts))
+    except ValueError:
+        max_ = None
+
+    return (min_, max_)
+
+
 def _day_dom(forecasts: Iterable[Forecast], date_: date) -> dom.DayForecast:
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = dom.DayForecast()
-    min_temps = (forecast.temp_min for forecast in forecasts)
-    day_forecast.tempmin = min(map(round, min_temps))
-    max_temps = (forecast.temp_max for forecast in forecasts)
-    day_forecast.tempmax = max(map(round, max_temps))
+    day_forecast.tempmin, day_forecast.tempmax = _get_temps(forecasts)
     day_forecast.date = date_
     icon_ids = defaultdict(int)
     weather_texts = defaultdict(int)
