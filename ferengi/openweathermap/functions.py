@@ -1,8 +1,8 @@
 """Utility functions."""
 
-from collections import defaultdict
+from collections import Counter
 from datetime import date, datetime, timedelta
-from typing import Iterable, Iterator, Tuple
+from typing import Iterable, Iterator, Optional, Tuple
 
 from ferengi.openweathermap import dom  # pylint: disable=E0611
 from ferengi.openweathermap.orm import City, Forecast
@@ -65,37 +65,49 @@ def _get_temps(forecasts: Iterable[Forecast]) -> Tuple[int, int]:
     return (min_, max_)
 
 
+def _get_icon_ids(forecasts: Iterable[Forecast]) -> Iterator[str]:
+    """Yields translated icon IDs."""
+
+    for forecast in forecasts:
+        for weather in forecast.weather:
+            yield ICONS.get(weather.icon, 6)
+
+
+def _get_icon_id(forecasts: Iterable[Forecast]) -> Optional[str]:
+    """Returns the most common icon ID."""
+
+    try:
+        return Counter(_get_icon_ids(forecasts)).most_common(1)[0][0]
+    except IndexError:
+        return None
+
+
+def _get_weather_texts(forecasts: Iterable[Forecast]) -> Iterator[str]:
+    """Yields weather texts."""
+
+    for forecast in forecasts:
+        for weather in forecast.weather:
+            if weather.description:
+                yield weather.description
+
+
+def _get_weather_text(forecasts: Iterable[Forecast]) -> Optional[str]:
+    """Returns the most common weather text."""
+
+    try:
+        return Counter(_get_weather_texts(forecasts)).most_common(1)[0][0]
+    except IndexError:
+        return None
+
+
 def _day_dom(forecasts: Iterable[Forecast], date_: date) -> dom.DayForecast:
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = dom.DayForecast()
     day_forecast.tempmin, day_forecast.tempmax = _get_temps(forecasts)
     day_forecast.date = date_
-    icon_ids = defaultdict(int)
-    weather_texts = defaultdict(int)
-
-    for forecast in forecasts:
-        for weather in forecast.weather:
-            icon_id = ICONS.get(weather.icon, 6)
-            icon_ids[icon_id] += 1
-            weather_text = weather.description
-
-            if weather_text:
-                weather_texts[weather_text] += 1
-
-    max_icon_id_occurance = max(icon_ids.values())
-    max_weather_text_occurance = max(weather_texts.values())
-
-    for icon_id, occurance in icon_ids.items():
-        if occurance == max_icon_id_occurance:
-            day_forecast.icon_id = icon_id
-            break
-
-    for weather_text, occurance in weather_texts.items():
-        if occurance == max_weather_text_occurance:
-            day_forecast.weather_text = weather_text
-            break
-
+    day_forecast.icon_id = _get_icon_id(forecasts)
+    day_forecast.weather_text = _get_weather_text(forecasts)
     return day_forecast
 
 

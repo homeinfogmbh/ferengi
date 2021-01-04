@@ -75,14 +75,14 @@
                 Wettervorhersage für einen Tag.
             </xs:documentation>
         </xs:annotation>
-        <xs:attribute name="icon_id" type="xs:integer">
+        <xs:attribute name="icon_id" type="xs:integer" minOccurs="0">
             <xs:annotation>
                 <xs:documentation xml:lang="de">
                     Wetter Icon.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="weather_text" type="xs:string">
+        <xs:attribute name="weather_text" type="xs:string" minOccurs="0">
             <xs:annotation>
                 <xs:documentation xml:lang="de">
                     Wetterbeschreibung.
