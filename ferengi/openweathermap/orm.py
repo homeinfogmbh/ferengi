@@ -196,7 +196,7 @@ class Forecast(WeatherModel):  # pylint: disable=R0902
         yield forecast
 
         for weather in json['weather']:
-            yield Weather.from_dict(weather, forecast=forecast)
+            yield Weather.from_json(weather, forecast=forecast)
 
     @classmethod
     def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
