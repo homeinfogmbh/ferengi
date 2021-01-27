@@ -3,7 +3,7 @@
 from __future__ import annotations
 from contextlib import suppress
 from datetime import datetime, timedelta
-from typing import Iterable, Iterator, List
+from typing import Iterator, List
 
 from peewee import CharField
 from peewee import DateTimeField
