@@ -28,7 +28,7 @@ __all__ = ['City', 'Forecast', 'Weather']
 DATABASE = get_database(CONFIG)
 
 
-class _WeatherModel(Model):
+class WeatherModel(Model):
     """Abstract, basic weather DB model."""
 
     class Meta:     # pylint: disable=C0111,R0903
@@ -36,7 +36,7 @@ class _WeatherModel(Model):
         schema = DATABASE.database
 
 
-class City(_WeatherModel):
+class City(WeatherModel):
     """Available regions."""
 
     id = IntegerField(primary_key=True)     # pylint: disable=C0103
@@ -89,13 +89,13 @@ class City(_WeatherModel):
 
         return dictionary
 
-    def _update_forecast(self):
+    def _update_forecast(self) -> None:
         """Updates the city's weather forecast."""
         for forecast in CLIENT(self.id)['list']:
-            for record in Forecast.from_dict(self, forecast):
+            for record in Forecast.from_json(forecast, city=self):
                 record.save()
 
-    def update_forecast(self, force=False):
+    def update_forecast(self, force=False) -> None:
         """Updates the city's weather forecast."""
         if not self.up2date or force:
             old_forecasts = tuple(self.forecasts)   # pylint: disable=E1101
@@ -110,7 +110,7 @@ class City(_WeatherModel):
             raise UpToDate() from None
 
 
-class Forecast(_WeatherModel):  # pylint: disable=R0902
+class Forecast(WeatherModel):  # pylint: disable=R0902
     """Regional weather forecast."""
 
     city = ForeignKeyField(
@@ -131,7 +131,7 @@ class Forecast(_WeatherModel):  # pylint: disable=R0902
 
     @classmethod
     def by_city(cls, city: City, since: datetime = None,
-                until: datetime = None) -> Iterable[Forecast]:
+                until: datetime = None) -> ModelSelect:
         """Yields forecases of the specified
         city within the specified time period.
         """
@@ -150,54 +150,53 @@ class Forecast(_WeatherModel):  # pylint: disable=R0902
         return cls.select().where(expression)
 
     @classmethod
-    def from_dict(cls, city: City, dct: dict) -> Iterator[Weather]:
+    def from_json(cls, json: dict, *, city: City) -> Iterator[WeatherModel]:
         """Creates a forecast for the respective
         city from the specified dict.
         """
-        forecast = cls()
-        forecast.city = city
-        forecast.dt = datetime.fromtimestamp(dct['dt'])
+        forecast = cls(city=city)
+        forecast.dt = datetime.fromtimestamp(json['dt'])
 
         with suppress(KeyError):
-            forecast.temp = dct['main']['temp']
+            forecast.temp = json['main']['temp']
 
         with suppress(KeyError):
-            forecast.temp_min = dct['main']['temp_min']
+            forecast.temp_min = json['main']['temp_min']
 
         with suppress(KeyError):
-            forecast.temp_max = dct['main']['temp_max']
+            forecast.temp_max = json['main']['temp_max']
 
         with suppress(KeyError):
-            forecast.pressure = dct['main']['pressure']
+            forecast.pressure = json['main']['pressure']
 
         with suppress(KeyError):
-            forecast.sea_level = dct['main']['sea_level']
+            forecast.sea_level = json['main']['sea_level']
 
         with suppress(KeyError):
-            forecast.grnd_level = dct['main']['grnd_level']
+            forecast.grnd_level = json['main']['grnd_level']
 
         with suppress(KeyError):
-            forecast.humidity = dct['main']['humidity']
+            forecast.humidity = json['main']['humidity']
 
         with suppress(KeyError):
-            forecast.clouds_all = dct['clouds']['all']
+            forecast.clouds_all = json['clouds']['all']
 
         with suppress(KeyError):
-            forecast.wind_speed = dct['wind']['speed']
+            forecast.wind_speed = json['wind']['speed']
 
         with suppress(KeyError):
-            forecast.wind_deg = dct['wind']['deg']
+            forecast.wind_deg = json['wind']['deg']
 
         with suppress(KeyError):
-            forecast.rain_3h = dct['rain']['3h']
+            forecast.rain_3h = json['rain']['3h']
 
         with suppress(KeyError):
-            forecast.snow_3h = dct['snow']['3h']
+            forecast.snow_3h = json['snow']['3h']
 
         yield forecast
 
-        for weather in dct['weather']:
-            yield Weather.from_dict(forecast, weather)
+        for weather in json['weather']:
+            yield Weather.from_dict(weather, forecast=forecast)
 
     @classmethod
     def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
@@ -208,8 +207,8 @@ class Forecast(_WeatherModel):  # pylint: disable=R0902
         return super().select(*{cls, City, *args}, **kwargs).join(City)
 
     def to_json(self) -> dict:  # pylint: disable=R0912
-        """Converts the forecast into a JSON-ish dictionary."""
-        dictionary = {'dt': self.dt.isoformat()}
+        """Converts the forecast into a JSON-ish dict."""
+        json = {'dt': self.dt.isoformat()}
         main = {}
 
         if self.temp is not None:
@@ -234,10 +233,10 @@ class Forecast(_WeatherModel):  # pylint: disable=R0902
             main['humidity'] = self.humidity
 
         if main:
-            dictionary['main'] = main
+            json['main'] = main
 
         if self.clouds_all is not None:
-            dictionary['clouds'] = {'all': self.clouds_all}
+            json['clouds'] = {'all': self.clouds_all}
 
         wind = {}
 
@@ -248,23 +247,23 @@ class Forecast(_WeatherModel):  # pylint: disable=R0902
             wind['deg'] = dec2dict(self.wind_deg)
 
         if wind:
-            dictionary['wind'] = wind
+            json['wind'] = wind
 
         if self.rain_3h is not None:
-            dictionary['rain'] = {'3h': dec2dict(self.rain_3h)}
+            json['rain'] = {'3h': dec2dict(self.rain_3h)}
 
         if self.snow_3h is not None:
-            dictionary['snow'] = {'3h': dec2dict(self.snow_3h)}
+            json['snow'] = {'3h': dec2dict(self.snow_3h)}
 
         weather = [weather.to_json() for weather in self.weather]
 
         if weather:
-            dictionary['weather'] = weather
+            json['weather'] = weather
 
-        return dictionary
+        return json
 
 
-class Weather(_WeatherModel):
+class Weather(WeatherModel):
     """Weather details."""
 
     forecast = ForeignKeyField(
@@ -276,16 +275,15 @@ class Weather(_WeatherModel):
     icon = CharField(255)
 
     @classmethod
-    def from_dict(cls, forecast: Forecast, dct: dict):
+    def from_json(cls, json: dict, *, forecast: Forecast) -> Weather:
         """Creates a weather record for the respective
         forecast from the specified dict.
         """
-        weather = cls()
-        weather.forecast = forecast
-        weather.weather_id = dct['id']
-        weather.main = dct['main']
-        weather.description = dct['description']
-        weather.icon = dct['icon']
+        weather = cls(forecast=forecast)
+        weather.weather_id = json['id']
+        weather.main = json['main']
+        weather.description = json['description']
+        weather.icon = json['icon']
         return weather
 
     @classmethod
