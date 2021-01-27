@@ -9,11 +9,11 @@ from ferengi.garbage_disposal.orm import Location
 __all__ = ['ROUTES']
 
 
-def get_garbage_disposal(ident: int) -> JSON:
-    """Returns garbage disposal information for the respective terminal."""
+def for_system(ident: int) -> JSON:
+    """Returns garbage disposal information for the respective system."""
 
     try:
-        system = System[ident]
+        system = System.select(cascade=True).where(System.id == ident).get()
     except System.DoesNotExist:
         return ('No such system.', 404)
 
@@ -22,7 +22,8 @@ def get_garbage_disposal(ident: int) -> JSON:
 
     locations = [
         location.to_json() for location in
-        Location.by_address(system.deployment.address)]
+        Location.by_address(system.deployment.address)
+    ]
 
     if not locations:
         return ('No garbage disposal information available.', 404)
@@ -30,4 +31,4 @@ def get_garbage_disposal(ident: int) -> JSON:
     return JSON(locations)
 
 
-ROUTES = [('GET', '/garbage-disposal/<int:ident>', get_garbage_disposal)]
+ROUTES = [('GET', '/garbage-disposal/<int:ident>', for_system)]
