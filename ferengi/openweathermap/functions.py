@@ -1,8 +1,8 @@
 """Utility functions."""
 
-from collections import defaultdict
+from collections import Counter
 from datetime import date, datetime, timedelta
-from typing import Iterable
+from typing import Iterable, Iterator, Optional, Tuple
 
 from ferengi.openweathermap import dom  # pylint: disable=E0611
 from ferengi.openweathermap.orm import City, Forecast
@@ -33,40 +33,81 @@ ICONS = {
 }
 
 
+def _min_temps(forecasts: Iterable[Forecast]) -> Iterator[int]:
+    """Yields minimum temperatures of forecasts."""
+
+    for forecast in forecasts:
+        if forecast.temp_min is not None:
+            yield round(forecast.temp_min)
+
+
+def _max_temps(forecasts: Iterable[Forecast]) -> Iterator[int]:
+    """Yields maximum temperatures of forecasts."""
+
+    for forecast in forecasts:
+        if forecast.temp_max is not None:
+            yield round(forecast.temp_max)
+
+
+def _get_temps(forecasts: Iterable[Forecast]) -> Tuple[int, int]:
+    """Returns the min and max temperature."""
+
+    try:
+        min_ = min(_min_temps(forecasts))
+    except ValueError:
+        min_ = None
+
+    try:
+        max_ = max(_max_temps(forecasts))
+    except ValueError:
+        max_ = None
+
+    return (min_, max_)
+
+
+def _get_icon_ids(forecasts: Iterable[Forecast]) -> Iterator[str]:
+    """Yields translated icon IDs."""
+
+    for forecast in forecasts:
+        for weather in forecast.weather:
+            yield ICONS.get(weather.icon, 6)
+
+
+def _get_icon_id(forecasts: Iterable[Forecast]) -> Optional[str]:
+    """Returns the most common icon ID."""
+
+    try:
+        return Counter(_get_icon_ids(forecasts)).most_common(1)[0][0]
+    except IndexError:
+        return None
+
+
+def _get_weather_texts(forecasts: Iterable[Forecast]) -> Iterator[str]:
+    """Yields weather texts."""
+
+    for forecast in forecasts:
+        for weather in forecast.weather:
+            if weather.description:
+                yield weather.description
+
+
+def _get_weather_text(forecasts: Iterable[Forecast]) -> Optional[str]:
+    """Returns the most common weather text."""
+
+    try:
+        return Counter(_get_weather_texts(forecasts)).most_common(1)[0][0]
+    except IndexError:
+        return None
+
+
 def _day_dom(forecasts: Iterable[Forecast], date_: date) -> dom.DayForecast:
     """Converts a set of forecasts of the same day to DOM."""
 
     day_forecast = dom.DayForecast()
-    min_temps = (forecast.temp_min for forecast in forecasts)
-    day_forecast.tempmin = min(map(round, min_temps))
-    max_temps = (forecast.temp_max for forecast in forecasts)
-    day_forecast.tempmax = max(map(round, max_temps))
+    day_forecast.tempmin, day_forecast.tempmax = _get_temps(forecasts)
     day_forecast.date = date_
-    icon_ids = defaultdict(int)
-    weather_texts = defaultdict(int)
-
-    for forecast in forecasts:
-        for weather in forecast.weather:
-            icon_id = ICONS.get(weather.icon, 6)
-            icon_ids[icon_id] += 1
-            weather_text = weather.description
-
-            if weather_text:
-                weather_texts[weather_text] += 1
-
-    max_icon_id_occurance = max(icon_ids.values())
-    max_weather_text_occurance = max(weather_texts.values())
-
-    for icon_id, occurance in icon_ids.items():
-        if occurance == max_icon_id_occurance:
-            day_forecast.icon_id = icon_id
-            break
-
-    for weather_text, occurance in weather_texts.items():
-        if occurance == max_weather_text_occurance:
-            day_forecast.weather_text = weather_text
-            break
-
+    day_forecast.icon_id = _get_icon_id(forecasts)
+    day_forecast.weather_text = _get_weather_text(forecasts)
     return day_forecast
 
 

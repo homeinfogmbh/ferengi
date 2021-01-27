@@ -1,5 +1,6 @@
 """ORM models for the garbage disposal module."""
 
+from __future__ import annotations
 from datetime import date
 
 from peewee import CharField

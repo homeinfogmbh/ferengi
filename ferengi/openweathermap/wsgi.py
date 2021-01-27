@@ -34,4 +34,4 @@ def get_weather(city: City) -> Tuple[str, int]:
     return ('Invalid content type.', 406)
 
 
-ROUTES = (('GET', '/weather/<city>', get_weather, 'get_weather'),)
+ROUTES = [('GET', '/weather/<city>', get_weather)]
