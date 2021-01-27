@@ -24,7 +24,7 @@ def names() -> Iterator[str]:
     for name in CONFIG['config'].get('cities', '').split():
         yield name
 
-    for deployment in Deployment:
+    for deployment in Deployment.select(cascade=True).where(True):
         yield deployment.address.city
 
 
