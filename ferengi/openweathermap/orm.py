@@ -12,6 +12,7 @@ from peewee import FloatField
 from peewee import ForeignKeyField
 from peewee import IntegerField
 from peewee import Model
+from peewee import ModelSelect
 from peewee import SmallIntegerField
 
 from peeweeplus import dec2dict
@@ -38,7 +39,7 @@ class _WeatherModel(Model):
 class City(_WeatherModel):
     """Available regions."""
 
-    id = IntegerField(primary_key=True)
+    id = IntegerField(primary_key=True)     # pylint: disable=C0103
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
@@ -97,7 +98,7 @@ class City(_WeatherModel):
     def update_forecast(self, force=False):
         """Updates the city's weather forecast."""
         if not self.up2date or force:
-            old_forecasts = tuple(self.forecasts)
+            old_forecasts = tuple(self.forecasts)   # pylint: disable=E1101
             self._update_forecast()
 
             for old_forecast in old_forecasts:
@@ -109,10 +110,11 @@ class City(_WeatherModel):
             raise UpToDate() from None
 
 
-class Forecast(_WeatherModel):
+class Forecast(_WeatherModel):  # pylint: disable=R0902
     """Regional weather forecast."""
 
-    city = ForeignKeyField(City, column_name='city', backref='forecasts')
+    city = ForeignKeyField(
+        City, column_name='city', backref='forecasts', lazy_load=False)
     dt = DateTimeField()
     temp = DecimalField(4, 2, null=True)
     temp_min = DecimalField(4, 2, null=True)
@@ -197,7 +199,15 @@ class Forecast(_WeatherModel):
         for weather in dct['weather']:
             yield Weather.from_dict(forecast, weather)
 
-    def to_json(self) -> dict:
+    @classmethod
+    def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
+        """Selects forecasts."""
+        if not cascade:
+            return super().select(*args, **kwargs)
+
+        return super().select(*{cls, City, *args}, **kwargs).join(City)
+
+    def to_json(self) -> dict:  # pylint: disable=R0912
         """Converts the forecast into a JSON-ish dictionary."""
         dictionary = {'dt': self.dt.isoformat()}
         main = {}
@@ -259,7 +269,7 @@ class Weather(_WeatherModel):
 
     forecast = ForeignKeyField(
         Forecast, column_name='forecast', backref='weather',
-        on_delete='CASCADE')
+        on_delete='CASCADE', lazy_load=False)
     weather_id = SmallIntegerField()
     main = CharField(255)
     description = CharField(255)
@@ -277,6 +287,15 @@ class Weather(_WeatherModel):
         weather.description = dct['description']
         weather.icon = dct['icon']
         return weather
+
+    @classmethod
+    def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
+        """Selects weather."""
+        if not cascade:
+            return super().select(*args, **kwargs)
+
+        return super().select(*{cls, Forecast, City, *args}, **kwargs).join(
+            Forecast).join(City)
 
     def to_json(self) -> dict:
         """Converts the weather into a JSON-ish dict."""
