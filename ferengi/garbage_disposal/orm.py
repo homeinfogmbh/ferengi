@@ -113,21 +113,21 @@ class Location(_GarbageDisposalModel):
     def from_address(cls, address: Address) -> Iterator[Location]:
         """Creates an entry from the respective address."""
         for pickup_solution in get_disposals(address):
-            yield from cls.from_dict(address, pickup_solution.to_json())
+            json = pickup_solution.to_json()
+            yield from cls.from_json(json, address=address)
 
     @classmethod
-    def from_dict(cls, address: Address, dct: dict) -> Iterator[Model]:
+    def from_json(cls, json: dict, *, address: Address) -> Iterator[Model]:
         """Creates the respective records from the given dictionary."""
-        record = cls()
-        record.address = address
-        record.code = dct['code']
-        record.street = dct['street']
-        record.house_number = dct['house_number']
-        record.district = dct['district']
-        yield record
+        location = cls(address=address)
+        location.code = json['code']
+        location.street = json['street']
+        location.house_number = json['house_number']
+        location.district = json['district']
+        yield location
 
-        for pickup in dct['pickups']:
-            yield from Pickup.from_dict(record, pickup)
+        for pickup in json['pickups']:
+            yield from Pickup.from_json(pickup, location=location)
 
     def to_json(self) -> dict:
         """Returns a JSON-ish dictionary."""
@@ -152,18 +152,17 @@ class Pickup(_GarbageDisposalModel):
     interval = CharField(16)
 
     @classmethod
-    def from_dict(cls, location: Location, dct: dict) -> Iterator[Model]:
-        """Creates and yields respective records from the dictionary."""
-        record = cls()
-        record.location = location
-        record.type_ = dct['type']
-        record.image_link = dct['image_link']
-        record.weekday = dct['weekday']
-        record.interval = dct['interval']
-        yield record
+    def from_json(cls, json: dict, *, location: Location) -> Iterator[Model]:
+        """Creates pickups from a JSON-ish dict."""
+        pickup = cls(location=location)
+        pickup.type_ = json['type']
+        pickup.image_link = json['image_link']
+        pickup.weekday = json['weekday']
+        pickup.interval = json['interval']
+        yield pickup
 
-        for date in dct.get('next_dates', ()):
-            yield PickupDate.from_dict(record, date)
+        for date in json.get('next_dates', ()):
+            yield PickupDate.from_json(date, pickup=pickup)
 
     def to_json(self) -> dict:
         """Returns a JSON-ish dictionary."""
@@ -187,14 +186,13 @@ class PickupDate(_GarbageDisposalModel):
     exceptional = BooleanField()
 
     @classmethod
-    def from_dict(cls, pickup: Pickup, dct: dict) -> PickupDate:
-        """Creates and yields respective records from the dictionary."""
-        record = cls()
-        record.pickup = pickup
-        record.date = datetime.strptime(dct['date'], '%Y-%m-%d')
-        record.weekday = dct['weekday']
-        record.exceptional = dct['exceptional']
-        return record
+    def from_json(cls, json: dict, *, pickup: Pickup) -> PickupDate:
+        """Createspickup dates from JSON-ish dict."""
+        pickup_date = cls(pickup=pickup)
+        pickup_date.date = datetime.strptime(json['date'], '%Y-%m-%d')
+        pickup_date.weekday = json['weekday']
+        pickup_date.exceptional = json['exceptional']
+        return pickup_date
 
     def to_json(self) -> dict:
         """Returns a JSON-ish dictionary."""
