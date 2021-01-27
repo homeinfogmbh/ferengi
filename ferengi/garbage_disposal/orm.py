@@ -11,7 +11,8 @@ from peewee import DateField
 from peewee import DateTimeField
 from peewee import ForeignKeyField
 from peewee import Model
-from requests.exceptions import ConnectionError     # pylint: disable=W0622
+from peewee import ModelSelect
+from requests import ConnectionError    # pylint: disable=W0622
 
 from hwdb import Deployment
 from mdb import Address
@@ -67,7 +68,7 @@ class Location(_GarbageDisposalModel):
     @classmethod
     def by_address(cls, address: Address) -> Iterable[Location]:
         """Returns the respective garbage disposal by address."""
-        return cls.select().where(cls.address == address)
+        return cls.select(cascade=True).where(cls.address == address)
 
     @classmethod
     def refresh(cls, address: Address, force: bool = False):
@@ -94,11 +95,20 @@ class Location(_GarbageDisposalModel):
                 sleep(WAIT_TIME)
 
     @classmethod
+    def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
+        """Selects locations."""
+        if not cascade:
+            return super().select(*args, **kwargs)
+
+        return super().select(*{cls, Address, *args}, **kwargs).join(Address)
+
+    @classmethod
     def update_all(cls, force: bool = False):
         """Updates the garbage disposal for all active systems."""
         addresses = set()
 
-        for deployment in Deployment.select().where(Deployment.testing == 0):
+        for deployment in Deployment.select(cascade=True).where(
+                Deployment.testing == 0):
             addresses.add(deployment.address)
 
         cls.refresh_all(addresses, force=force)
@@ -106,7 +116,7 @@ class Location(_GarbageDisposalModel):
     @classmethod
     def purge(cls, address: Address):
         """Purges records for the respective address."""
-        for record in cls.select().where(cls.address == address):
+        for record in cls.by_address(address):
             record.delete_instance()
 
     @classmethod
