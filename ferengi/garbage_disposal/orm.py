@@ -46,7 +46,7 @@ class _GarbageDisposalModel(Model):
 class Location(_GarbageDisposalModel):
     """Garbage disposal model."""
 
-    address = ForeignKeyField(Address, column_name='address')
+    address = ForeignKeyField(Address, column_name='address', lazy_load=False)
     code = CharField(32)
     street = CharField(64)
     house_number = CharField(32)
@@ -145,7 +145,7 @@ class Pickup(_GarbageDisposalModel):
 
     location = ForeignKeyField(
         Location, column_name='location', backref='pickups',
-        on_delete='CASCADE')
+        on_delete='CASCADE', lazy_load=False)
     type_ = CharField(32)
     image_link = CharField(255)
     weekday = CharField(32)
@@ -181,7 +181,7 @@ class PickupDate(_GarbageDisposalModel):
 
     pickup = ForeignKeyField(
         Pickup, column_name='pickup', backref='next_dates',
-        on_delete='CASCADE')
+        on_delete='CASCADE', lazy_load=False)
     date = DateField()
     weekday = CharField(16)
     exceptional = BooleanField()
