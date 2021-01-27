@@ -50,21 +50,21 @@ class City(WeatherModel):
         return self.name
 
     @classmethod
-    def from_dict(cls, dct: dict) -> City:
+    def from_json(cls, json: dict) -> City:
         """Creates a city from a dict."""
         city = cls()
-        city.id = dct['_id']
-        city.name = dct['name']
-        city.country = dct['country']
-        city.longitude = dct['coord']['lon']
-        city.latitude = dct['coord']['lat']
+        city.id = json['_id']
+        city.name = json['name']
+        city.country = json['country']
+        city.longitude = json['coord']['lon']
+        city.latitude = json['coord']['lat']
         return city
 
     @classmethod
-    def initialize(cls, list_: List[dict]):
+    def initialize(cls, json: List[dict]):
         """Initializes table from dictionary list."""
-        for dct in list_:
-            cls.from_dict(dct).save()
+        for city in json:
+            cls.from_json(city).save()
 
     @property
     def up2date(self) -> bool:
