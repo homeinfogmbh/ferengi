@@ -61,7 +61,7 @@ class FerengiDatabase(MySQLDatabase):
 def get_database(config: ConfigParser) -> MySQLDatabase:
     """Returns the database by config."""
 
-    return FerengiDatabase(config=config['db'])
+    return FerengiDatabase(None, config=config['db'])
 
 
 def roa():
