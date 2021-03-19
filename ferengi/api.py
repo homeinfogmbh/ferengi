@@ -45,23 +45,13 @@ class FerengiDatabase(MySQLDatabase):
     @database.setter
     def database(self, database: str) -> None:
         """Sets the databast name."""
-        super().database = database
-
-    @property
-    def host(self) -> str:
-        """Returns the host name."""
-        return super().host or 'localhost'
-
-    @host.setter
-    def host(self, host: str) -> None:
-        """Sets the host name."""
-        super().host = host
+        self._database = database
 
 
 def get_database(config: ConfigParser) -> MySQLDatabase:
     """Returns the database by config."""
 
-    return FerengiDatabase(None, config=config['db'])
+    return FerengiDatabase(None, config=config['db'], host='localhost')
 
 
 def roa():
