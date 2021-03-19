@@ -10,7 +10,7 @@ from peeweeplus import MySQLDatabase
 from ferengi.roa import ROA
 
 
-__all__ = ['UpToDate', 'APIError', 'ferengi_database', 'get_database']
+__all__ = ['UpToDate', 'APIError', 'get_database']
 
 
 class UpToDate(Exception):
@@ -34,21 +34,34 @@ class APIError(Exception):
         return self.response.text
 
 
-def ferengi_database(database: str, user: str = None,
-                     passwd: str = None) -> MySQLDatabase:
-    """Returns a local, prefixed MySQL database."""
+class FerengiDatabase(MySQLDatabase):
+    """FERENGI database."""
 
-    return MySQLDatabase(
-        f'ferengi_{database}', host='localhost', user=user, passwd=passwd,
-        closing=True)
+    @property
+    def database(self) -> str:
+        """Returns the database name with a prefix."""
+        return f'ferengi_{super().database}'
+
+    @database.setter
+    def database(self, database: str) -> None:
+        """Sets the databast name."""
+        super().database = database
+
+    @property
+    def host(self) -> str:
+        """Returns the host name."""
+        return super().host or 'localhost'
+
+    @host.setter
+    def host(self, host: str) -> None:
+        """Sets the host name."""
+        super().host = host
 
 
 def get_database(config: ConfigParser) -> MySQLDatabase:
     """Returns the database by config."""
 
-    return ferengi_database(
-        config['db']['database'], user=config['db']['user'],
-        passwd=config['db']['passwd'])
+    return FerengiDatabase(config=config['db'])
 
 
 def roa():
