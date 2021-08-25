@@ -8,7 +8,6 @@ setup(
     author='Richard Neumann',
     packages=[
         'ferengi',
-        'ferengi.facebook',
         'ferengi.garbage_disposal',
         'ferengi.openligadb',
         'ferengi.openweathermap',
