@@ -14,10 +14,3 @@ APPLICATION = Application('ferengi', cors=True)
 APPLICATION.add_routes(openligadb.ROUTES)
 APPLICATION.add_routes(openweathermap.ROUTES)
 APPLICATION.add_routes(garbage_disposal.ROUTES)
-
-
-@APPLICATION.errorhandler(Exception)
-def debug_exceptions(_):
-    """Prints a stack trace."""
-
-    return Error(format_exc(), status=500)
