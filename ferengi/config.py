@@ -15,5 +15,5 @@ def ferengi_config(filename):
 
     path = CONFIG_DIR.joinpath(filename)
     config = ConfigParser()
-    config.read(str(path))
+    config.read(path)
     return config
