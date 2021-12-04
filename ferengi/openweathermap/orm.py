@@ -15,9 +15,9 @@ from peewee import Model
 from peewee import ModelSelect
 from peewee import SmallIntegerField
 
-from peeweeplus import dec2dict
+from peeweeplus import MySQLDatabaseProxy, dec2dict
 
-from ferengi.api import UpToDate, get_database
+from ferengi.api import UpToDate
 from ferengi.openweathermap.config import CONFIG
 from ferengi.openweathermap.client import CLIENT
 
@@ -25,7 +25,8 @@ from ferengi.openweathermap.client import CLIENT
 __all__ = ['City', 'Forecast', 'Weather']
 
 
-DATABASE = get_database(CONFIG)
+DATABASE = MySQLDatabaseProxy('ferengi_openweathermap',
+                              'ferengi.d/openweathermap.conf')
 
 
 class WeatherModel(Model):

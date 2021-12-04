@@ -3,16 +3,14 @@
 from datetime import timedelta
 from logging import getLogger
 
-from ferengi.api import get_database
 from ferengi.config import ferengi_config
 
 
-__all__ = ['CONFIG', 'DATABASE', 'INTERVAL', 'DISTRICTS', 'WAIT_TIME']
+__all__ = ['CONFIG', 'INTERVAL', 'DISTRICTS', 'WAIT_TIME']
 
 
 LOGGER = getLogger('Garbage disposal')
 CONFIG = ferengi_config('garbage_disposal.conf')
-DATABASE = get_database(CONFIG)
 
 try:
     INTERVAL = CONFIG.getint('api', 'interval')

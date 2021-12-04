@@ -16,8 +16,8 @@ from requests import ConnectionError    # pylint: disable=W0622
 
 from hwdb import Deployment
 from mdb import Address
+from peeweeplus import MySQLDatabaseProxy
 
-from ferengi.garbage_disposal.config import DATABASE
 from ferengi.garbage_disposal.config import DISTRICTS
 from ferengi.garbage_disposal.config import INTERVAL
 from ferengi.garbage_disposal.config import LOGGER
@@ -27,6 +27,10 @@ from ferengi.garbage_disposal.interface import get_disposals
 
 
 __all__ = ['create_tables', 'Location']
+
+
+DATABASE = MySQLDatabaseProxy('ferengi_garbage_disposal',
+                              'ferengi.d/garbage_disposal.conf')
 
 
 def create_tables():

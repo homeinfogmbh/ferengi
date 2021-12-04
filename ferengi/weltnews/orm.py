@@ -8,9 +8,8 @@ from urllib.request import urlopen
 from peewee import CharField, DateTimeField, ForeignKeyField, TextField
 
 from filedb import File
-from peeweeplus import JSONModel
+from peeweeplus import JSONModel, MySQLDatabaseProxy
 
-from ferengi.api import get_database
 from ferengi.weltnews.config import CONFIG
 from ferengi.weltnews.dom import CreateFromDocument
 from ferengi.weltnews.functions import add_file_from_url
@@ -19,7 +18,7 @@ from ferengi.weltnews.functions import add_file_from_url
 __all__ = ['News']
 
 
-DATABASE = get_database(CONFIG)
+DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
 DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
