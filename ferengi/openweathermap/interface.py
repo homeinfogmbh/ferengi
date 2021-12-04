@@ -3,7 +3,8 @@
 from logging import getLogger
 from typing import Iterator
 
-from functoolsplus import coerce
+from peewee import ModelSelect
+
 from hwdb import Deployment
 
 from ferengi.api import APIError, UpToDate
@@ -17,7 +18,6 @@ __all__ = ['cities', 'update']
 LOGGER = getLogger('OpenWeatherMap')
 
 
-@coerce(set)
 def names() -> Iterator[str]:
     """Yields targeted city names."""
 
@@ -28,16 +28,13 @@ def names() -> Iterator[str]:
         yield deployment.address.city
 
 
-def cities() -> Iterator[City]:
+def cities() -> ModelSelect:
     """Yields used city names."""
 
-    countries = CONFIG['config']['countries'].split()
-
-    for name in names():
-        try:
-            yield City.get((City.name == name) & (City.country << countries))
-        except City.DoesNotExist:
-            LOGGER.warning('No such city: "%s".', name)
+    return City.select().where(
+        (City.name << set(names()))
+        & (City.country << set(CONFIG['config']['countries'].split()))
+    )
 
 
 def update(force: bool = False) -> None:
