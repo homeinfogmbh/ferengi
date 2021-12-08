@@ -10,6 +10,9 @@ from ferengi.openweathermap import update as update_openweathermap
 from ferengi.weltnews import update as update_welt_news
 
 
+__all__ = ['main']
+
+
 LOGGER = getLogger(__file__)
 
 
@@ -45,7 +48,3 @@ def main():
         update_openweathermap(force=args.force)
     elif args.module == 'weltnews':
         update_welt_news()
-
-
-if __name__ == '__main__':
-    main()
