@@ -7,12 +7,18 @@ from peewee import CharField
 from peewee import IntegerField
 from peewee import Model
 
+from peeweeplus import MySQLDatabaseProxy
+
 from ferengi.openligadb import dom
 from ferengi.openligadb.client import get_table
-from ferengi.openligadb.config import DATABASE, LOGGER
+from ferengi.openligadb.config import LOGGER
 
 
 __all__ = ['create_tables', 'Team']
+
+
+DATABASE = MySQLDatabaseProxy('ferengi_openligadb',
+                              'ferengi.d/openligadb.conf')
 
 
 def create_tables():
