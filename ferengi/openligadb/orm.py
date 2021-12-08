@@ -1,4 +1,4 @@
-"""ORM models for the garbage disposal module."""
+"""ORM models for the OpenLigaDB module."""
 
 from __future__ import annotations
 from datetime import date
