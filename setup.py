@@ -22,7 +22,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'ferengi = gerengi.cli:main'
+            'ferengi = ferengi.cli:main'
         ]
     },
     data_files=[
