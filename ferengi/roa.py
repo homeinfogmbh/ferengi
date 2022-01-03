@@ -1,6 +1,6 @@
 """The rules of acquisition."""
 
-from syslib import B64LZMA
+from b64lzma import B64LZMA
 
 
 __all__ = ['ROA']
