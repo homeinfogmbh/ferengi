@@ -28,7 +28,6 @@ setup(
         'ferengi',
         'ferengi.openligadb',
         'ferengi.openweathermap',
-        'ferengi.rss',
         'ferengi.weltnews'
     ],
     entry_points={
