@@ -133,7 +133,7 @@ class Forecast(WeatherModel):  # pylint: disable=R0902
     @classmethod
     def by_city(cls, city: City, since: datetime = None,
                 until: datetime = None) -> ModelSelect:
-        """Yields forecases of the specified
+        """Yields forecasts of the specified
         city within the specified time period.
         """
         if isinstance(city, str):
