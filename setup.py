@@ -17,7 +17,6 @@ setup(
         'peewee',
         'peeweeplus',
         'requests',
-        'timelib',
         'wsgilib'
     ],
     author='HOMEINFO - Digitale Informationssysteme GmbH',

@@ -1,8 +1,8 @@
 """WGSI application to retrieve weather data."""
 
+from datetime import date
 from typing import Tuple
 
-from timelib import today
 from wsgilib import ACCEPT, JSON, XML
 
 from ferengi.openweathermap.functions import forecasts_to_dom
@@ -16,7 +16,7 @@ def get_weather(city: City) -> Tuple[str, int]:
     """Returns the respective weather forecasts."""
 
     try:
-        forecasts = Forecast.by_city(city, since=today())
+        forecasts = Forecast.by_city(city, since=date.today())
     except City.DoesNotExist:
         return ('No such city.', 404)
 
