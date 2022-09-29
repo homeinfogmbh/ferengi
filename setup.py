@@ -35,9 +35,10 @@ setup(
         ]
     },
     data_files=[
-        ('/usr/lib/systemd/system/',
-            ['files/ferengi@.service', 'files/ferengi@.timer']
-        )
+        ('/usr/lib/systemd/system/', [
+            'files/ferengi@.service',
+            'files/ferengi@.timer'
+        ])
     ],
     license='GPLv3',
     description=(
