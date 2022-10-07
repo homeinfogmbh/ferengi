@@ -32,12 +32,12 @@ def create_tables():
 class _OpenLigaDBModel(Model):
     """Base Model."""
 
-    class Meta:     # pylint: disable=C0111,R0903
+    class Meta:
         database = DATABASE
         schema = DATABASE.database
 
 
-class Team(_OpenLigaDBModel):   # pylint: disable=R0902
+class Team(_OpenLigaDBModel):
     """Garbage disposal model."""
 
     draw = IntegerField()
