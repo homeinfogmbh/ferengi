@@ -23,8 +23,7 @@ FILES = {
     'sport': True,
     'test': False,
     'wirtschaft': True,
-    'wissen': True,
-    'wissenschaft': True
+    'wissen': True
 }
 
 
