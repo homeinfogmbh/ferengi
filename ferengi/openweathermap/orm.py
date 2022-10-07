@@ -200,12 +200,12 @@ class Forecast(WeatherModel):  # pylint: disable=R0902
             yield Weather.from_json(weather, forecast=forecast)
 
     @classmethod
-    def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
+    def select(cls, *args, cascade: bool = False) -> ModelSelect:
         """Selects forecasts."""
         if not cascade:
-            return super().select(*args, **kwargs)
+            return super().select(*args)
 
-        return super().select(*{cls, City, *args}, **kwargs).join(City)
+        return super().select(*{cls, City, *args}).join(City)
 
     def to_json(self) -> dict:  # pylint: disable=R0912
         """Converts the forecast into a JSON-ish dict."""
@@ -288,12 +288,12 @@ class Weather(WeatherModel):
         return weather
 
     @classmethod
-    def select(cls, *args, cascade: bool = False, **kwargs) -> ModelSelect:
+    def select(cls, *args, cascade: bool = False) -> ModelSelect:
         """Selects weather."""
         if not cascade:
-            return super().select(*args, **kwargs)
+            return super().select(*args)
 
-        return super().select(*{cls, Forecast, City, *args}, **kwargs).join(
+        return super().select(*{cls, Forecast, City, *args}).join(
             Forecast).join(City)
 
     def to_json(self) -> dict:
