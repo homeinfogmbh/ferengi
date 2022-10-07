@@ -1,5 +1,8 @@
 """HTTP client."""
 
+from logging import getLogger
+from urllib.error import HTTPError
+
 from ferengi.weltnews.orm import News
 
 
@@ -29,4 +32,7 @@ def update() -> None:
     """Updates the records."""
 
     for file, active in FILES.items():
-        News.update_from_file(file, active)
+        try:
+            News.update_from_file(file, active)
+        except HTTPError as error:
+            getLogger(__file__).error('Could not update url: %s', error)
