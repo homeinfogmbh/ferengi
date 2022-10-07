@@ -1,7 +1,9 @@
 """Library to store news from weltoohservice.de/xml/."""
 
 from __future__ import annotations
+from logging import getLogger
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
 from typing import Iterator
@@ -21,6 +23,7 @@ __all__ = ['News']
 
 DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
 DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
+LOGGER = getLogger(__file__)
 
 
 class News(JSONModel):  # pylint: disable=R0902
@@ -93,7 +96,11 @@ class News(JSONModel):  # pylint: disable=R0902
     def update_from_file(cls, file: str, active: bool = True) -> None:
         """Updates from a news file name."""
         url = urljoin(CONFIG['api']['base_url'], f'{file}.xml')
-        cls.update_from_url(url, active=active)
+
+        try:
+            cls.update_from_url(url, active=active)
+        except HTTPError:
+            LOGGER.warning('Could not update url: %s', url)
 
     def save(self, *args, **kwargs) -> int:
         """Saves the record."""
