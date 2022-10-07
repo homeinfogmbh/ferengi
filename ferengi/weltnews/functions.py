@@ -21,7 +21,7 @@ def add_file_from_url(url: str) -> File:
 def parse_datetime(timestamp: str) -> datetime:
     """Parse a datetime from a timestamp.
 
-    The XML files inhttp://homeinfo.weltoohservice.de/xml/ have broken
+    The XML files in http://homeinfo.weltoohservice.de/xml/ have broken
     locales. It used to follow the format:
 
         '%a, %d %b %Y %H:%M:%S %Z'
