@@ -32,7 +32,7 @@ DATABASE = MySQLDatabaseProxy('ferengi_openweathermap',
 class WeatherModel(Model):
     """Abstract, basic weather DB model."""
 
-    class Meta:     # pylint: disable=C0111,R0903
+    class Meta:
         database = DATABASE
         schema = DATABASE.database
 
@@ -40,7 +40,7 @@ class WeatherModel(Model):
 class City(WeatherModel):
     """Available regions."""
 
-    id = IntegerField(primary_key=True)     # pylint: disable=C0103
+    id = IntegerField(primary_key=True)
     name = CharField(255)
     country = CharField(2)
     longitude = FloatField()
@@ -111,7 +111,7 @@ class City(WeatherModel):
             raise UpToDate() from None
 
 
-class Forecast(WeatherModel):  # pylint: disable=R0902
+class Forecast(WeatherModel):
     """Regional weather forecast."""
 
     city = ForeignKeyField(
@@ -207,7 +207,7 @@ class Forecast(WeatherModel):  # pylint: disable=R0902
 
         return super().select(*{cls, City, *args}).join(City)
 
-    def to_json(self) -> dict:  # pylint: disable=R0912
+    def to_json(self) -> dict:
         """Converts the forecast into a JSON-ish dict."""
         json = {'dt': self.dt.isoformat()}
         main = {}
