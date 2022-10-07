@@ -1,5 +1,7 @@
 """WSGI interface."""
 
+from typing import Union
+
 from requests import get
 
 from wsgilib import Binary, Error, XML
@@ -19,7 +21,7 @@ def get_table() -> XML:
     return XML(array_of_bl_table_team)
 
 
-def get_icon(ident: int) -> Binary:
+def get_icon(ident: int) -> Union[Binary, Error]:
     """Proxy the respective team icons."""
 
     try:
