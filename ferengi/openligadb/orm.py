@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 from datetime import date
+from typing import Any
 
 from peewee import CharField
 from peewee import IntegerField
@@ -119,7 +120,7 @@ class Team(_OpenLigaDBModel):
 
     def to_dom(self) -> dom.BlTableTeamType:
         """Returns a BlTableTeamType instance from the record."""
-        xml = dom.BlTableTeamType()
+        xml: Any = dom.BlTableTeamType()
         xml.Draw = self.draw
         xml.Goals = self.goals
         xml.Lost = self.lost
