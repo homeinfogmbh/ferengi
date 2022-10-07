@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 from contextlib import suppress
-from datetime import datetime, timedelta
-from typing import Iterator, Optional
+from datetime import date, datetime, timedelta
+from typing import Iterator, Optional, Union
 
 from peewee import CharField
 from peewee import DateTimeField
@@ -137,8 +137,8 @@ class Forecast(WeatherModel):
     def by_city(
             cls,
             city: City,
-            since: Optional[datetime] = None,
-            until: Optional[datetime] = None
+            since: Optional[Union[date, datetime]] = None,
+            until: Optional[Union[date, datetime]] = None
     ) -> ModelSelect:
         """Yields forecasts of the specified
         city within the specified time period.
