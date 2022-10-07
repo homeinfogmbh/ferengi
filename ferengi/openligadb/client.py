@@ -1,6 +1,7 @@
 """Data import from openligadb.de."""
 
 from datetime import date
+from typing import Optional
 
 from requests import get
 
@@ -14,8 +15,11 @@ __all__ = ['get_table']
 HEADERS = {'Accept': 'application/xml'}
 
 
-def get_table(year: int = None, *, headers: dict = HEADERS) -> Match:
+def get_table(year: int = None, *, headers: Optional[dict] = None) -> Match:
     """Gets the table information for the given year or the current year."""
+
+    if headers is None:
+        headers = HEADERS
 
     if year is None:
         year = date.today().year
