@@ -58,7 +58,7 @@ class Team(_OpenLigaDBModel):
             array: dom.ArrayOfBlTableTeamType.typeDefinition
     ) -> bool:
         """Updates the entire table from the given ArrayOfBlTableTeam."""
-        for record in cls:
+        for record in cls.select().where(True):
             LOGGER.info('Removing: %s', record.short_name)
             record.delete_instance()
 
