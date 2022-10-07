@@ -20,7 +20,7 @@ def get_table() -> XML:
 
 
 def get_icon(ident: int) -> Binary:
-    """Proxy the respecive team icons."""
+    """Proxy the respective team icons."""
 
     try:
         team = Team.get(Team.id == ident)
