@@ -35,4 +35,4 @@ def update() -> None:
         try:
             News.update_from_file(file, active)
         except HTTPError as error:
-            getLogger('weltnews').error('Could not update url: %s', error)
+            getLogger('weltnews').error('Could not update url: %s', error.url)
