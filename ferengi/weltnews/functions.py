@@ -33,7 +33,7 @@ def parse_datetime(timestamp: str) -> datetime:
     padded, so we need to do that, too.
     """
 
-    _, day_of_month, *remainder, _ = timestamp.split()
+    _, day_of_month, *remainder = timestamp.split()
     fixed_timestamp = ' '.join(['{:0>2}'.format(day_of_month), *remainder])
     setlocale(LC_TIME, getdefaultlocale())
     return datetime.strptime(fixed_timestamp, '%d %b %Y %H:%M:%S %Z')
