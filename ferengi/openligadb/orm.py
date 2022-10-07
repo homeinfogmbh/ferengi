@@ -74,15 +74,15 @@ class Team(_OpenLigaDBModel):
         """Runs an update from the API."""
         year = date.today().year
         LOGGER.info('Getting Bundesliga table for %i.', year)
-        dom = get_table(year=year)
+        array = get_table(year=year)
 
-        if not dom.BlTableTeam:
+        if not array.BlTableTeam:
             LOGGER.warning('No data for %i.', year)
             year -= 1
             LOGGER.info('Getting Bundesliga table for %i.', year)
-            dom = get_table(year=year)
+            array = get_table(year=year)
 
-        return cls.update_from_dom(dom)
+        return cls.update_from_dom(array)
 
     @classmethod
     def from_dom(cls, table: dom.BlTableTeamType.typeDefinition) -> Team:
