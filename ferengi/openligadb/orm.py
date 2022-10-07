@@ -53,13 +53,16 @@ class Team(_OpenLigaDBModel):
     won = IntegerField()
 
     @classmethod
-    def update_from_dom(cls, dom: dom.ArrayOfBlTableTeamType) -> bool:
+    def update_from_dom(
+            cls,
+            array: dom.ArrayOfBlTableTeamType.typeDefinition
+    ) -> bool:
         """Updates the entire table from the given ArrayOfBlTableTeam."""
         for record in cls:
             LOGGER.info('Removing: %s', record.short_name)
             record.delete_instance()
 
-        for team in dom.BlTableTeam:
+        for team in array.BlTableTeam:
             record = cls.from_dom(team)
             record.save()
             LOGGER.info('Added: %s', record.short_name)
