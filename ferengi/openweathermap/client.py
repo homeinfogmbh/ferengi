@@ -21,7 +21,7 @@ class Client:
             api_key: Optional[str] = None,
             **params
     ):
-        """Sets base URL and API key"""
+        """Set base URL and API key"""
         self.base_url = base_url or self.config['base_url']
         self.api_key = api_key or self.config['api_key']
         self.params = params
@@ -31,7 +31,7 @@ class Client:
             city_id: int,
             raw: bool = False
     ) -> Union[Response, dict]:
-        """Retrievels weather data for the respective city ID."""
+        """Retrieve weather data for the respective city ID."""
         self.params.update({'id': city_id, 'appid': self.api_key})
         response = get(self.base_url, params=self.params)
 
@@ -45,7 +45,7 @@ class Client:
 
     @property
     def config(self) -> dict[str, Any]:
-        """Returns the API config section."""
+        """Return the API config section."""
         return CONFIG['api']
 
 
