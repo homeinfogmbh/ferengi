@@ -3,7 +3,7 @@
 from __future__ import annotations
 from contextlib import suppress
 from datetime import datetime, timedelta
-from typing import Iterator, List, Optional
+from typing import Iterator, Optional
 
 from peewee import CharField
 from peewee import DateTimeField
@@ -64,7 +64,7 @@ class City(WeatherModel):
         return city
 
     @classmethod
-    def initialize(cls, json: List[dict]):
+    def initialize(cls, json: list[dict]):
         """Initializes table from dictionary list."""
         for city in json:
             cls.from_json(city).save()
