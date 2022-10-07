@@ -82,20 +82,20 @@ class Team(_OpenLigaDBModel):
         return cls.update_from_dom(dom)
 
     @classmethod
-    def from_dom(cls, dom: dom.BlTableTeamType) -> Team:
+    def from_dom(cls, table: dom.BlTableTeamType.typeDefinition) -> Team:
         """Returns a record from a BlTableTeamType instance."""
         record = cls()
-        record.draw = dom.Draw
-        record.goals = dom.Goals
-        record.lost = dom.Lost
-        record.matches = dom.Matches
-        record.opponent_goals = dom.OpponentGoals
-        record.points = dom.Points
-        record.short_name = dom.ShortName
-        record.team_icon_url = dom.TeamIconUrl
-        record.team_info_id = dom.TeamInfoId
-        record.team_name = dom.TeamName
-        record.won = dom.Won
+        record.draw = table.Draw
+        record.goals = table.Goals
+        record.lost = table.Lost
+        record.matches = table.Matches
+        record.opponent_goals = table.OpponentGoals
+        record.points = table.Points
+        record.short_name = table.ShortName
+        record.team_icon_url = table.TeamIconUrl
+        record.team_info_id = table.TeamInfoId
+        record.team_name = table.TeamName
+        record.won = table.Won
         return record
 
     @classmethod
