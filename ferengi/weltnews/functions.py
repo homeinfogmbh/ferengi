@@ -1,6 +1,7 @@
 """Common functions."""
 
 from datetime import datetime
+from locale import LC_TIME, getdefaultlocale, setlocale
 
 from requests import get
 
@@ -33,6 +34,7 @@ def parse_datetime(timestamp: str) -> datetime:
     """
 
     _, remainder = timestamp.split(' ', maxsplit=1)
-    day_of_month, *remainder = remainder.split()
+    day_of_month, *remainder, _ = remainder.split()     # Discard GMT at end
     fixed_timestamp = ' '.join(['{:0>2}'.format(day_of_month), *remainder])
-    return datetime.strptime(fixed_timestamp, '%d %b %Y %H:%M:%S %Z')
+    setlocale(LC_TIME, getdefaultlocale())
+    return datetime.strptime(fixed_timestamp, '%d %b %Y %H:%M:%S')
