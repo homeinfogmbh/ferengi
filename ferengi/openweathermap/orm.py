@@ -25,8 +25,10 @@ from ferengi.openweathermap.client import CLIENT
 __all__ = ['City', 'Forecast', 'Weather']
 
 
-DATABASE = MySQLDatabaseProxy('ferengi_openweathermap',
-                              'ferengi.d/openweathermap.conf')
+DATABASE = MySQLDatabaseProxy(
+    'ferengi_openweathermap',
+    'ferengi.d/openweathermap.conf'
+)
 
 
 class WeatherModel(Model):
@@ -115,7 +117,8 @@ class Forecast(WeatherModel):
     """Regional weather forecast."""
 
     city = ForeignKeyField(
-        City, column_name='city', backref='forecasts', lazy_load=False)
+        City, column_name='city', backref='forecasts', lazy_load=False
+    )
     dt = DateTimeField()
     temp = DecimalField(4, 2, null=True)
     temp_min = DecimalField(4, 2, null=True)
@@ -131,8 +134,12 @@ class Forecast(WeatherModel):
     snow_3h = DecimalField(6, 3, null=True)
 
     @classmethod
-    def by_city(cls, city: City, since: datetime = None,
-                until: datetime = None) -> ModelSelect:
+    def by_city(
+            cls,
+            city: City,
+            since: datetime = None,
+            until: datetime = None
+    ) -> ModelSelect:
         """Yields forecasts of the specified
         city within the specified time period.
         """
@@ -269,7 +276,8 @@ class Weather(WeatherModel):
 
     forecast = ForeignKeyField(
         Forecast, column_name='forecast', backref='weather',
-        on_delete='CASCADE', lazy_load=False)
+        on_delete='CASCADE', lazy_load=False
+    )
     weather_id = SmallIntegerField()
     main = CharField(255)
     description = CharField(255)
