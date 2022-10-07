@@ -17,8 +17,10 @@ from ferengi.openligadb.config import LOGGER
 __all__ = ['create_tables', 'Team']
 
 
-DATABASE = MySQLDatabaseProxy('ferengi_openligadb',
-                              'ferengi.d/openligadb.conf')
+DATABASE = MySQLDatabaseProxy(
+    'ferengi_openligadb',
+    'ferengi.d/openligadb.conf'
+)
 
 
 def create_tables():
