@@ -29,7 +29,10 @@ def parse_datetime(timestamp: str) -> datetime:
     However, recently the day is in English locale, while the month is in
     German locale. Hence, we just strip away the day and parse the
     remainder with German locale.
+    Also, the days month is no longer padded, so we need to do that, too.
     """
 
-    _, remainder = timestamp.split(', ', maxsplit=1)
-    return datetime.strptime(remainder, '%d %b %Y %H:%M:%S %Z')
+    _, remainder = timestamp.split(' ', maxsplit=1)
+    day_of_month, *remainder = remainder.split()
+    fixed_timestamp = ' '.join(['{:0>2}'.format(day_of_month), *remainder])
+    return datetime.strptime(fixed_timestamp, '%d %b %Y %H:%M:%S %Z')
