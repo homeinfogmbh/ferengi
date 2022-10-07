@@ -12,7 +12,7 @@ from ferengi.openweathermap.orm import City, Forecast
 __all__ = ['ROUTES']
 
 
-def get_weather(city: City) -> Union[tuple[str, int], XML]:
+def get_weather(city: City) -> Union[tuple[str, int], JSON, XML]:
     """Returns the respective weather forecasts."""
 
     try:
