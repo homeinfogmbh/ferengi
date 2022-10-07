@@ -101,7 +101,7 @@ class City(WeatherModel):
     def update_forecast(self, force=False) -> None:
         """Updates the city's weather forecast."""
         if not self.up2date or force:
-            old_forecasts = tuple(self.forecasts)   # pylint: disable=E1101
+            old_forecasts = tuple(self.forecasts)
             self._update_forecast()
 
             for old_forecast in old_forecasts:
