@@ -25,7 +25,7 @@ FILES = {
 }
 
 
-def update():
+def update() -> None:
     """Updates the records."""
 
     for file, active in FILES.items():

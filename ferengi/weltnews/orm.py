@@ -1,16 +1,18 @@
 """Library to store news from weltoohservice.de/xml/."""
 
+from __future__ import annotations
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
+from typing import Iterator
 
 from peewee import CharField, DateTimeField, ForeignKeyField, TextField
 
 from filedb import File
 from peeweeplus import JSONModel, MySQLDatabaseProxy
 
+from ferengi.weltnews import dom
 from ferengi.weltnews.config import CONFIG
-from ferengi.weltnews.dom import CreateFromDocument
 from ferengi.weltnews.functions import add_file_from_url, parse_datetime
 
 
@@ -40,7 +42,7 @@ class News(JSONModel):  # pylint: disable=R0902
     web_url = TextField()
 
     @classmethod
-    def from_dom(cls, news, filename):
+    def from_dom(cls, news: dom.News.typeDefinition, filename: str) -> News:
         """Creates a new news entry from the given DOM model."""
         record = cls()
         record.filename = filename
@@ -63,20 +65,20 @@ class News(JSONModel):  # pylint: disable=R0902
         return record
 
     @classmethod
-    def from_url(cls, url):
+    def from_url(cls, url: str) -> Iterator[News]:
         """Yields records from the respective URL."""
         filename = Path(urlparse(url).path).name
 
         with urlopen(url) as response:
             text = response.read().decode()
 
-        is24news = CreateFromDocument(text)
+        is24news = dom.CreateFromDocument(text)
 
         for news in is24news.news:
             yield cls.from_dom(news, filename)
 
     @classmethod
-    def update_from_url(cls, url, active=True):
+    def update_from_url(cls, url: str, active: bool = True) -> None:
         """Updates the records from the respective URL."""
         filename = Path(urlparse(url).path).name
 
@@ -88,12 +90,12 @@ class News(JSONModel):  # pylint: disable=R0902
                 record.save()
 
     @classmethod
-    def update_from_file(cls, file, active=True):
+    def update_from_file(cls, file: str, active: bool = True) -> None:
         """Updates from a news file name."""
         url = urljoin(CONFIG['api']['base_url'], f'{file}.xml')
-        return cls.update_from_url(url, active=active)
+        cls.update_from_url(url, active=active)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> int:
         """Saves the record."""
         if self.image:
             self.image.save(*args, **kwargs)

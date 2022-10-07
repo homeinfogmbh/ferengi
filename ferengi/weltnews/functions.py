@@ -10,7 +10,7 @@ from filedb import File
 __all__ = ['add_file_from_url', 'parse_datetime']
 
 
-def add_file_from_url(url):
+def add_file_from_url(url: str) -> File:
     """Downloads a file from the given URL
     and adds it to the filedb returning its ID.
     """
