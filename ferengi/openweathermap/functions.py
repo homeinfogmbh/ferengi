@@ -62,7 +62,7 @@ def _get_temps(forecasts: Iterable[Forecast]) -> Tuple[int, int]:
     except ValueError:
         max_ = None
 
-    return (min_, max_)
+    return min_, max_
 
 
 def _get_icon_ids(forecasts: Iterable[Forecast]) -> Iterator[str]:
