@@ -11,11 +11,12 @@ __all__ = ['update']
 
 FILES = {
     'auto': False,
+    'infoscreen': False,
     'karriere': True,
     'kultur': True,
     'leute': True,
     'multimedia': True,
-    'olympia2018': False,
+    'oohtemp': False,
     'panorama': True,
     'politik': True,
     'reise': True,
@@ -23,8 +24,7 @@ FILES = {
     'test': False,
     'wirtschaft': True,
     'wissen': True,
-    'wissenschaft': True,
-    'wm2018': False
+    'wissenschaft': True
 }
 
 
