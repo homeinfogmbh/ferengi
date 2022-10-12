@@ -107,7 +107,7 @@ class Team(_OpenLigaDBModel):
         """Returns an ArrayOfBlTableTeam."""
         array_of_bl_table_team = dom.ArrayOfBlTableTeam()
 
-        for record in cls.select().wher(True):
+        for record in cls.select().where(True):
             bl_table_team = record.to_dom()
 
             if url_template is not None:
