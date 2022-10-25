@@ -1,6 +1,7 @@
 """Library to store news from weltoohservice.de/xml/."""
 
 from __future__ import annotations
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
@@ -13,7 +14,7 @@ from peeweeplus import JSONModel, MySQLDatabaseProxy
 
 from ferengi.weltnews import dom
 from ferengi.weltnews.config import CONFIG
-from ferengi.weltnews.functions import add_file_from_url, parse_datetime
+from ferengi.weltnews.functions import add_file_from_url
 
 
 __all__ = ['News']
@@ -50,7 +51,9 @@ class News(JSONModel):  # pylint: disable=R0902
         record.headline = news.headline
         record.source = news.source
         record.textmessage = news.textmessage
-        record.published = parse_datetime(news.published.value())
+        record.published = datetime.strptime(
+            news.published.value(), '%a, %d %b %Y %H:%M:%S %Z'
+        )
 
         if news.image.value():
             record.image = add_file_from_url(news.image.value())
