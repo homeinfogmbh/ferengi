@@ -24,10 +24,10 @@ DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
 DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
-class News(JSONModel):  # pylint: disable=R0902
+class News(JSONModel):
     """News model."""
 
-    class Meta:     # pylint: disable=C0111,R0903
+    class Meta:
         database = DATABASE
         schema = database.database
 
