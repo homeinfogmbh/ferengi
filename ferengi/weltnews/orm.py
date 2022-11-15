@@ -52,7 +52,7 @@ class News(JSONModel):
         record.source = news.source
         record.textmessage = news.textmessage
         record.published = datetime.strptime(
-            news.published.value(), '%a, %d %b %Y %H:%M:%S %Z'
+            news.published.value().split(', ')[1], '%d %b %Y %H:%M:%S %Z'
         )
 
         if news.image.value():
