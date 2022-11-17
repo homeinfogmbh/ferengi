@@ -1,5 +1,7 @@
 """News update client."""
 
+from logging import getLogger
+
 from feedparser import parse
 from feedparser.util import FeedParserDict
 
@@ -35,4 +37,12 @@ def update_from_entries(entries: list[FeedParserDict]) -> None:
         article.delete_instance()
 
     for entry in entries:
-        News.from_entry(entry).save()
+        try:
+            news = News.from_entry(entry)
+        except KeyError as error:
+            getLogger('spiegelnews').error(
+                'Could not update news entry: %s',
+                error
+            )
+        else:
+            news.save()
