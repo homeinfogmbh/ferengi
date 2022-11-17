@@ -21,7 +21,7 @@ __all__ = ['News']
 
 
 DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
-DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
+DATETIME_FORMAT = '%d %b %Y %H:%M:%S %Z'
 
 
 class News(JSONModel):
@@ -52,7 +52,8 @@ class News(JSONModel):
         record.source = news.source
         record.textmessage = news.textmessage
         record.published = datetime.strptime(
-            news.published.value().split(', ')[1], '%d %b %Y %H:%M:%S %Z'
+            news.published.value().split(', ')[1],
+            DATETIME_FORMAT
         )
 
         if news.image.value():
