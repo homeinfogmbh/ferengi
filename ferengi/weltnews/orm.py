@@ -12,9 +12,9 @@ from peewee import CharField, DateTimeField, ForeignKeyField, TextField
 from filedb import File
 from peeweeplus import JSONModel, MySQLDatabaseProxy
 
+from ferengi.functions import add_file_from_url
 from ferengi.weltnews import dom
 from ferengi.weltnews.config import CONFIG
-from ferengi.weltnews.functions import add_file_from_url
 
 
 __all__ = ['News']
