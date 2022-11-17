@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 from datetime import datetime
+from logging import getLogger
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
@@ -76,7 +77,13 @@ class News(JSONModel):
         is24news = dom.CreateFromDocument(text)
 
         for news in is24news.news:
-            yield cls.from_dom(news, filename)
+            try:
+                yield cls.from_dom(news, filename)
+            except ValueError as error:
+                getLogger('weltnews').error(
+                    'Cannot parse record due to value error: %s',
+                    error
+                )
 
     @classmethod
     def update_from_url(cls, url: str, active: bool = True) -> None:
