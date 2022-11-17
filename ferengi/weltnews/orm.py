@@ -21,7 +21,7 @@ __all__ = ['News']
 
 
 DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
-DATETIME_FORMAT = '%d %b %Y %H:%M:%S %Z'
+DATETIME_FORMATS = {'%d %b %Y %H:%M:%S %Z', '%d %b %Y %H:%M:%S %Z'}
 
 
 class News(JSONModel):
@@ -51,10 +51,7 @@ class News(JSONModel):
         record.headline = news.headline
         record.source = news.source
         record.textmessage = news.textmessage
-        record.published = datetime.strptime(
-            news.published.value().split(', ')[1],
-            DATETIME_FORMAT
-        )
+        record.published = parse_datetime(news.published.value())
 
         if news.image.value():
             record.image = add_file_from_url(news.image.value())
@@ -111,3 +108,18 @@ class News(JSONModel):
             self.video.save(*args, **kwargs)
 
         return super().save(*args, **kwargs)
+
+
+def parse_datetime(timestamp: str) -> datetime:
+    """Parse a datetime from a string."""
+
+    for frmt in DATETIME_FORMATS:
+        try:
+            return datetime.strptime(timestamp, frmt)
+        except ValueError:
+            continue
+
+    raise ValueError(
+        f'Cannot parse "{timestamp}" with either format:',
+        DATETIME_FORMATS
+    )
