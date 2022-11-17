@@ -28,6 +28,7 @@ setup(
         'ferengi',
         'ferengi.openligadb',
         'ferengi.openweathermap',
+        'ferengi.spiegelnews',
         'ferengi.weltnews'
     ],
     entry_points={
