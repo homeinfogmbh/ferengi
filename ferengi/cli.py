@@ -7,6 +7,7 @@ from logging import DEBUG, INFO, basicConfig, getLogger
 from ferengi.api import roa
 from ferengi.openligadb import Team
 from ferengi.openweathermap import update as update_openweathermap
+from ferengi.spiegelnews import update as update_spiegel_news
 from ferengi.weltnews import update as update_welt_news
 
 
@@ -30,6 +31,7 @@ def get_args() -> Namespace:
     subparsers = parser.add_subparsers(dest='module')
     subparsers.add_parser('openligadb', help='import soccer league tables')
     subparsers.add_parser('openweathermap', help='import weather information')
+    subparsers.add_parser('spiegelnews', help='import news from spiegel.de')
     subparsers.add_parser('weltnews', help='import news from welt.de')
     return parser.parse_args()
 
@@ -46,5 +48,7 @@ def main():
         Team.update_from_api()
     elif args.module == 'openweathermap':
         update_openweathermap(force=args.force)
+    elif args.module == 'spiegelnews':
+        update_spiegel_news()
     elif args.module == 'weltnews':
         update_welt_news()

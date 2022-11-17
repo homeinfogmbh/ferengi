@@ -11,6 +11,7 @@ setup(
     setup_requires=['setuptools_scm'],
     install_requires=[
         'b64lzma',
+        'feedparser',
         'filedb',
         'flask',
         'hwdb',
