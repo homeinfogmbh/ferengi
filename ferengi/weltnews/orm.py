@@ -21,7 +21,7 @@ __all__ = ['News']
 
 
 DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
-DATETIME_FORMAT = '%b %Y %H:%M:%S %Z'
+DATETIME_FORMAT = '%d %b %Y %H:%M:%S %Z'
 
 
 class News(JSONModel):
