@@ -39,7 +39,7 @@ class News(JSONModel):
     text = TextField()
     category = CharField(255)
     image = ForeignKeyField(File, column_name='image', null=True)
-    timestamp = DateTimeField()
+    published = DateTimeField()
 
     @classmethod
     def from_entry(cls, entry: FeedParserDict) -> News:
@@ -55,7 +55,7 @@ class News(JSONModel):
                 record.image = add_file_from_url(link['href'])
                 break
 
-        record.timestamp = datetime.strptime(
+        record.published = datetime.strptime(
             entry['published'],
             DATETIME_FORMAT
         )
