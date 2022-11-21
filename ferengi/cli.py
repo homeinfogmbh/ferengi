@@ -5,6 +5,7 @@ from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig, getLogger
 
 from ferengi.api import roa
+from ferengi.googlenews import update as update_google_news
 from ferengi.openligadb import Team
 from ferengi.openweathermap import update as update_openweathermap
 from ferengi.spiegelnews import update as update_spiegel_news
@@ -29,6 +30,7 @@ def get_args() -> Namespace:
         '--rules-of-acquisition', action='store_true',
         help='print the rules of acquisition')
     subparsers = parser.add_subparsers(dest='module')
+    subparsers.add_parser('googlenews', help='import news from Google')
     subparsers.add_parser('openligadb', help='import soccer league tables')
     subparsers.add_parser('openweathermap', help='import weather information')
     subparsers.add_parser('spiegelnews', help='import news from spiegel.de')
@@ -44,6 +46,8 @@ def main():
 
     if args.rules_of_acquisition:
         roa()
+    elif args.module == 'googlenews':
+        update_google_news()
     elif args.module == 'openligadb':
         Team.update_from_api()
     elif args.module == 'openweathermap':

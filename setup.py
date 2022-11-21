@@ -26,6 +26,7 @@ setup(
     maintainer_email='<r dot neumann at homeinfo priod de>',
     packages=[
         'ferengi',
+        'ferengi.googlenews',
         'ferengi.openligadb',
         'ferengi.openweathermap',
         'ferengi.spiegelnews',
