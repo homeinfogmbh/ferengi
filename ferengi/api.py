@@ -7,7 +7,7 @@ from requests import Response
 from ferengi.roa import ROA
 
 
-__all__ = ['UpToDate', 'APIError']
+__all__ = ['UpToDate', 'APIError', 'roa']
 
 
 class UpToDate(Exception):
