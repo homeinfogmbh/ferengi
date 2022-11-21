@@ -35,7 +35,7 @@ class RSSNews(JSONModel):
     def __init_subclass__(
             cls,
             *,
-            rss_feed_url: str,
+            rss_feed_url: str | None = None,
             datetime_format: str = '%a, %d %b %Y %H:%M:%S %z',
             **kwargs
     ):
