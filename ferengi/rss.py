@@ -34,12 +34,12 @@ class RSSNews(JSONModel):
 
     def __init_subclass__(
             cls,
-            *,
+            *args,
             rss_feed_url: str | None = None,
             datetime_format: str = '%a, %d %b %Y %H:%M:%S %z',
             **kwargs
     ):
-        super().__init_subclass__(**kwargs)
+        super().__init_subclass__(*args, **kwargs)
         cls.source.default = rss_feed_url
         cls.DATETIME_FORMAT = datetime_format
 
