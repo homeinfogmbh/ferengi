@@ -15,6 +15,7 @@ setup(
         'filedb',
         'flask',
         'hwdb',
+        'lxml',
         'peewee',
         'peeweeplus',
         'requests',

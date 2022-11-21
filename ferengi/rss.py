@@ -12,7 +12,7 @@ from peewee import CharField, DateTimeField, ForeignKeyField, TextField
 from filedb import File
 from peeweeplus import JSONModel
 
-from ferengi.functions import add_file_from_url
+from ferengi.functions import add_file_from_url, extract_text
 
 
 __all__ = ['RSSNews', 'update_from_url']
@@ -53,7 +53,7 @@ class RSSNews(JSONModel):
         record = cls()
         record.title = entry['title']
         record.link = entry['link']
-        record.text = entry['summary']
+        record.text = extract_text(entry['summary'])
         record.category = entry.get('category')
         record.author = entry.get('author')
 
