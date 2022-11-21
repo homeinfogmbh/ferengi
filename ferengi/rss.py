@@ -53,7 +53,11 @@ class RSSNews(JSONModel):
         record = cls()
         record.title = entry['title']
         record.link = entry['link']
-        record.text = extract_text(entry['summary'])
+
+        if (text := extract_text(entry['summary'])) is None:
+            raise ValueError('No article text.')
+
+        record.text = text
         record.category = entry.get('category')
         record.author = entry.get('author')
 
@@ -102,7 +106,7 @@ def update_from_entries(
     for count, entry in enumerate(entries, start=1):
         try:
             news = model.from_entry(entry)
-        except KeyError as error:
+        except (KeyError, ValueError) as error:
             errors += 1
             LOGGER.error('Could not update news entry: %s', error)
         else:
