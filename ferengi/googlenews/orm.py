@@ -13,7 +13,7 @@ DATABASE = MySQLDatabaseProxy(
     'ferengi_googlenews',
     'ferengi.d/googlenews.conf'
 )
-DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %z'
+DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 
 class News(
