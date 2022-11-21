@@ -32,6 +32,7 @@ class RSSNews(JSONModel):
     link = TextField()
     text = TextField()
     category = CharField(255, null=True)
+    author = CharField(255, null=True)
     image = ForeignKeyField(File, column_name='image', null=True)
     published = DateTimeField()
 
@@ -54,6 +55,7 @@ class RSSNews(JSONModel):
         record.link = entry['link']
         record.text = entry['summary']
         record.category = entry.get('category')
+        record.author = entry.get('author')
 
         for link in entry['links']:
             if link['type'].startswith('image/'):
