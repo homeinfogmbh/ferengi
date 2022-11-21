@@ -40,4 +40,7 @@ def extract_text_from_html_elements(
 
         children.extend(element.iterchildren())
 
-    return extract_text_from_html_elements(children)
+    if children:
+        return extract_text_from_html_elements(children)
+
+    return None
