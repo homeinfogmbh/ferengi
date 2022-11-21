@@ -74,9 +74,7 @@ class News(JSONModel):
         with urlopen(url) as response:
             text = response.read().decode()
 
-        is24news = dom.CreateFromDocument(text)
-
-        for news in is24news.news:
+        for news in dom.CreateFromDocument(text).news:
             try:
                 yield cls.from_dom(news, filename)
             except ValueError as error:
