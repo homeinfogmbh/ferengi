@@ -23,12 +23,15 @@ def get_args() -> Namespace:
 
     parser = ArgumentParser(description='Greedy data acquisition.')
     parser.add_argument(
-        '-v', '--verbose', action='store_true', help='enable verbose logging')
+        '-v', '--verbose', action='store_true', help='enable verbose logging'
+    )
     parser.add_argument(
-        '-f', '--force', action='store_true', help='force data import')
+        '-f', '--force', action='store_true', help='force data import'
+    )
     parser.add_argument(
         '--rules-of-acquisition', action='store_true',
-        help='print the rules of acquisition')
+        help='print the rules of acquisition'
+    )
     subparsers = parser.add_subparsers(dest='module')
     subparsers.add_parser('googlenews', help='import news from Google')
     subparsers.add_parser('openligadb', help='import soccer league tables')
