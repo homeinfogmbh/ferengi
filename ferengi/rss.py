@@ -18,6 +18,9 @@ from ferengi.functions import add_file_from_url
 __all__ = ['RSSNews', 'update_from_url']
 
 
+LOGGER = getLogger('RSS news')
+
+
 class RSSNews(JSONModel):
     """Abstract model to store news from RSS feeds."""
 
@@ -92,13 +95,15 @@ def update_from_entries(
     for article in model.select().where(True):
         article.delete_instance()
 
-    for entry in entries:
+    count = errors = 0
+
+    for count, entry in enumerate(entries, start=1):
         try:
             news = model.from_entry(entry)
         except KeyError as error:
-            getLogger('RSS news').error(
-                'Could not update news entry: %s',
-                error
-            )
+            errors += 1
+            LOGGER.error('Could not update news entry: %s', error)
         else:
             news.save()
+
+    LOGGER.info('Updated %i / %i entries', count - errors, count)
