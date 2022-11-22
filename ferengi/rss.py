@@ -61,9 +61,9 @@ class RSSNews(JSONModel):
         record.category = entry.get('category')
         record.author = entry.get('author')
 
-        for link in entry['links']:
-            if link['type'].startswith('image/'):
-                record.image = add_file_from_url(link['href'])
+        for media_content in entry['media_content']:
+            if media_content['medium'] == 'image':
+                record.image = add_file_from_url(media_content['url'])
                 break
 
         record.published = datetime.strptime(
