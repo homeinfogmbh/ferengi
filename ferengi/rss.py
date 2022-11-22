@@ -3,7 +3,7 @@
 from __future__ import annotations
 from datetime import datetime
 from logging import getLogger
-from typing import Type
+from typing import Optional, Type
 
 from feedparser import parse
 from feedparser.util import FeedParserDict
@@ -48,6 +48,13 @@ class RSSNews(JSONModel):
         cls.DATETIME_FORMAT = datetime_format
 
     @classmethod
+    def parse_image(cls, entry: FeedParserDict) -> Optional[File]:
+        """Parse an image from the entry."""
+        for link in entry['links']:
+            if link['type'].startswith('image/'):
+                return add_file_from_url(link['href'])
+
+    @classmethod
     def from_entry(cls, entry: FeedParserDict) -> RSSNews:
         """Creates a new news entry from the given DOM model."""
         record = cls()
@@ -60,12 +67,7 @@ class RSSNews(JSONModel):
         record.text = text
         record.category = entry.get('category')
         record.author = entry.get('author')
-
-        for media_content in entry['media_content']:
-            if media_content['medium'] == 'image':
-                record.image = add_file_from_url(media_content['url'])
-                break
-
+        record.image = cls.parse_image(entry)
         record.published = datetime.strptime(
             entry['published'],
             cls.DATETIME_FORMAT
