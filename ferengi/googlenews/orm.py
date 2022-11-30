@@ -9,7 +9,6 @@ from peeweeplus import MySQLDatabaseProxy
 
 from ferengi.functions import add_file_from_url
 from ferengi.rss import RSSNews
-from ferengi.googlenews.constants import RSS_FEED_URL
 
 
 __all__ = ['News']
@@ -24,7 +23,6 @@ DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
 class News(
     RSSNews,
-    rss_feed_url=RSS_FEED_URL,
     datetime_format=DATETIME_FORMAT
 ):
     """News model."""

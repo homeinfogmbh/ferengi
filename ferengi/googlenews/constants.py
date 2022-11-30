@@ -1,6 +1,9 @@
-"""Constants."""
+"""Common constants."""
 
-__all__ = ['RSS_FEED_URL']
+__all__ = ['CITIES']
 
 
-RSS_FEED_URL = 'https://rss.app/feeds/89vCOugNuFiiDxD1.xml'
+CITIES = {
+    'Hannover': 'https://rss.app/feeds/ok5mqe22WfIhfUP0.xml',
+    'Würzburg': 'https://rss.app/feeds/fj92OQ1iTwkMgyLX.xml'
+}
