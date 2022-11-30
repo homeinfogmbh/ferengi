@@ -55,9 +55,9 @@ class RSSNews(JSONModel):
                 return add_file_from_url(link['href'])
 
     @classmethod
-    def from_entry(cls, entry: FeedParserDict) -> RSSNews:
+    def from_entry(cls, entry: FeedParserDict, **kwargs) -> RSSNews:
         """Creates a new news entry from the given DOM model."""
-        record = cls()
+        record = cls(**kwargs)
         record.title = entry['title']
         record.link = entry['link']
 
@@ -82,21 +82,26 @@ class RSSNews(JSONModel):
         return super().save(*args, **kwargs)
 
 
-def update_from_url(url: str, model: Type[RSSNews]) -> None:
+def update_from_url(url: str, model: Type[RSSNews], **kwargs) -> None:
     """Create news entries from the given RSS feed URL."""
 
-    update_from_rss(parse(url), model)
+    update_from_rss(parse(url), model, **kwargs)
 
 
-def update_from_rss(rss: FeedParserDict, model: Type[RSSNews]) -> None:
+def update_from_rss(
+        rss: FeedParserDict,
+        model: Type[RSSNews],
+        **kwargs
+) -> None:
     """Create news entries from the given RSS feed URL."""
 
-    update_from_entries(rss['entries'], model)
+    update_from_entries(rss['entries'], model, **kwargs)
 
 
 def update_from_entries(
         entries: list[FeedParserDict],
-        model: Type[RSSNews]
+        model: Type[RSSNews],
+        **kwargs
 ) -> None:
     """Creates a new news entry from the given DOM model."""
 
@@ -107,7 +112,7 @@ def update_from_entries(
 
     for count, entry in enumerate(entries, start=1):
         try:
-            news = model.from_entry(entry)
+            news = model.from_entry(entry, **kwargs)
         except (KeyError, ValueError) as error:
             errors += 1
             LOGGER.error('Could not update news entry: %s', error)
