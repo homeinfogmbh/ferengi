@@ -12,4 +12,5 @@ __all__ = ['update']
 def update() -> None:
     """Update news from default RSS feed."""
 
+    News.delete().where(True).execute()
     update_from_url(RSS_FEED_URL, News)
