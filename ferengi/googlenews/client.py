@@ -15,4 +15,5 @@ def update() -> None:
 
     for city, url in CITIES.items():
         getLogger('Google News').info('Importing news for city: %s', city)
-        update_from_url(url, News, city=city)
+        News.delete().where(News.source == url).execute()
+        update_from_url(url, News, clear=False, city=city)
