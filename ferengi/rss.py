@@ -85,7 +85,7 @@ class RSSNews(JSONModel):
 def update_from_url(url: str, model: Type[RSSNews], **kwargs) -> None:
     """Create news entries from the given RSS feed URL."""
 
-    update_from_rss(parse(url), model, **kwargs)
+    update_from_rss(parse(url), model, source=url, **kwargs)
 
 
 def update_from_rss(
