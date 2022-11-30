@@ -101,12 +101,15 @@ def update_from_rss(
 def update_from_entries(
         entries: list[FeedParserDict],
         model: Type[RSSNews],
+        *,
+        clear: bool = True,
         **kwargs
 ) -> None:
     """Creates a new news entry from the given DOM model."""
 
-    for article in model.select().where(True):
-        article.delete_instance()
+    if clear:
+        for article in model.select().where(True):
+            article.delete_instance()
 
     count = errors = 0
 
