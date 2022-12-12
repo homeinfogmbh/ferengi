@@ -2,8 +2,8 @@
 
 from logging import getLogger
 
-from ferengi.googlenews.constants import FEEDS
-from ferengi.googlenews.orm import News
+from ferengi.rssapp.constants import FEEDS
+from ferengi.rssapp.orm import News
 from ferengi.rss import update_from_url
 
 

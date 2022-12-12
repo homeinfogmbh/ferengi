@@ -5,7 +5,7 @@ from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig, getLogger
 
 from ferengi.api import roa
-from ferengi.googlenews import update as update_google_news
+from ferengi.rssapp import update as update_google_news
 from ferengi.openligadb import Team
 from ferengi.openweathermap import update as update_openweathermap
 from ferengi.spiegelnews import update as update_spiegel_news
