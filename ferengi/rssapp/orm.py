@@ -16,8 +16,8 @@ __all__ = ['News', 'Provider']
 
 
 DATABASE = MySQLDatabaseProxy(
-    'ferengi_googlenews',
-    'ferengi.d/googlenews.conf'
+    'ferengi_rssapp',
+    'ferengi.d/rssapp.conf'
 )
 DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
 
