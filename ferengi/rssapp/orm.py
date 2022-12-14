@@ -3,15 +3,16 @@
 from typing import Optional
 
 from feedparser.util import FeedParserDict
+from peewee import BooleanField, CharField, TextField
 
 from filedb import File
-from peeweeplus import MySQLDatabaseProxy
+from peeweeplus import JSONModel, MySQLDatabaseProxy
 
 from ferengi.functions import add_file_from_url
 from ferengi.rss import RSSNews
 
 
-__all__ = ['News']
+__all__ = ['News', 'Provider']
 
 
 DATABASE = MySQLDatabaseProxy(
@@ -37,3 +38,17 @@ class News(
         for media_content in entry['media_content']:
             if media_content['medium'] == 'image':
                 return add_file_from_url(media_content['url'])
+
+
+class Provider(JSONModel):
+    """News provider."""
+
+    """News model."""
+
+    class Meta:
+        database = DATABASE
+        schema = database.database
+
+    name = CharField(255)
+    url = TextField()
+    enabled = BooleanField(default=True)
