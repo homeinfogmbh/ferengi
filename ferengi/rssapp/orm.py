@@ -43,8 +43,6 @@ class News(
 class Provider(JSONModel):
     """News provider."""
 
-    """News model."""
-
     class Meta:
         database = DATABASE
         schema = database.database
