@@ -36,6 +36,13 @@ Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element name="id" type="xs:nonNegativeInteger">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        Identifikationsnummer
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="subline" type="xs:string">
                 <xs:annotation>
                     <xs:documentation xml:lang="de">
