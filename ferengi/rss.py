@@ -76,6 +76,8 @@ class RSSNews(JSONModel):
 
     def save(self, *args, **kwargs) -> int:
         """Save the record."""
+        print('Text:', self.text, flush=True)
+
         if self.image:
             self.image.save(*args, **kwargs)
 
