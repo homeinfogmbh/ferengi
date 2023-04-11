@@ -31,7 +31,6 @@ class News(
     class Meta:
         database = DATABASE
         schema = database.database
-        table_settings = ['DEFAULT CHARSET=utf8']
 
     @classmethod
     def parse_image(cls, entry: FeedParserDict) -> Optional[File]:
