@@ -39,6 +39,8 @@ class News(
             if media_content['medium'] == 'image':
                 return add_file_from_url(media_content['url'])
 
+        return None
+
 
 class Provider(JSONModel):
     """News provider."""
