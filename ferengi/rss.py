@@ -54,6 +54,8 @@ class RSSNews(JSONModel):
             if link['type'].startswith('image/'):
                 return add_file_from_url(link['href'])
 
+        return None
+
     @classmethod
     def from_entry(cls, entry: FeedParserDict, **kwargs) -> RSSNews:
         """Creates a new news entry from the given DOM model."""
