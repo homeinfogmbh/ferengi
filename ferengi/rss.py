@@ -60,11 +60,7 @@ class RSSNews(JSONModel):
         record = cls(**kwargs)
         record.title = entry['title']
         record.link = entry['link']
-
-        if (text := extract_text(entry['summary'])) is None:
-            raise ValueError('No article text.')
-
-        record.text = text
+        record.text =  extract_text(entry['summary']) or ''
         record.category = entry.get('category')
         record.author = entry.get('author')
         record.image = cls.parse_image(entry)
@@ -72,7 +68,11 @@ class RSSNews(JSONModel):
             entry['published'],
             cls.DATETIME_FORMAT
         )
-        return record
+
+        if record.text or record.image:
+            return record
+
+        raise ValueError('Neither text not image provided.')
 
     def save(self, *args, **kwargs) -> int:
         """Save the record."""
