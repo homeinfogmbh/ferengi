@@ -71,7 +71,7 @@ class City(WeatherModel):
 
     @property
     def up2date(self) -> bool:
-        """Determines whether weather is up to date."""
+        """Determines whether weather is up-to-date."""
         if self.last_update is None:
             return False
 
