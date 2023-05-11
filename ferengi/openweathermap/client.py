@@ -1,7 +1,8 @@
 """OpenWeatherMap API client."""
 
+from __future__ import annotations
 from json import loads
-from typing import Any, Optional, Union
+from typing import Union
 
 from requests import Response, get
 
@@ -15,15 +16,10 @@ __all__ = ['CLIENT']
 class Client:
     """Receive and store weather data."""
 
-    def __init__(
-            self,
-            base_url: Optional[str] = None,
-            api_key: Optional[str] = None,
-            **params
-    ):
+    def __init__(self, base_url: str, api_key: str, **params):
         """Set base URL and API key"""
-        self.base_url = base_url or self.config['base_url']
-        self.api_key = api_key or self.config['api_key']
+        self.base_url = base_url
+        self.api_key = api_key
         self.params = params
 
     def __call__(
@@ -43,10 +39,14 @@ class Client:
 
         raise APIError(response)
 
-    @property
-    def config(self) -> dict[str, Any]:
+    @classmethod
+    def from_config(cls, **params) -> Client:
         """Return the API config section."""
-        return CONFIG['api']
+        return cls(
+            CONFIG.get('api', 'base_url'),
+            CONFIG.get('api', 'api_key'),
+            **params
+        )
 
 
-CLIENT = Client(units='metric', lang='de')   # Default client.
+CLIENT = Client.from_config(units='metric', lang='de')  # Default client.
