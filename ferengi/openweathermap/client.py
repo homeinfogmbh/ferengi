@@ -28,8 +28,10 @@ class Client:
             raw: bool = False
     ) -> Union[Response, dict]:
         """Retrieve weather data for the respective city ID."""
-        self.params.update({'id': city_id, 'appid': self.api_key})
-        response = get(self.base_url, params=self.params)
+        response = get(
+            self.base_url,
+            params={'id': city_id, 'appid': self.api_key, **self.params}
+        )
 
         if raw:
             return response
