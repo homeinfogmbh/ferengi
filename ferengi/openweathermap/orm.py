@@ -212,7 +212,7 @@ class Forecast(WeatherModel):
         if not cascade:
             return super().select(*args)
 
-        return super().select(*{cls, City, *args}).join(City)
+        return super().select(cls, City, *args).join(City)
 
     def to_json(self) -> dict:
         """Converts the forecast into a JSON-ish dict."""
@@ -301,7 +301,7 @@ class Weather(WeatherModel):
         if not cascade:
             return super().select(*args)
 
-        return super().select(*{cls, Forecast, City, *args}).join(
+        return super().select(cls, Forecast, City, *args).join(
             Forecast).join(City)
 
     def to_json(self) -> dict:
