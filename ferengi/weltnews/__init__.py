@@ -4,4 +4,4 @@ from ferengi.weltnews.orm import News
 from ferengi.weltnews.client import update
 
 
-__all__ = ['update', 'News']
+__all__ = ["update", "News"]

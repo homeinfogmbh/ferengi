@@ -12,20 +12,14 @@ from ferengi.functions import add_file_from_url
 from ferengi.rss import RSSNews
 
 
-__all__ = ['News', 'Provider']
+__all__ = ["News", "Provider"]
 
 
-DATABASE = MySQLDatabaseProxy(
-    'ferengi_rssapp',
-    'ferengi.d/rssapp.conf'
-)
-DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
+DATABASE = MySQLDatabaseProxy("ferengi_rssapp", "ferengi.d/rssapp.conf")
+DATETIME_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
 
 
-class News(
-    RSSNews,
-    datetime_format=DATETIME_FORMAT
-):
+class News(RSSNews, datetime_format=DATETIME_FORMAT):
     """News model."""
 
     class Meta:
@@ -35,9 +29,9 @@ class News(
     @classmethod
     def parse_image(cls, entry: FeedParserDict) -> Optional[File]:
         """Parse an image from the entry."""
-        for media_content in entry['media_content']:
-            if media_content['medium'] == 'image':
-                return add_file_from_url(media_content['url'])
+        for media_content in entry["media_content"]:
+            if media_content["medium"] == "image":
+                return add_file_from_url(media_content["url"])
 
         return None
 

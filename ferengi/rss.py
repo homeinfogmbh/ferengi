@@ -15,10 +15,10 @@ from peeweeplus import JSONModel
 from ferengi.functions import add_file_from_url, extract_text
 
 
-__all__ = ['RSSNews', 'update_from_url']
+__all__ = ["RSSNews", "update_from_url"]
 
 
-LOGGER = getLogger('RSS news')
+LOGGER = getLogger("RSS news")
 
 
 class RSSNews(JSONModel):
@@ -33,15 +33,15 @@ class RSSNews(JSONModel):
     text = TextField()
     category = CharField(255, null=True)
     author = CharField(255, null=True)
-    image = ForeignKeyField(File, column_name='image', null=True)
+    image = ForeignKeyField(File, column_name="image", null=True)
     published = DateTimeField()
 
     def __init_subclass__(
-            cls,
-            *args,
-            rss_feed_url: str | None = None,
-            datetime_format: str = '%a, %d %b %Y %H:%M:%S %z',
-            **kwargs
+        cls,
+        *args,
+        rss_feed_url: str | None = None,
+        datetime_format: str = "%a, %d %b %Y %H:%M:%S %z",
+        **kwargs,
     ):
         super().__init_subclass__(*args, **kwargs)
         cls.source.default = rss_feed_url
@@ -50,9 +50,9 @@ class RSSNews(JSONModel):
     @classmethod
     def parse_image(cls, entry: FeedParserDict) -> Optional[File]:
         """Parse an image from the entry."""
-        for link in entry['links']:
-            if link['type'].startswith('image/'):
-                return add_file_from_url(link['href'])
+        for link in entry["links"]:
+            if link["type"].startswith("image/"):
+                return add_file_from_url(link["href"])
 
         return None
 
@@ -60,21 +60,18 @@ class RSSNews(JSONModel):
     def from_entry(cls, entry: FeedParserDict, **kwargs) -> RSSNews:
         """Creates a new news entry from the given DOM model."""
         record = cls(**kwargs)
-        record.title = entry['title']
-        record.link = entry['link']
-        record.text =  extract_text(entry['summary']) or ''
-        record.category = entry.get('category')
-        record.author = entry.get('author')
+        record.title = entry["title"]
+        record.link = entry["link"]
+        record.text = extract_text(entry["summary"]) or ""
+        record.category = entry.get("category")
+        record.author = entry.get("author")
         record.image = cls.parse_image(entry)
-        record.published = datetime.strptime(
-            entry['published'],
-            cls.DATETIME_FORMAT
-        )
+        record.published = datetime.strptime(entry["published"], cls.DATETIME_FORMAT)
 
         if record.text or record.image:
             return record
 
-        raise ValueError('Neither text not image provided.')
+        raise ValueError("Neither text not image provided.")
 
     def save(self, *args, **kwargs) -> int:
         """Save the record."""
@@ -90,20 +87,14 @@ def update_from_url(url: str, model: Type[RSSNews], **kwargs) -> None:
     update_from_rss(parse(url), model, source=url, **kwargs)
 
 
-def update_from_rss(
-        rss: FeedParserDict,
-        model: Type[RSSNews],
-        **kwargs
-) -> None:
+def update_from_rss(rss: FeedParserDict, model: Type[RSSNews], **kwargs) -> None:
     """Create news entries from the given RSS feed URL."""
 
-    update_from_entries(rss['entries'], model, **kwargs)
+    update_from_entries(rss["entries"], model, **kwargs)
 
 
 def update_from_entries(
-        entries: list[FeedParserDict],
-        model: Type[RSSNews],
-        **kwargs
+    entries: list[FeedParserDict], model: Type[RSSNews], **kwargs
 ) -> None:
     """Creates a new news entry from the given DOM model."""
 
@@ -114,8 +105,8 @@ def update_from_entries(
             news = model.from_entry(entry, **kwargs)
         except (KeyError, ValueError) as error:
             errors += 1
-            LOGGER.error('Could not update news entry: %s', error)
+            LOGGER.error("Could not update news entry: %s", error)
         else:
             news.save()
 
-    LOGGER.info('Updated %i / %i entries', count - errors, count)
+    LOGGER.info("Updated %i / %i entries", count - errors, count)

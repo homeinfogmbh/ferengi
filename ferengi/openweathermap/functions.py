@@ -8,28 +8,28 @@ from ferengi.openweathermap import dom  # pylint: disable=E0611
 from ferengi.openweathermap.orm import City, Forecast
 
 
-__all__ = ['forecasts_to_dom']
+__all__ = ["forecasts_to_dom"]
 
 
 ICONS = {
-    '01d': 22,
-    '02d': 13,
-    '03d': 5,
-    '04d': 12,
-    '09d': 4,
-    '10d': 15,
-    '11d': 1,
-    '13d': 20,
-    '50d': 8,
-    '01n': 22,
-    '02n': 13,
-    '03n': 5,
-    '04n': 12,
-    '09n': 4,
-    '10n': 15,
-    '11n': 1,
-    '13n': 20,
-    '50n': 8
+    "01d": 22,
+    "02d": 13,
+    "03d": 5,
+    "04d": 12,
+    "09d": 4,
+    "10d": 15,
+    "11d": 1,
+    "13d": 20,
+    "50d": 8,
+    "01n": 22,
+    "02n": 13,
+    "03n": 5,
+    "04n": 12,
+    "09n": 4,
+    "10n": 15,
+    "11n": 1,
+    "13n": 20,
+    "50n": 8,
 }
 
 
@@ -137,9 +137,9 @@ def forecasts_to_dom(city: City, forecasts: Iterable[Forecast]) -> dom.xml:
     forecast.day = [
         _day_dom(today_forecasts, today),
         _day_dom(tomorrow_forecasts, tomorrow),
-        _day_dom(day_after_tomorrow_forecasts, day_after_tomorrow)
+        _day_dom(day_after_tomorrow_forecasts, day_after_tomorrow),
     ]
     xml.forecast = forecast
     xml.name = city
-    xml.pubdate = now.strftime('%Y-%m-%d %H:%M:%S')
+    xml.pubdate = now.strftime("%Y-%m-%d %H:%M:%S")
     return xml

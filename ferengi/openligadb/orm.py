@@ -15,13 +15,10 @@ from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import LOGGER
 
 
-__all__ = ['create_tables', 'Team']
+__all__ = ["create_tables", "Team"]
 
 
-DATABASE = MySQLDatabaseProxy(
-    'ferengi_openligadb',
-    'ferengi.d/openligadb.conf'
-)
+DATABASE = MySQLDatabaseProxy("ferengi_openligadb", "ferengi.d/openligadb.conf")
 
 
 def create_tables():
@@ -54,19 +51,16 @@ class Team(_OpenLigaDBModel):
     won = IntegerField()
 
     @classmethod
-    def update_from_dom(
-            cls,
-            array: dom.ArrayOfBlTableTeamType.typeDefinition
-    ) -> bool:
+    def update_from_dom(cls, array: dom.ArrayOfBlTableTeamType.typeDefinition) -> bool:
         """Updates the entire table from the given ArrayOfBlTableTeam."""
         for record in cls.select().where(True):
-            LOGGER.info('Removing: %s', record.short_name)
+            LOGGER.info("Removing: %s", record.short_name)
             record.delete_instance()
 
         for team in array.BlTableTeam:
             record = cls.from_dom(team)
             record.save()
-            LOGGER.info('Added: %s', record.short_name)
+            LOGGER.info("Added: %s", record.short_name)
 
         return True
 
@@ -74,13 +68,13 @@ class Team(_OpenLigaDBModel):
     def update_from_api(cls) -> bool:
         """Runs an update from the API."""
         year = date.today().year
-        LOGGER.info('Getting Bundesliga table for %i.', year)
+        LOGGER.info("Getting Bundesliga table for %i.", year)
         array = get_table(year=year)
 
         if not array.BlTableTeam:
-            LOGGER.warning('No data for %i.', year)
+            LOGGER.warning("No data for %i.", year)
             year -= 1
-            LOGGER.info('Getting Bundesliga table for %i.', year)
+            LOGGER.info("Getting Bundesliga table for %i.", year)
             array = get_table(year=year)
 
         return cls.update_from_dom(array)

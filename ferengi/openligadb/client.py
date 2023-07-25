@@ -9,10 +9,10 @@ from ferengi.openligadb.config import CONFIG, LOGGER
 from ferengi.openligadb.dom import CreateFromDocument, Match
 
 
-__all__ = ['get_table']
+__all__ = ["get_table"]
 
 
-HEADERS = {'Accept': 'application/xml'}
+HEADERS = {"Accept": "application/xml"}
 
 
 def get_table(year: int = None, *, headers: Optional[dict] = None) -> Match:
@@ -24,8 +24,8 @@ def get_table(year: int = None, *, headers: Optional[dict] = None) -> Match:
     if year is None:
         year = date.today().year
 
-    template = CONFIG['api']['table_url']
+    template = CONFIG["api"]["table_url"]
     url = template.format(year)
-    LOGGER.info('Retrieving data from: %s', url)
+    LOGGER.info("Retrieving data from: %s", url)
     response = get(url, headers=headers)
     return CreateFromDocument(response.text)

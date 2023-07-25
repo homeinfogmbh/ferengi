@@ -4,4 +4,4 @@ from ferengi.rssapp.client import update
 from ferengi.rssapp.orm import News, Provider
 
 
-__all__ = ['News', 'Provider', 'update']
+__all__ = ["News", "Provider", "update"]

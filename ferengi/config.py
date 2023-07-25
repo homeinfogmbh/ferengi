@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Any
 
 
-__all__ = ['ferengi_config']
+__all__ = ["ferengi_config"]
 
 
-CONFIG_DIR = Path('/usr/local/etc/ferengi.d')
+CONFIG_DIR = Path("/usr/local/etc/ferengi.d")
 
 
 class ConfigProxy(ConfigParser):

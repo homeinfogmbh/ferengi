@@ -18,11 +18,11 @@ from ferengi.weltnews import dom
 from ferengi.weltnews.config import CONFIG
 
 
-__all__ = ['News']
+__all__ = ["News"]
 
 
-DATABASE = MySQLDatabaseProxy('ferengi_weltnews', 'ferengi.d/weltnews.conf')
-DATETIME_FORMATS = {'%a, %d %b %Y %H:%M:%S %Z'}
+DATABASE = MySQLDatabaseProxy("ferengi_weltnews", "ferengi.d/weltnews.conf")
+DATETIME_FORMATS = {"%a, %d %b %Y %H:%M:%S %Z"}
 
 
 class News(JSONModel):
@@ -32,15 +32,15 @@ class News(JSONModel):
         database = DATABASE
         schema = database.database
 
-    filename = CharField(255)   # Meta information.
+    filename = CharField(255)  # Meta information.
     subline = CharField(255)
     headline = CharField(255)
     source = CharField(255)
     textmessage = TextField()
     published = DateTimeField()
-    image = ForeignKeyField(File, column_name='image', null=True)
-    thumb = ForeignKeyField(File, column_name='thumb', null=True)
-    video = ForeignKeyField(File, column_name='video', null=True)
+    image = ForeignKeyField(File, column_name="image", null=True)
+    thumb = ForeignKeyField(File, column_name="thumb", null=True)
+    video = ForeignKeyField(File, column_name="video", null=True)
     web_url = TextField()
 
     @classmethod
@@ -78,9 +78,8 @@ class News(JSONModel):
             try:
                 yield cls.from_dom(news, filename)
             except ValueError as error:
-                getLogger('weltnews').error(
-                    'Cannot parse record due to value error: %s',
-                    error
+                getLogger("weltnews").error(
+                    "Cannot parse record due to value error: %s", error
                 )
 
     @classmethod
@@ -98,7 +97,7 @@ class News(JSONModel):
     @classmethod
     def update_from_file(cls, file: str, active: bool = True) -> None:
         """Updates from a news file name."""
-        url = urljoin(CONFIG['api']['base_url'], f'{file}.xml')
+        url = urljoin(CONFIG["api"]["base_url"], f"{file}.xml")
         cls.update_from_url(url, active=active)
 
     def save(self, *args, **kwargs) -> int:
@@ -125,6 +124,5 @@ def parse_datetime(timestamp: str) -> datetime:
             continue
 
     raise ValueError(
-        f'Cannot parse "{timestamp}" with either format:',
-        DATETIME_FORMATS
+        f'Cannot parse "{timestamp}" with either format:', DATETIME_FORMATS
     )

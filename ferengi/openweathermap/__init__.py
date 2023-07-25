@@ -6,11 +6,4 @@ from ferengi.openweathermap.orm import City, Forecast
 from ferengi.openweathermap.wsgi import ROUTES
 
 
-__all__ = [
-    'ROUTES',
-    'cities',
-    'forecasts_to_dom',
-    'update',
-    'City',
-    'Forecast'
-]
+__all__ = ["ROUTES", "cities", "forecasts_to_dom", "update", "City", "Forecast"]

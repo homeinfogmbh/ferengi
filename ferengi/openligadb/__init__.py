@@ -6,4 +6,4 @@ from ferengi.openligadb.orm import Team
 from ferengi.openligadb.wsgi import ROUTES
 
 
-__all__ = ['CONFIG', 'ROUTES', 'get_table', 'Team']
+__all__ = ["CONFIG", "ROUTES", "get_table", "Team"]

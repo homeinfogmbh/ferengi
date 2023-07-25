@@ -12,16 +12,16 @@ from ferengi.openweathermap.config import CONFIG
 from ferengi.openweathermap.orm import City
 
 
-__all__ = ['cities', 'update']
+__all__ = ["cities", "update"]
 
 
-LOGGER = getLogger('OpenWeatherMap')
+LOGGER = getLogger("OpenWeatherMap")
 
 
 def names() -> Iterator[str]:
     """Yields targeted city names."""
 
-    for name in CONFIG['config'].get('cities', '').split():
+    for name in CONFIG["config"].get("cities", "").split():
         yield name
 
     for deployment in Deployment.select(cascade=True).where(True):
@@ -33,7 +33,7 @@ def cities() -> ModelSelect:
 
     return City.select().where(
         (City.name << set(names()))
-        & (City.country << set(CONFIG['config']['countries'].split()))
+        & (City.country << set(CONFIG["config"]["countries"].split()))
     )
 
 
@@ -46,6 +46,6 @@ def update(force: bool = False) -> None:
         except UpToDate:
             LOGGER.info('Weather for "%s" is up-to-date.', city.name)
         except APIError as api_error:
-            LOGGER.error('Caught API error (%i): %s.', api_error, api_error)
+            LOGGER.error("Caught API error (%i): %s.", api_error, api_error)
         else:
             LOGGER.info('Updated weather for "%s".', city.name)

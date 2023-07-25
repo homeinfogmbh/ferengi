@@ -10,7 +10,7 @@ from ferengi.api import APIError
 from ferengi.openweathermap.config import CONFIG
 
 
-__all__ = ['CLIENT']
+__all__ = ["CLIENT"]
 
 
 class Client:
@@ -22,15 +22,10 @@ class Client:
         self.api_key = api_key
         self.params = params
 
-    def __call__(
-            self,
-            city_id: int,
-            raw: bool = False
-    ) -> Union[Response, dict]:
+    def __call__(self, city_id: int, raw: bool = False) -> Union[Response, dict]:
         """Retrieve weather data for the respective city ID."""
         response = get(
-            self.base_url,
-            params={'id': city_id, 'appid': self.api_key, **self.params}
+            self.base_url, params={"id": city_id, "appid": self.api_key, **self.params}
         )
 
         if raw:
@@ -45,10 +40,8 @@ class Client:
     def from_config(cls, **params) -> Client:
         """Return the API config section."""
         return cls(
-            CONFIG.get('api', 'base_url'),
-            CONFIG.get('api', 'api_key'),
-            **params
+            CONFIG.get("api", "base_url"), CONFIG.get("api", "api_key"), **params
         )
 
 
-CLIENT = Client.from_config(units='metric', lang='de')  # Default client.
+CLIENT = Client.from_config(units="metric", lang="de")  # Default client.

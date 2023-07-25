@@ -6,7 +6,7 @@ from ferengi.spiegelnews.orm import News
 from ferengi.rss import update_from_url
 
 
-__all__ = ['update']
+__all__ = ["update"]
 
 
 def update() -> None:

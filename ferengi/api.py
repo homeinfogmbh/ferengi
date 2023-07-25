@@ -7,7 +7,7 @@ from requests import Response
 from ferengi.roa import ROA
 
 
-__all__ = ['UpToDate', 'APIError', 'roa']
+__all__ = ["UpToDate", "APIError", "roa"]
 
 
 class UpToDate(Exception):
@@ -34,5 +34,5 @@ class APIError(Exception):
 def roa():
     """Prints the rules of acquisition."""
 
-    with Popen(('/usr/bin/less',), stdin=PIPE) as process:
+    with Popen(("/usr/bin/less",), stdin=PIPE) as process:
         process.communicate(input=bytes(ROA))

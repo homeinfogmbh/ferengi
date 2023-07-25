@@ -6,7 +6,7 @@ from ferengi.rssapp.orm import News, Provider
 from ferengi.rss import update_from_url
 
 
-__all__ = ['update']
+__all__ = ["update"]
 
 
 def update() -> None:
@@ -16,8 +16,5 @@ def update() -> None:
         News.delete().where(News.source == provider.url).execute()
 
         if provider.enabled:
-            getLogger('rss.app').info(
-                'Importing news for feed: %s',
-                provider.name
-            )
+            getLogger("rss.app").info("Importing news for feed: %s", provider.name)
             update_from_url(provider.url, News, clear=False)

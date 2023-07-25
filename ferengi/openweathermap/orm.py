@@ -22,13 +22,10 @@ from ferengi.openweathermap.config import CONFIG
 from ferengi.openweathermap.client import CLIENT
 
 
-__all__ = ['City', 'Forecast', 'Weather']
+__all__ = ["City", "Forecast", "Weather"]
 
 
-DATABASE = MySQLDatabaseProxy(
-    'ferengi_openweathermap',
-    'ferengi.d/openweathermap.conf'
-)
+DATABASE = MySQLDatabaseProxy("ferengi_openweathermap", "ferengi.d/openweathermap.conf")
 
 
 class WeatherModel(Model):
@@ -56,11 +53,11 @@ class City(WeatherModel):
     def from_json(cls, json: dict) -> City:
         """Creates a city from a dict."""
         city = cls()
-        city.id = json['_id']
-        city.name = json['name']
-        city.country = json['country']
-        city.longitude = json['coord']['lon']
-        city.latitude = json['coord']['lat']
+        city.id = json["_id"]
+        city.name = json["name"]
+        city.country = json["country"]
+        city.longitude = json["coord"]["lon"]
+        city.latitude = json["coord"]["lat"]
         return city
 
     @classmethod
@@ -80,21 +77,21 @@ class City(WeatherModel):
     def to_json(self) -> dict:
         """Converts the record to a JSON-ish dictionary."""
         dictionary = {
-            'id': self.id,
-            'name': self.name,
-            'country': self.country,
-            'longitude': self.longitude,
-            'latitude': self.latitude
+            "id": self.id,
+            "name": self.name,
+            "country": self.country,
+            "longitude": self.longitude,
+            "latitude": self.latitude,
         }
 
         if self.last_update is not None:
-            dictionary['last_update'] = self.last_update.isoformat()
+            dictionary["last_update"] = self.last_update.isoformat()
 
         return dictionary
 
     def _update_forecast(self) -> None:
         """Updates the city's weather forecast."""
-        for forecast in CLIENT(self.id)['list']:
+        for forecast in CLIENT(self.id)["list"]:
             for record in Forecast.from_json(forecast, city=self):
                 record.save()
 
@@ -117,7 +114,7 @@ class Forecast(WeatherModel):
     """Regional weather forecast."""
 
     city = ForeignKeyField(
-        City, column_name='city', backref='forecasts', lazy_load=False
+        City, column_name="city", backref="forecasts", lazy_load=False
     )
     dt = DateTimeField()
     temp = DecimalField(4, 2, null=True)
@@ -135,16 +132,16 @@ class Forecast(WeatherModel):
 
     @classmethod
     def by_city(
-            cls,
-            city: City,
-            since: Optional[Union[date, datetime]] = None,
-            until: Optional[Union[date, datetime]] = None
+        cls,
+        city: City,
+        since: Optional[Union[date, datetime]] = None,
+        until: Optional[Union[date, datetime]] = None,
     ) -> ModelSelect:
         """Yields forecasts of the specified
         city within the specified time period.
         """
         if isinstance(city, str):
-            countries = CONFIG['config']['countries'].split()
+            countries = CONFIG["config"]["countries"].split()
             city = City.get((City.name == city) & (City.country << countries))
 
         expression = cls.city == city
@@ -163,47 +160,47 @@ class Forecast(WeatherModel):
         city from the specified dict.
         """
         forecast = cls(city=city)
-        forecast.dt = datetime.fromtimestamp(json['dt'])
+        forecast.dt = datetime.fromtimestamp(json["dt"])
 
         with suppress(KeyError):
-            forecast.temp = json['main']['temp']
+            forecast.temp = json["main"]["temp"]
 
         with suppress(KeyError):
-            forecast.temp_min = json['main']['temp_min']
+            forecast.temp_min = json["main"]["temp_min"]
 
         with suppress(KeyError):
-            forecast.temp_max = json['main']['temp_max']
+            forecast.temp_max = json["main"]["temp_max"]
 
         with suppress(KeyError):
-            forecast.pressure = json['main']['pressure']
+            forecast.pressure = json["main"]["pressure"]
 
         with suppress(KeyError):
-            forecast.sea_level = json['main']['sea_level']
+            forecast.sea_level = json["main"]["sea_level"]
 
         with suppress(KeyError):
-            forecast.grnd_level = json['main']['grnd_level']
+            forecast.grnd_level = json["main"]["grnd_level"]
 
         with suppress(KeyError):
-            forecast.humidity = json['main']['humidity']
+            forecast.humidity = json["main"]["humidity"]
 
         with suppress(KeyError):
-            forecast.clouds_all = json['clouds']['all']
+            forecast.clouds_all = json["clouds"]["all"]
 
         with suppress(KeyError):
-            forecast.wind_speed = json['wind']['speed']
+            forecast.wind_speed = json["wind"]["speed"]
 
         with suppress(KeyError):
-            forecast.wind_deg = json['wind']['deg']
+            forecast.wind_deg = json["wind"]["deg"]
 
         with suppress(KeyError):
-            forecast.rain_3h = json['rain']['3h']
+            forecast.rain_3h = json["rain"]["3h"]
 
         with suppress(KeyError):
-            forecast.snow_3h = json['snow']['3h']
+            forecast.snow_3h = json["snow"]["3h"]
 
         yield forecast
 
-        for weather in json['weather']:
+        for weather in json["weather"]:
             yield Weather.from_json(weather, forecast=forecast)
 
     @classmethod
@@ -216,57 +213,57 @@ class Forecast(WeatherModel):
 
     def to_json(self) -> dict:
         """Converts the forecast into a JSON-ish dict."""
-        json = {'dt': self.dt.isoformat()}
+        json = {"dt": self.dt.isoformat()}
         main = {}
 
         if self.temp is not None:
-            main['temp'] = dec2dict(self.temp)
+            main["temp"] = dec2dict(self.temp)
 
         if self.temp_min is not None:
-            main['temp_min'] = dec2dict(self.temp_min)
+            main["temp_min"] = dec2dict(self.temp_min)
 
         if self.temp_max is not None:
-            main['temp_max'] = dec2dict(self.temp_max)
+            main["temp_max"] = dec2dict(self.temp_max)
 
         if self.pressure is not None:
-            main['pressure'] = dec2dict(self.pressure)
+            main["pressure"] = dec2dict(self.pressure)
 
         if self.sea_level is not None:
-            main['sea_level'] = dec2dict(self.sea_level)
+            main["sea_level"] = dec2dict(self.sea_level)
 
         if self.grnd_level is not None:
-            main['grnd_level'] = dec2dict(self.grnd_level)
+            main["grnd_level"] = dec2dict(self.grnd_level)
 
         if self.humidity is not None:
-            main['humidity'] = self.humidity
+            main["humidity"] = self.humidity
 
         if main:
-            json['main'] = main
+            json["main"] = main
 
         if self.clouds_all is not None:
-            json['clouds'] = {'all': self.clouds_all}
+            json["clouds"] = {"all": self.clouds_all}
 
         wind = {}
 
         if self.wind_speed is not None:
-            wind['speed'] = dec2dict(self.wind_speed)
+            wind["speed"] = dec2dict(self.wind_speed)
 
         if self.wind_deg is not None:
-            wind['deg'] = dec2dict(self.wind_deg)
+            wind["deg"] = dec2dict(self.wind_deg)
 
         if wind:
-            json['wind'] = wind
+            json["wind"] = wind
 
         if self.rain_3h is not None:
-            json['rain'] = {'3h': dec2dict(self.rain_3h)}
+            json["rain"] = {"3h": dec2dict(self.rain_3h)}
 
         if self.snow_3h is not None:
-            json['snow'] = {'3h': dec2dict(self.snow_3h)}
+            json["snow"] = {"3h": dec2dict(self.snow_3h)}
 
         weather = [weather.to_json() for weather in self.weather]
 
         if weather:
-            json['weather'] = weather
+            json["weather"] = weather
 
         return json
 
@@ -275,8 +272,11 @@ class Weather(WeatherModel):
     """Weather details."""
 
     forecast = ForeignKeyField(
-        Forecast, column_name='forecast', backref='weather',
-        on_delete='CASCADE', lazy_load=False
+        Forecast,
+        column_name="forecast",
+        backref="weather",
+        on_delete="CASCADE",
+        lazy_load=False,
     )
     weather_id = SmallIntegerField()
     main = CharField(255)
@@ -289,10 +289,10 @@ class Weather(WeatherModel):
         forecast from the specified dict.
         """
         weather = cls(forecast=forecast)
-        weather.weather_id = json['id']
-        weather.main = json['main']
-        weather.description = json['description']
-        weather.icon = json['icon']
+        weather.weather_id = json["id"]
+        weather.main = json["main"]
+        weather.description = json["description"]
+        weather.icon = json["icon"]
         return weather
 
     @classmethod
@@ -301,14 +301,13 @@ class Weather(WeatherModel):
         if not cascade:
             return super().select(*args)
 
-        return super().select(cls, Forecast, City, *args).join(
-            Forecast).join(City)
+        return super().select(cls, Forecast, City, *args).join(Forecast).join(City)
 
     def to_json(self) -> dict:
         """Converts the weather into a JSON-ish dict."""
         return {
-            'id': self.weather_id,
-            'main': self.main,
-            'description': self.description,
-            'icon': self.icon
+            "id": self.weather_id,
+            "main": self.main,
+            "description": self.description,
+            "icon": self.icon,
         }
