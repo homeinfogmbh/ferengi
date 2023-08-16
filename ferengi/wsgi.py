@@ -1,8 +1,6 @@
 """WSGI services."""
 
-from traceback import format_exc
-
-from wsgilib import Application, Error
+from wsgilib import Application
 
 from ferengi import openligadb, openweathermap
 
