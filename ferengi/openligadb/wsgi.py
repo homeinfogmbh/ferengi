@@ -16,9 +16,7 @@ __all__ = ["ROUTES"]
 def get_table() -> XML:
     """Returns the table of the 1st Bundesliga."""
 
-    template = CONFIG["api"]["icon_url"]
-    array_of_bl_table_team = Team.dump_dom(url_template=template)
-    return XML(array_of_bl_table_team)
+    return XML(Team.dump_dom(url_template=CONFIG["api"]["icon_url"]))
 
 
 def get_icon(ident: int) -> Union[Binary, Error]:
