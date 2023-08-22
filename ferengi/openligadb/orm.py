@@ -9,6 +9,7 @@ from peeweeplus import MySQLDatabaseProxy
 
 from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import LOGGER
+from ferengi.openligadb import dom
 
 
 __all__ = ["create_tables", "Team"]
@@ -91,3 +92,35 @@ class Team(_OpenLigaDBModel):
         record.team_name = team.get("teamName")
         record.won = team.get("won")
         return record
+
+    @classmethod
+    def dump_dom(cls, url_template: str = None) -> dom.ArrayOfBlTableTeam:
+        """Returns an ArrayOfBlTableTeam."""
+        array_of_bl_table_team = dom.ArrayOfBlTableTeam()
+
+        for record in cls.select().where(True):
+            bl_table_team = record.to_dom()
+
+            if url_template is not None:
+                team_icon_url = url_template.format(record.id)
+                bl_table_team.TeamIconUrl = team_icon_url
+
+            array_of_bl_table_team.BlTableTeam.append(bl_table_team)
+
+        return array_of_bl_table_team
+
+    def to_dom(self) -> dom.BlTableTeamType:
+        """Returns a BlTableTeamType instance from the record."""
+        xml = dom.BlTableTeamType()
+        xml.Draw = self.draw
+        xml.Goals = self.goals
+        xml.Lost = self.lost
+        xml.Matches = self.matches
+        xml.OpponentGoals = self.opponent_goals
+        xml.Points = self.points
+        xml.ShortName = self.short_name
+        xml.TeamIconUrl = self.team_icon_url
+        xml.TeamInfoId = self.team_info_id
+        xml.TeamName = self.team_name
+        xml.Won = self.won
+        return xml
