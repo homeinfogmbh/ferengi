@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 from datetime import date
-from typing import Any
 
-from peewee import CharField
-from peewee import IntegerField
-from peewee import Model
+from peewee import CharField, IntegerField, Model
 
 from peeweeplus import MySQLDatabaseProxy
 
-from ferengi.openligadb import dom
 from ferengi.openligadb.client import get_table
 from ferengi.openligadb.config import LOGGER
 
@@ -51,14 +47,14 @@ class Team(_OpenLigaDBModel):
     won = IntegerField()
 
     @classmethod
-    def update_from_dom(cls, array: dom.ArrayOfBlTableTeamType.typeDefinition) -> bool:
-        """Updates the entire table from the given ArrayOfBlTableTeam."""
+    def update_from_table(cls, table: list[dict]) -> bool:
+        """Updates the entire table from the given JSON table of team object."""
         for record in cls.select().where(True):
             LOGGER.info("Removing: %s", record.short_name)
             record.delete_instance()
 
-        for team in array.BlTableTeam:
-            record = cls.from_dom(team)
+        for team in table:
+            record = cls.from_json(team)
             record.save()
             LOGGER.info("Added: %s", record.short_name)
 
@@ -69,61 +65,29 @@ class Team(_OpenLigaDBModel):
         """Runs an update from the API."""
         year = date.today().year
         LOGGER.info("Getting Bundesliga table for %i.", year)
-        array = get_table(year=year)
+        table = get_table(year=year)
 
-        if not array.BlTableTeam:
+        if not table:
             LOGGER.warning("No data for %i.", year)
             year -= 1
             LOGGER.info("Getting Bundesliga table for %i.", year)
-            array = get_table(year=year)
+            table = get_table(year=year)
 
-        return cls.update_from_dom(array)
+        return cls.update_from_table(table)
 
     @classmethod
-    def from_dom(cls, table: dom.BlTableTeamType.typeDefinition) -> Team:
-        """Returns a record from a BlTableTeamType instance."""
+    def from_json(cls, team: dict) -> Team:
+        """Returns a record from a team JSON object."""
         record = cls()
-        record.draw = table.Draw
-        record.goals = table.Goals
-        record.lost = table.Lost
-        record.matches = table.Matches
-        record.opponent_goals = table.OpponentGoals
-        record.points = table.Points
-        record.short_name = table.ShortName
-        record.team_icon_url = table.TeamIconUrl
-        record.team_info_id = table.TeamInfoId
-        record.team_name = table.TeamName
-        record.won = table.Won
+        record.draw = team.get("draw")
+        record.goals = team.get("goals")
+        record.lost = team.get("lost")
+        record.matches = team.get("matches")
+        record.opponent_goals = team.get("opponentGoals")
+        record.points = team.get("points")
+        record.short_name = team.get("shortName")
+        record.team_icon_url = team.get("teamIconUrl")
+        record.team_info_id = team.get("teamInfoId")
+        record.team_name = team.get("teamName")
+        record.won = team.get("won")
         return record
-
-    @classmethod
-    def dump_dom(cls, url_template: str = None) -> dom.ArrayOfBlTableTeam:
-        """Returns an ArrayOfBlTableTeam."""
-        array_of_bl_table_team = dom.ArrayOfBlTableTeam()
-
-        for record in cls.select().where(True):
-            bl_table_team = record.to_dom()
-
-            if url_template is not None:
-                team_icon_url = url_template.format(record.id)
-                bl_table_team.TeamIconUrl = team_icon_url
-
-            array_of_bl_table_team.BlTableTeam.append(bl_table_team)
-
-        return array_of_bl_table_team
-
-    def to_dom(self) -> dom.BlTableTeamType:
-        """Returns a BlTableTeamType instance from the record."""
-        xml: Any = dom.BlTableTeamType()
-        xml.Draw = self.draw
-        xml.Goals = self.goals
-        xml.Lost = self.lost
-        xml.Matches = self.matches
-        xml.OpponentGoals = self.opponent_goals
-        xml.Points = self.points
-        xml.ShortName = self.short_name
-        xml.TeamIconUrl = self.team_icon_url
-        xml.TeamInfoId = self.team_info_id
-        xml.TeamName = self.team_name
-        xml.Won = self.won
-        return xml

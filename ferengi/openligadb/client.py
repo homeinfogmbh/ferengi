@@ -6,20 +6,13 @@ from typing import Optional
 from requests import get
 
 from ferengi.openligadb.config import CONFIG, LOGGER
-from ferengi.openligadb.dom import CreateFromDocument, Match
 
 
 __all__ = ["get_table"]
 
 
-HEADERS = {"Accept": "application/xml"}
-
-
-def get_table(year: int = None, *, headers: Optional[dict] = None) -> Match:
+def get_table(year: Optional[int] = None) -> list[dict]:
     """Gets the table information for the given year or the current year."""
-
-    if headers is None:
-        headers = HEADERS
 
     if year is None:
         year = date.today().year
@@ -27,5 +20,4 @@ def get_table(year: int = None, *, headers: Optional[dict] = None) -> Match:
     template = CONFIG["api"]["table_url"]
     url = template.format(year)
     LOGGER.info("Retrieving data from: %s", url)
-    response = get(url, headers=headers)
-    return CreateFromDocument(response.text)
+    return get(url).json()
